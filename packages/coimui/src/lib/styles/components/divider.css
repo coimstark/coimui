@@ -1,0 +1,99 @@
+/* --------------------------- */
+/* Divider                     */
+/* --------------------------- */
+
+@layer components {
+  .coim-divider {
+    margin: 0;
+    margin-block: 0.5rem;
+    flex-shrink: 0;
+    border-width: 0;
+    border-style: solid;
+    border-color: hsl(var(--grey-100));
+    border-bottom-width: thin;
+  }
+
+  .coim-divider-large,
+  .coim-divider.large {
+    margin-block: 1rem;
+  }
+
+  .coim-divider-inset {
+    margin-inline-start: 4.5rem;
+  }
+
+  .coim-divider-middle {
+    margin-inline: 1rem;
+  }
+
+  .coim-divider-vertical {
+    margin-block: 0;
+    margin-inline: 0.5rem;
+    height: 100%;
+    border-bottom-width: 0;
+    border-inline-end-width: thin;
+  }
+
+  .coim-divider-vertical.coim-divider-large,
+  .coim-divider-vertical.large {
+    margin-inline: 1rem;
+  }
+
+  .coim-divider-vertical.coim-divider-middle {
+    margin-block: 0.5rem;
+  }
+
+  .coim-divider-flex-item {
+    align-self: stretch;
+    height: auto;
+  }
+
+  .coim-divider-with-children {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    text-align: center;
+    border-width: 0;
+  }
+
+  .coim-divider-with-children::before,
+  .coim-divider-with-children::after {
+    content: "";
+    align-self: center;
+    border-top: thin solid hsl(var(--grey-100));
+    width: 50%;
+  }
+
+  .coim-divider-with-children.coim-divider-text-left::before {
+    width: 10%;
+  }
+
+  .coim-divider-with-children.coim-divider-text-left::after {
+    width: 90%;
+  }
+
+  .coim-divider-with-children.coim-divider-text-right::before {
+    width: 90%;
+  }
+
+  .coim-divider-with-children.coim-divider-text-right::after {
+    width: 10%;
+  }
+
+  .coim-divider-vertical.coim-divider-with-children {
+    flex-direction: column;
+  }
+
+  .coim-divider-vertical.coim-divider-with-children::before,
+  .coim-divider-vertical.coim-divider-with-children::after {
+    width: auto;
+    height: 50%;
+    border-top: 0;
+    border-inline-start: thin solid hsl(var(--grey-100));
+  }
+
+  .coim-divider-wrapper {
+    display: inline-block;
+    margin-inline: 2rem;
+  }
+}

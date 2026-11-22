@@ -1,0 +1,56 @@
+<script lang="ts">
+  import { sizeHelper, strokeSizeHelper, type IconProps } from "../helpers.js";
+
+  let {
+    class: className = "",
+    variant = "outlined",
+    size = "medium",
+    oneTone = false,
+    strokeWidth,
+    label,
+    ...rest
+  }: IconProps = $props();
+
+  const iconSize = $derived(sizeHelper(size));
+  const iconStrokeWidth = $derived(strokeWidth ?? strokeSizeHelper(iconSize));
+</script>
+
+{#if variant === "outlined"}
+  <svg
+      role={label ? "img" : undefined}
+      aria-label={label}
+      aria-hidden={label ? undefined : "true"}
+      {...rest}
+        width={iconSize}
+        height={iconSize}
+        class={className}
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M10 16L13.1515 12.8485C13.6201 12.3799 13.6201 11.6201 13.1515 11.1515L10 8"
+          stroke="currentColor"
+          stroke-width={iconStrokeWidth}
+          stroke-linecap="round"
+        />
+      </svg>
+{:else}
+  <svg
+      role={label ? "img" : undefined}
+      aria-label={label}
+      aria-hidden={label ? undefined : "true"}
+      {...rest}
+        width={iconSize}
+        height={iconSize}
+        class={className}
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M9.46967 16.5303C9.76256 16.8232 10.2373 16.8232 10.5302 16.5303L13.6816 13.379C14.4431 12.6174 14.4431 11.3827 13.6816 10.6212L10.5302 7.46978C10.2373 7.17689 9.76256 7.17689 9.46967 7.46978C9.17678 7.76268 9.17678 8.23744 9.46967 8.53033L12.621 11.6817C12.7968 11.8574 12.7968 12.1427 12.621 12.3184L9.46967 15.4698C9.17678 15.7627 9.17678 16.2374 9.46967 16.5303Z"
+          fill="currentColor"
+        />
+      </svg>
+{/if}

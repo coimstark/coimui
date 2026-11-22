@@ -1,0 +1,256 @@
+/* --------------------------- */
+/* Tailwind CSS v4 @theme      */
+/* --------------------------- */
+
+@theme {
+  /* Fonts */
+  --font-sans: var(--coim-font-body);
+  --font-heading: var(--coim-font-heading);
+  --font-body: var(--coim-font-body);
+
+  /* Breakpoints */
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 960px;
+  --breakpoint-lg: 1280px;
+  --breakpoint-xl: 1440px;
+  --breakpoint-2xl: 1640px;
+  --breakpoint-3xl: 1900px;
+
+  /* Border Radii */
+  --radius-4xs: var(--border-radius-4xs);
+  --radius-3xs: var(--border-radius-3xs);
+  --radius-2xs: var(--border-radius-2xs);
+  --radius-xs: var(--border-radius-xs);
+  --radius-sm: var(--border-radius-sm);
+  --radius-md: var(--border-radius-md);
+  --radius-lg: var(--border-radius-lg);
+  --radius-xl: var(--border-radius-xl);
+  --radius-2xl: var(--border-radius-2xl);
+  --radius-3xl: var(--border-radius-3xl);
+  --radius-4xl: var(--border-radius-4xl);
+
+  /* Typography Scale */
+  --text-xs: 0.6875rem;
+  --text-sm: 0.75rem;
+  --text-base: 0.875rem;
+  --text-lg: 1rem;
+  --text-xl: 1.125rem;
+  --text-2xl: 1.25rem;
+  --text-3xl: 1.375rem;
+  --text-4xl: 1.5rem;
+  --text-5xl: 1.625rem;
+
+  /* Text Colors */
+  --color-text-primary: hsl(var(--text-primary));
+  --color-text-primary-light: hsl(var(--text-primary-light));
+  --color-text-primary-dark: hsl(var(--text-primary-dark));
+
+  --color-text-secondary: hsl(var(--text-secondary));
+  --color-text-secondary-light: hsl(var(--text-secondary-light));
+  --color-text-secondary-dark: hsl(var(--text-secondary-dark));
+
+  --color-text-disabled: hsl(var(--text-disabled));
+  --color-text-disabled-light: hsl(var(--text-disabled-light));
+  --color-text-disabled-dark: hsl(var(--text-disabled-dark));
+
+  --color-text-muted: hsl(var(--text-muted));
+  --color-text-muted-light: hsl(var(--text-muted-light));
+  --color-text-muted-dark: hsl(var(--text-muted-dark));
+
+  --color-text-contrast: hsl(var(--text-contrast));
+  --color-text-contrast-alternative: hsl(var(--text-contrast-alternative));
+
+  /* Background Colors */
+  --color-background: hsl(var(--background));
+  --color-background-paper: hsl(var(--background-paper));
+
+  /* Theme Colors */
+  --color-primary: hsl(var(--primary));
+  --color-primary-light: hsl(var(--primary-light));
+  --color-primary-dark: hsl(var(--primary-dark));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-light: hsl(var(--secondary-light));
+  --color-secondary-dark: hsl(var(--secondary-dark));
+
+  --color-accent-1: hsl(var(--accent-1));
+  --color-accent-1-light: hsl(var(--accent-1-light));
+  --color-accent-1-dark: hsl(var(--accent-1-dark));
+
+  --color-accent-2: hsl(var(--accent-2));
+  --color-accent-2-light: hsl(var(--accent-2-light));
+  --color-accent-2-dark: hsl(var(--accent-2-dark));
+
+  --color-accent-3: hsl(var(--accent-3));
+  --color-accent-3-light: hsl(var(--accent-3-light));
+  --color-accent-3-dark: hsl(var(--accent-3-dark));
+
+  --color-accent-4: hsl(var(--accent-4));
+  --color-accent-4-light: hsl(var(--accent-4-light));
+  --color-accent-4-dark: hsl(var(--accent-4-dark));
+
+  --color-accent-5: hsl(var(--accent-5));
+  --color-accent-5-light: hsl(var(--accent-5-light));
+  --color-accent-5-dark: hsl(var(--accent-5-dark));
+
+  --color-accent-6: hsl(var(--accent-6));
+  --color-accent-6-light: hsl(var(--accent-6-light));
+  --color-accent-6-dark: hsl(var(--accent-6-dark));
+
+  /* Feedback Colors */
+  --color-error: hsl(var(--error));
+  --color-error-light: hsl(var(--error-light));
+  --color-error-dark: hsl(var(--error-dark));
+
+  --color-info: hsl(var(--info));
+  --color-info-light: hsl(var(--info-light));
+  --color-info-dark: hsl(var(--info-dark));
+
+  --color-success: hsl(var(--success));
+  --color-success-light: hsl(var(--success-light));
+  --color-success-dark: hsl(var(--success-dark));
+
+  --color-warning: hsl(var(--warning));
+  --color-warning-light: hsl(var(--warning-light));
+  --color-warning-dark: hsl(var(--warning-dark));
+
+  --color-rating: hsl(var(--rating));
+  --color-rating-light: hsl(var(--rating-light));
+  --color-rating-dark: hsl(var(--rating-dark));
+
+  /* Grey & Gray Scales */
+  --color-grey-20: hsl(var(--grey-20));
+  --color-grey-25: hsl(var(--grey-25));
+  --color-grey-50: hsl(var(--grey-50));
+  --color-grey-100: hsl(var(--grey-100));
+  --color-grey-200: hsl(var(--grey-200));
+  --color-grey-300: hsl(var(--grey-300));
+  --color-grey-400: hsl(var(--grey-400));
+  --color-grey-500: hsl(var(--grey-500));
+  --color-grey-600: hsl(var(--grey-600));
+  --color-grey-700: hsl(var(--grey-700));
+  --color-grey-800: hsl(var(--grey-800));
+  --color-grey-900: hsl(var(--grey-900));
+
+  --color-gray-20: hsl(var(--grey-20));
+  --color-gray-25: hsl(var(--grey-25));
+  --color-gray-50: hsl(var(--grey-50));
+  --color-gray-100: hsl(var(--grey-100));
+  --color-gray-200: hsl(var(--grey-200));
+  --color-gray-300: hsl(var(--grey-300));
+  --color-gray-400: hsl(var(--grey-400));
+  --color-gray-500: hsl(var(--grey-500));
+  --color-gray-600: hsl(var(--grey-600));
+  --color-gray-700: hsl(var(--grey-700));
+  --color-gray-800: hsl(var(--grey-800));
+  --color-gray-900: hsl(var(--grey-900));
+
+  /* Line */
+  --color-line: var(--line);
+
+  /* Shadows */
+  --shadow-line-left: var(--coim-shadow-line-left);
+  --shadow-line-right: var(--coim-shadow-line-right);
+
+  --shadow-2xs: var(--coim-shadow-2xs);
+  --shadow-xs: var(--coim-shadow-xs);
+  --shadow-sm: var(--coim-shadow-sm);
+  --shadow-md: var(--coim-shadow-md);
+  --shadow-lg: var(--coim-shadow-lg);
+  --shadow-xl: var(--coim-shadow-xl);
+  --shadow-2xl: var(--coim-shadow-2xl);
+
+  --shadow-darker-2xs: var(--coim-shadow-darker-2xs);
+  --shadow-darker-xs: var(--coim-shadow-darker-xs);
+  --shadow-darker-sm: var(--coim-shadow-darker-sm);
+  --shadow-darker-md: var(--coim-shadow-darker-md);
+  --shadow-darker-lg: var(--coim-shadow-darker-lg);
+  --shadow-darker-xl: var(--coim-shadow-darker-xl);
+  --shadow-darker-2xl: var(--coim-shadow-darker-2xl);
+
+  /* Animations */
+  --animate-float: float 2s ease-in-out infinite;
+  --animate-wiggle: wiggle 1s ease-in-out infinite;
+
+  @keyframes float {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes wiggle {
+    0%,
+    100% {
+      transform: rotate(-3deg);
+    }
+    50% {
+      transform: rotate(3deg);
+    }
+  }
+}
+
+@utility opacity-disabled {
+  opacity: 0.5;
+}
+
+@utility bg-waves {
+  background-image: var(--bg-waves);
+}
+
+@utility text-balance {
+  text-wrap: balance;
+}
+
+@utility stroke-opacity-10 {
+  stroke-opacity: 0.1;
+}
+
+@utility stroke-opacity-100 {
+  stroke-opacity: 1;
+}
+
+@utility fill-opacity-10 {
+  fill-opacity: 0.1;
+}
+
+@utility fill-opacity-100 {
+  fill-opacity: 1;
+}
+
+@utility circle-radius-5 {
+  r: 5;
+}
+
+@utility text-anchor-start {
+  text-anchor: start;
+}
+
+@utility text-anchor-middle {
+  text-anchor: middle;
+}
+
+@utility text-anchor-end {
+  text-anchor: end;
+}
+
+@utility dominant-baseline-auto {
+  dominant-baseline: auto;
+}
+
+@utility dominant-baseline-hanging {
+  dominant-baseline: hanging;
+}
+
+@utility dominant-baseline-text-after-edge {
+  dominant-baseline: text-after-edge;
+}
+
+@utility dominant-baseline-text-before-edge {
+  dominant-baseline: text-before-edge;
+}

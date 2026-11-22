@@ -1,0 +1,307 @@
+/* --------------------------- */
+/* Chip                        */
+/* --------------------------- */
+
+@layer components {
+  .coim-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    max-width: 100%;
+    box-sizing: border-box;
+    font-family: var(--coim-font-body);
+    font-weight: 500;
+    box-shadow: none;
+    vertical-align: middle;
+    white-space: nowrap;
+    text-decoration: none;
+    border: 0;
+    outline: 1px solid transparent;
+    outline-offset: -1px;
+    transition: background-color 150ms, color 150ms, outline-color 150ms;
+  }
+
+  .coim-chip.coim-chip-clickable {
+    cursor: pointer;
+  }
+
+  .coim-chip.coim-chip-small {
+    height: auto;
+    border-radius: var(--border-radius-sm);
+    padding: 0.125rem 0.25rem;
+    font-size: var(--text-sm);
+    line-height: 1rem;
+  }
+
+  .coim-chip.coim-chip-medium {
+    height: auto;
+    border-radius: var(--border-radius-sm);
+    padding: 0.125rem 0.375rem;
+    font-size: var(--text-base);
+    line-height: 1.25rem;
+  }
+
+  .coim-chip-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-inline: 0.375rem;
+    white-space: nowrap;
+  }
+
+  .coim-chip-small .coim-chip-label {
+    padding-inline: 0.25rem;
+  }
+
+  .coim-chip.coim-chip-multiline {
+    height: auto;
+    white-space: normal;
+  }
+
+  .coim-chip.coim-chip-multiline .coim-chip-label {
+    display: block;
+    white-space: normal;
+  }
+
+  .coim-chip-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .coim-chip-medium .coim-chip-avatar .coim-avatar {
+    margin-inline-start: -0.125rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    font-size: var(--text-xs);
+  }
+
+  .coim-chip-small .coim-chip-avatar .coim-avatar {
+    margin-inline-start: 0;
+    width: 1rem;
+    height: 1rem;
+    font-size: var(--text-xs);
+  }
+
+  .coim-chip-icon {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    color: currentColor;
+  }
+
+  .coim-chip-delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 1.125rem;
+    height: 1.125rem;
+    padding: 0;
+    margin-inline-start: -0.125rem;
+    margin-inline-end: 0;
+    border: 0;
+    border-radius: 9999px;
+    cursor: pointer;
+    background-color: hsl(var(--text-disabled));
+    color: hsl(var(--background-paper));
+    transition: background-color 150ms, color 150ms;
+  }
+
+  .coim-chip-small .coim-chip-delete {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .coim-chip-delete:hover {
+    background-color: hsl(var(--text-disabled-dark));
+  }
+
+  /* Filled default / grey */
+  .coim-chip-filled {
+    background-color: hsl(var(--grey-25));
+    color: hsl(var(--text-primary));
+  }
+
+  .coim-chip-filled.coim-chip-clickable:hover {
+    background-color: hsl(var(--grey-50));
+  }
+
+  .coim-chip-filled.coim-chip-color-grey .coim-chip-delete {
+    background-color: hsl(var(--text-secondary));
+    color: hsl(var(--grey-25));
+  }
+
+  .coim-chip-filled.coim-chip-color-grey .coim-chip-delete:hover {
+    background-color: hsl(var(--text-secondary-light));
+    color: hsl(var(--grey-50));
+  }
+
+  /* Outlined default / grey */
+  .coim-chip-outlined {
+    background-color: transparent;
+    color: hsl(var(--text-primary));
+    outline: 1px solid hsl(var(--grey-200));
+    outline-offset: -1px;
+  }
+
+  .coim-chip-outlined.coim-chip-clickable:hover {
+    background-color: hsl(var(--grey-200) / 0.1);
+  }
+
+  .coim-chip-outlined.coim-chip-color-grey .coim-chip-delete {
+    background-color: hsl(var(--text-secondary));
+    color: hsl(var(--background-paper));
+  }
+
+  .coim-chip-outlined.coim-chip-color-grey .coim-chip-delete:hover {
+    background-color: hsl(var(--text-secondary-dark));
+  }
+
+  /* Pastel default / grey */
+  .coim-chip-pastel {
+    background-color: hsl(var(--grey-500) / 0.12);
+    color: hsl(var(--text-primary));
+  }
+
+  .coim-chip-pastel.coim-chip-clickable:hover {
+    background-color: hsl(var(--grey-500) / 0.2);
+  }
+
+  /* Token-based colors via CSS custom properties */
+  .coim-chip-color-primary {
+    --coim-chip-color: var(--primary);
+    --coim-chip-color-light: var(--primary-light);
+    --coim-chip-color-dark: var(--primary-dark);
+  }
+  .coim-chip-color-secondary {
+    --coim-chip-color: var(--secondary);
+    --coim-chip-color-light: var(--secondary-light);
+    --coim-chip-color-dark: var(--secondary-dark);
+  }
+  .coim-chip-color-accent-1 {
+    --coim-chip-color: var(--accent-1);
+    --coim-chip-color-light: var(--accent-1-light);
+    --coim-chip-color-dark: var(--accent-1-dark);
+  }
+  .coim-chip-color-accent-2 {
+    --coim-chip-color: var(--accent-2);
+    --coim-chip-color-light: var(--accent-2-light);
+    --coim-chip-color-dark: var(--accent-2-dark);
+  }
+  .coim-chip-color-accent-3 {
+    --coim-chip-color: var(--accent-3);
+    --coim-chip-color-light: var(--accent-3-light);
+    --coim-chip-color-dark: var(--accent-3-dark);
+  }
+  .coim-chip-color-accent-4 {
+    --coim-chip-color: var(--accent-4);
+    --coim-chip-color-light: var(--accent-4-light);
+    --coim-chip-color-dark: var(--accent-4-dark);
+  }
+  .coim-chip-color-accent-5 {
+    --coim-chip-color: var(--accent-5);
+    --coim-chip-color-light: var(--accent-5-light);
+    --coim-chip-color-dark: var(--accent-5-dark);
+  }
+  .coim-chip-color-accent-6 {
+    --coim-chip-color: var(--accent-6);
+    --coim-chip-color-light: var(--accent-6-light);
+    --coim-chip-color-dark: var(--accent-6-dark);
+  }
+  .coim-chip-color-info {
+    --coim-chip-color: var(--info);
+    --coim-chip-color-light: var(--info-light);
+    --coim-chip-color-dark: var(--info-dark);
+  }
+  .coim-chip-color-success {
+    --coim-chip-color: var(--success);
+    --coim-chip-color-light: var(--success-light);
+    --coim-chip-color-dark: var(--success-dark);
+  }
+  .coim-chip-color-warning {
+    --coim-chip-color: var(--warning);
+    --coim-chip-color-light: var(--warning-light);
+    --coim-chip-color-dark: var(--warning-dark);
+  }
+  .coim-chip-color-error {
+    --coim-chip-color: var(--error);
+    --coim-chip-color-light: var(--error-light);
+    --coim-chip-color-dark: var(--error-dark);
+  }
+  .coim-chip-color-text-primary {
+    --coim-chip-color: var(--text-primary);
+    --coim-chip-color-light: var(--text-primary-light);
+    --coim-chip-color-dark: var(--text-primary-dark);
+  }
+  .coim-chip-color-text-secondary {
+    --coim-chip-color: var(--text-secondary);
+    --coim-chip-color-light: var(--text-secondary-light);
+    --coim-chip-color-dark: var(--text-secondary-dark);
+  }
+  .coim-chip-color-text-disabled {
+    --coim-chip-color: var(--text-disabled);
+    --coim-chip-color-light: var(--text-disabled-light);
+    --coim-chip-color-dark: var(--text-disabled-dark);
+  }
+
+  .coim-chip-filled:not(.coim-chip-color-grey) {
+    background-color: hsl(var(--coim-chip-color));
+    color: hsl(var(--text-contrast));
+  }
+
+  .coim-chip-filled:not(.coim-chip-color-grey).coim-chip-clickable:hover {
+    background-color: hsl(var(--coim-chip-color-light));
+  }
+
+  .coim-chip-filled:not(.coim-chip-color-grey) .coim-chip-delete {
+    background-color: hsl(var(--text-contrast));
+    color: hsl(var(--coim-chip-color));
+  }
+
+  .coim-chip-filled:not(.coim-chip-color-grey) .coim-chip-delete:hover {
+    color: hsl(var(--coim-chip-color-light));
+  }
+
+  .coim-chip-outlined:not(.coim-chip-color-grey) {
+    outline-color: hsl(var(--coim-chip-color));
+    color: hsl(var(--coim-chip-color));
+  }
+
+  .coim-chip-outlined:not(.coim-chip-color-grey).coim-chip-clickable:hover {
+    background-color: hsl(var(--coim-chip-color-light) / 0.1);
+  }
+
+  .coim-chip-outlined:not(.coim-chip-color-grey) .coim-chip-delete {
+    background-color: hsl(var(--coim-chip-color));
+    color: hsl(var(--text-contrast));
+  }
+
+  .coim-chip-outlined:not(.coim-chip-color-grey) .coim-chip-delete:hover {
+    background-color: hsl(var(--coim-chip-color-dark));
+  }
+
+  .coim-chip-pastel:not(.coim-chip-color-grey) {
+    background-color: hsl(var(--coim-chip-color-light) / 0.14);
+    color: hsl(var(--coim-chip-color-dark));
+  }
+
+  .dark .coim-chip-pastel:not(.coim-chip-color-grey) {
+    color: hsl(var(--coim-chip-color-light));
+  }
+
+  .coim-chip-pastel:not(.coim-chip-color-grey).coim-chip-clickable:hover {
+    background-color: hsl(var(--coim-chip-color-light) / 0.22);
+  }
+
+  .coim-chip-pastel:not(.coim-chip-color-grey) .coim-chip-delete {
+    background-color: hsl(var(--coim-chip-color));
+    color: hsl(var(--text-contrast));
+  }
+
+  .coim-chip.is-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}

@@ -1,0 +1,120 @@
+/* --------------------------- */
+/* Toggle Button               */
+/* --------------------------- */
+
+@layer components {
+  .coim-toggle-group {
+    @apply inline-flex gap-1!;
+
+    &.coim-toggle-group-vertical {
+      @apply flex-col gap-1!;
+    }
+  }
+
+  .coim-toggle-btn {
+    @apply font-body text-text-primary m-0! inline-flex cursor-pointer items-center justify-center border-none font-medium tracking-normal normal-case shadow-none transition-all select-none;
+
+    &:hover:not(:disabled):not([data-disabled]) {
+      @apply bg-grey-50 text-text-primary-dark;
+    }
+
+    &[data-disabled],
+    &:disabled {
+      @apply pointer-events-none opacity-disabled;
+    }
+
+    /* Sizes */
+    &.coim-toggle-btn-size-tiny {
+      @apply rounded-sm px-1.5 py-1.5 text-base leading-4;
+    }
+    &.coim-toggle-btn-size-small {
+      @apply rounded-sm px-2 py-2 text-base leading-4;
+    }
+    &.coim-toggle-btn-size-medium {
+      @apply rounded-md px-2 py-2 text-base leading-5;
+    }
+    &.coim-toggle-btn-size-large {
+      @apply rounded-lg px-2 py-2 text-base leading-6;
+    }
+
+    &.coim-toggle-btn-outlined {
+      @apply border! border-solid! border-transparent!;
+
+      &.coim-toggle-btn-size-tiny {
+        @apply px-[calc(0.375rem-1px)] py-[calc(0.375rem-1px)];
+      }
+      &.coim-toggle-btn-size-small,
+      &.coim-toggle-btn-size-medium,
+      &.coim-toggle-btn-size-large {
+        @apply px-[calc(0.5rem-1px)] py-[calc(0.5rem-1px)];
+      }
+    }
+
+    /* Selected Surface (solid active pill) */
+    &.coim-toggle-btn-surface[data-state="on"],
+    &.coim-toggle-btn-surface[aria-pressed="true"] {
+      @apply text-text-contrast;
+
+      &.coim-toggle-btn-color-primary { @apply bg-primary; }
+      &.coim-toggle-btn-color-secondary { @apply bg-secondary; }
+      &.coim-toggle-btn-color-accent-1 { @apply bg-accent-1; }
+      &.coim-toggle-btn-color-accent-2 { @apply bg-accent-2; }
+      &.coim-toggle-btn-color-accent-3 { @apply bg-accent-3; }
+      &.coim-toggle-btn-color-accent-4 { @apply bg-accent-4; }
+      &.coim-toggle-btn-color-accent-5 { @apply bg-accent-5; }
+      &.coim-toggle-btn-color-accent-6 { @apply bg-accent-6; }
+      &.coim-toggle-btn-color-success { @apply bg-success; }
+      &.coim-toggle-btn-color-warning { @apply bg-warning; }
+      &.coim-toggle-btn-color-info { @apply bg-info; }
+      &.coim-toggle-btn-color-error { @apply bg-error; }
+      &.coim-toggle-btn-color-text-primary { @apply bg-text-primary text-text-contrast-alternative; }
+      &.coim-toggle-btn-color-text-secondary { @apply bg-text-secondary text-text-contrast-alternative; }
+      &.coim-toggle-btn-color-text-disabled { @apply bg-text-disabled text-text-contrast-alternative; }
+      &.coim-toggle-btn-color-grey { @apply bg-grey-100 text-text-primary; }
+    }
+
+    /* Selected Outlined */
+    &.coim-toggle-btn-outlined[data-state="on"],
+    &.coim-toggle-btn-outlined[aria-pressed="true"] {
+      @apply bg-transparent;
+
+      &.coim-toggle-btn-color-primary { @apply border-primary! text-primary; }
+      &.coim-toggle-btn-color-secondary { @apply border-secondary! text-secondary; }
+      &.coim-toggle-btn-color-accent-1 { @apply border-accent-1! text-accent-1; }
+      &.coim-toggle-btn-color-accent-2 { @apply border-accent-2! text-accent-2; }
+      &.coim-toggle-btn-color-accent-3 { @apply border-accent-3! text-accent-3; }
+      &.coim-toggle-btn-color-accent-4 { @apply border-accent-4! text-accent-4; }
+      &.coim-toggle-btn-color-accent-5 { @apply border-accent-5! text-accent-5; }
+      &.coim-toggle-btn-color-accent-6 { @apply border-accent-6! text-accent-6; }
+      &.coim-toggle-btn-color-success { @apply border-success! text-success; }
+      &.coim-toggle-btn-color-warning { @apply border-warning! text-warning; }
+      &.coim-toggle-btn-color-info { @apply border-info! text-info; }
+      &.coim-toggle-btn-color-error { @apply border-error! text-error; }
+      &.coim-toggle-btn-color-text-primary { @apply border-text-primary! text-text-primary; }
+      &.coim-toggle-btn-color-text-secondary { @apply border-text-secondary! text-text-secondary; }
+      &.coim-toggle-btn-color-text-disabled { @apply border-text-disabled! text-text-disabled; }
+      &.coim-toggle-btn-color-grey { @apply border-grey-300! text-text-primary; }
+    }
+
+    /* Selected Pastel */
+    &.coim-toggle-btn-pastel[data-state="on"],
+    &.coim-toggle-btn-pastel[aria-pressed="true"] {
+      &.coim-toggle-btn-color-primary { @apply bg-primary-light/15 text-primary-dark; }
+      &.coim-toggle-btn-color-secondary { @apply bg-secondary-light/15 text-secondary-dark; }
+      &.coim-toggle-btn-color-accent-1 { @apply bg-accent-1-light/15 text-accent-1-dark; }
+      &.coim-toggle-btn-color-accent-2 { @apply bg-accent-2-light/15 text-accent-2-dark; }
+      &.coim-toggle-btn-color-accent-3 { @apply bg-accent-3-light/15 text-accent-3-dark; }
+      &.coim-toggle-btn-color-accent-4 { @apply bg-accent-4-light/15 text-accent-4-dark; }
+      &.coim-toggle-btn-color-accent-5 { @apply bg-accent-5-light/15 text-accent-5-dark; }
+      &.coim-toggle-btn-color-accent-6 { @apply bg-accent-6-light/15 text-accent-6-dark; }
+      &.coim-toggle-btn-color-success { @apply bg-success-light/15 text-success-dark; }
+      &.coim-toggle-btn-color-warning { @apply bg-warning-light/15 text-warning-dark; }
+      &.coim-toggle-btn-color-info { @apply bg-info-light/15 text-info-dark; }
+      &.coim-toggle-btn-color-error { @apply bg-error-light/15 text-error-dark; }
+      &.coim-toggle-btn-color-text-primary { @apply bg-grey-500/15 text-text-primary; }
+      &.coim-toggle-btn-color-text-secondary { @apply bg-grey-500/15 text-text-secondary; }
+      &.coim-toggle-btn-color-text-disabled { @apply bg-grey-500/15 text-text-disabled; }
+      &.coim-toggle-btn-color-grey { @apply bg-grey-50 text-text-primary; }
+    }
+  }
+}

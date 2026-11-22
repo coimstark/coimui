@@ -1,0 +1,74 @@
+/* --------------------------- */
+/* Bottom Navigation           */
+/* --------------------------- */
+
+@layer components {
+  .coim-bottom-navigation {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    height: 3.5rem;
+    background-color: hsl(var(--background-paper));
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--coim-shadow-xs);
+  }
+
+  .flat .coim-bottom-navigation {
+    box-shadow: none;
+    border: 1px solid hsl(var(--grey-100));
+  }
+
+  .coim-bottom-navigation-action {
+    display: inline-flex;
+    flex: 1 1 0%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 5rem;
+    max-width: 10.5rem;
+    padding: 0.375rem 0.75rem;
+    border: 0;
+    background: transparent;
+    color: hsl(var(--text-secondary));
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 150ms, background-color 150ms, padding 150ms;
+  }
+
+  .coim-bottom-navigation-action:hover {
+    color: hsl(var(--text-primary));
+  }
+
+  .coim-bottom-navigation-action.is-selected {
+    color: hsl(var(--primary));
+  }
+
+  .coim-bottom-navigation-action.is-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .coim-bottom-navigation-action-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.25rem;
+  }
+
+  .coim-bottom-navigation-action-label {
+    font-family: var(--coim-font-body);
+    font-size: var(--text-base);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+  }
+
+  .coim-bottom-navigation-action-label.is-hidden {
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+    font-size: 0;
+  }
+}

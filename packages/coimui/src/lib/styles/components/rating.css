@@ -1,0 +1,67 @@
+/* --------------------------- */
+/* Rating                      */
+/* --------------------------- */
+
+@layer components {
+  .coim-rating {
+    @apply inline-flex items-center gap-0.5 select-none;
+
+    &.coim-disabled,
+    &[data-disabled] {
+      @apply pointer-events-none opacity-disabled;
+    }
+
+    &.coim-readonly,
+    &[data-readonly] {
+      @apply cursor-default;
+    }
+
+    &:not(.coim-disabled):not(.coim-readonly) .coim-rating-item {
+      @apply cursor-pointer;
+    }
+  }
+
+  .coim-rating-size-small .coim-rating-icon {
+    @apply h-4 w-4;
+  }
+
+  .coim-rating-size-medium .coim-rating-icon {
+    @apply h-5 w-5;
+  }
+
+  .coim-rating-size-large .coim-rating-icon {
+    @apply h-6 w-6;
+  }
+
+  .coim-rating-item {
+    @apply relative inline-flex items-center justify-center;
+  }
+
+  .coim-rating-icon {
+    @apply relative inline-flex items-center justify-center;
+  }
+
+  .coim-rating-icon-filled svg,
+  .coim-rating-icon-filled svg.contained,
+  .coim-rating-icon-filled svg.outlined {
+    @apply text-rating;
+  }
+
+  .coim-rating-icon-empty svg,
+  .coim-rating-icon-empty svg.outlined {
+    @apply text-grey-200!;
+  }
+
+  .coim-rating-icon-empty svg.contained {
+    @apply text-grey-50!;
+  }
+
+  .coim-rating-half-overlay {
+    @apply pointer-events-none absolute inset-0 overflow-hidden;
+    clip-path: inset(0 50% 0 0);
+  }
+
+  html[dir="rtl"] .coim-rating-half-overlay {
+    clip-path: inset(0 0 0 50%);
+  }
+}

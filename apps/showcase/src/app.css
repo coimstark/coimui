@@ -1,0 +1,5 @@
+@import "@coimui/svelte/styles";
+@import "@coimui/svelte/styles/data-grid.css";
+@import "@coimui/svelte/styles/charts.css";
+@import "@coimui/svelte/styles/date-pickers.css";
+@import "@coimui/svelte/styles/plugins.css";

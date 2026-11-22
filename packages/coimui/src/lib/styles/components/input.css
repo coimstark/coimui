@@ -1,0 +1,479 @@
+/* --------------------------- */
+/* Input & Form Controls       */
+/* --------------------------- */
+
+@layer components {
+  .coim-form-control {
+    @apply relative m-0 mb-4 flex flex-col;
+
+    &.coim-form-control-full-width {
+      @apply w-full;
+    }
+
+    &.coim-form-control-full-height {
+      @apply flex-1;
+
+      .coim-input-root {
+        @apply flex-1 items-start;
+      }
+    }
+  }
+
+  .coim-form-group {
+    @apply m-0 mb-4 flex flex-col border-0 p-0;
+
+    &.coim-form-group-row {
+      @apply flex-row flex-wrap;
+    }
+
+    .coim-form-control:last-of-type,
+    > .coim-form-group,
+    .coim-form-control > .coim-form-control {
+      @apply mb-0;
+    }
+  }
+
+  /* Standard label */
+  .coim-form-label:not(.coim-input-label-animated) {
+    @apply font-body text-text-primary mb-2 block text-base font-semibold;
+
+    &.coim-disabled {
+      @apply opacity-disabled text-text-primary;
+    }
+
+    &.coim-error {
+      @apply text-text-primary;
+    }
+  }
+
+  /* Base Input Root (standard default) */
+  .coim-input-root {
+    @apply bg-grey-25 font-body text-text-primary relative flex h-auto min-h-0 items-center rounded-lg px-4 py-2 text-base leading-5 outline-2 -outline-offset-1 outline-transparent transition-all;
+
+    &.coim-focused:not(.coim-disabled):not(.coim-readonly) {
+      @apply outline-primary/40 border-transparent outline-2 -outline-offset-1;
+    }
+
+    &:hover:not(.coim-disabled):not(.coim-readonly) {
+      @apply bg-grey-50;
+    }
+
+    &.coim-focused:hover:not(.coim-disabled):not(.coim-readonly) {
+      @apply bg-grey-25 border-transparent;
+    }
+
+    .coim-input-field {
+      @apply font-body text-text-primary placeholder:opacity-disabled h-auto min-h-0 w-full min-w-0 flex-1 border-0 bg-transparent px-0 py-0.5 text-base leading-5 outline-hidden;
+    }
+
+    &.coim-input-size-small {
+      @apply rounded-md px-4 py-1.5;
+    }
+
+    &.coim-error:not(:hover):not(.coim-focused) {
+      @apply bg-error-light/10!;
+    }
+  }
+
+  /* Surface standard input */
+  .coim-input-root.coim-input-surface-standard {
+    @apply bg-background-paper outline-line shadow-xs outline -outline-offset-1;
+
+    &.coim-focused:not(.coim-disabled):not(.coim-readonly) {
+      @apply outline-primary/40 border-transparent outline-2 -outline-offset-1;
+    }
+
+    &:hover:not(.coim-disabled):not(.coim-readonly) {
+      @apply bg-background-paper text-primary;
+    }
+
+    &.coim-focused:hover:not(.coim-disabled):not(.coim-readonly) {
+      @apply bg-background-paper border-transparent;
+    }
+  }
+
+  .flat .coim-input-root.coim-input-surface-standard {
+    @apply shadow-none!;
+  }
+
+  /* Standard outlined (border-grey-200) */
+  .coim-input-root.coim-input-standard-outlined {
+    @apply border-grey-200 border border-solid bg-transparent px-3.75 py-[calc(0.5rem-1px)]! outline-2 -outline-offset-1 outline-transparent;
+
+    &.coim-focused:not(.coim-disabled):not(.coim-readonly) {
+      @apply outline-primary/40 border-transparent outline-2 -outline-offset-1;
+    }
+
+    &:hover:not(.coim-disabled):not(.coim-readonly) {
+      @apply border-grey-500 bg-transparent;
+    }
+
+    &.coim-focused:hover:not(.coim-disabled):not(.coim-readonly) {
+      @apply border-transparent bg-transparent;
+    }
+
+    &.coim-input-size-small {
+      @apply px-3.75! py-1.25!;
+    }
+
+    &.coim-error:not(:hover):not(.coim-focused) {
+      @apply border-error! bg-transparent!;
+    }
+  }
+
+  /* Outlined Input with Notched Outline & Floating Label */
+  .coim-input-wrapper {
+    @apply relative flex flex-col;
+  }
+
+  .coim-input-root.coim-input-outlined {
+    @apply border-none bg-transparent p-0 outline-hidden!;
+
+    &:hover:not(.coim-disabled):not(.coim-readonly) {
+      @apply bg-transparent;
+
+      .coim-input-notched-outline {
+        @apply border-grey-500;
+      }
+    }
+
+    &.coim-focused:not(.coim-disabled):not(.coim-readonly) {
+      @apply outline-none!;
+
+      .coim-input-notched-outline {
+        @apply border-primary/40 border-2;
+      }
+    }
+
+    .coim-input-field {
+      @apply rounded-lg px-4 py-3;
+    }
+
+    &.coim-input-size-small .coim-input-field {
+      @apply rounded-md px-4 py-2;
+    }
+
+    &.coim-input-size-small .coim-input-notched-outline {
+      @apply rounded-md;
+    }
+
+    &.coim-disabled .coim-input-notched-outline {
+      @apply border-grey-200;
+    }
+
+    &.coim-error:not(:hover):not(.coim-focused) {
+      @apply bg-transparent!;
+
+      .coim-input-notched-outline {
+        @apply border-error!;
+      }
+    }
+  }
+
+  .coim-input-notched-outline {
+    @apply border-grey-200 pointer-events-none absolute inset-0 m-0 min-w-0 rounded-lg border border-solid px-2.5 text-start transition-colors;
+
+    legend {
+      @apply font-body invisible block h-[11px] w-auto max-w-[0.01px] overflow-hidden p-0 text-sm whitespace-nowrap transition-[max-width];
+    }
+
+    &.coim-notched-shrunk legend {
+      @apply max-w-full px-1.5;
+    }
+  }
+
+  /* Floating Outline Label */
+  .coim-input-label-outlined {
+    @apply font-body text-text-secondary pointer-events-none absolute inset-s-0 top-0 z-10 origin-top-left text-base leading-5 transition-all;
+    transform: translate(1rem, 0.75rem) scale(1);
+
+    &.coim-input-label-shrink {
+      transform: translate(1rem, calc(-0.5rem - 2px)) scale(0.85);
+    }
+
+    &.coim-input-label-size-small {
+      transform: translate(1rem, 0.5rem) scale(1);
+
+      &.coim-input-label-shrink {
+        transform: translate(1rem, calc(-0.5rem - 2px)) scale(0.85);
+      }
+    }
+
+    &.coim-focused {
+      @apply text-primary;
+    }
+
+    &.coim-error {
+      @apply text-error;
+    }
+  }
+
+  /* Filled Input & Floating Label */
+  .coim-input-root.coim-input-filled {
+    @apply bg-grey-25 h-auto min-h-0 rounded-lg p-0 outline-2 -outline-offset-1 outline-transparent transition-all;
+
+    &.coim-focused:not(.coim-disabled):not(.coim-readonly) {
+      @apply bg-grey-25 outline-primary/40 border-transparent outline-2 -outline-offset-1;
+    }
+
+    &:hover:not(.coim-disabled):not(.coim-readonly) {
+      @apply bg-grey-50;
+    }
+
+    &.coim-focused:hover:not(.coim-disabled):not(.coim-readonly) {
+      @apply bg-grey-25! border-transparent;
+    }
+
+    .coim-input-field {
+      @apply rounded-lg px-4 pt-5.5 pb-2;
+    }
+
+    &.coim-input-size-small .coim-input-field {
+      @apply rounded-md pt-4.5 pb-1;
+    }
+
+    &.coim-disabled {
+      @apply bg-grey-25;
+    }
+
+    &.coim-error:not(:hover):not(.coim-focused) {
+      @apply bg-error-light/10!;
+    }
+  }
+
+  .coim-form-control.surface .coim-input-root.coim-input-filled,
+  .coim-input-root.coim-input-filled.surface {
+    @apply bg-background-paper shadow-xs;
+
+    &.coim-focused {
+      @apply bg-background-paper!;
+    }
+
+    &:hover:not(.coim-disabled) {
+      @apply bg-background-paper! outline-primary/40 border-transparent outline-2 -outline-offset-1;
+    }
+
+    &.coim-focused:hover {
+      @apply bg-background-paper!;
+    }
+
+    &.coim-disabled:hover {
+      @apply outline-transparent!;
+    }
+  }
+
+  .flat .coim-form-control.surface .coim-input-root.coim-input-filled,
+  .flat .coim-input-root.coim-input-filled.surface {
+    @apply shadow-none!;
+  }
+
+  .coim-input-label-filled {
+    @apply font-body text-text-secondary pointer-events-none absolute inset-s-0 top-0 z-10 origin-top-left text-base leading-5 transition-all;
+    transform: translate(1rem, 0.875rem) scale(1);
+
+    &.coim-input-label-shrink {
+      transform: translate(1rem, 0.25rem) scale(0.85);
+    }
+
+    &.coim-input-label-size-small {
+      transform: translate(1rem, 0.675rem) scale(1);
+
+      &.coim-input-label-shrink {
+        transform: translate(1rem, 0.125rem) scale(0.85);
+      }
+    }
+
+    &.coim-focused {
+      @apply text-primary;
+    }
+
+    &.coim-error {
+      @apply text-error;
+    }
+  }
+
+  /* Disabled */
+  .coim-input-root.coim-disabled,
+  .coim-form-control-label.coim-disabled .coim-form-control-label-text {
+    @apply opacity-disabled text-text-primary;
+  }
+
+  /* Form helper text */
+  .coim-form-helper-text {
+    @apply font-body text-text-secondary mt-1 text-sm leading-4 font-normal tracking-normal;
+
+    &.coim-error {
+      @apply text-error;
+    }
+
+    &.coim-disabled {
+      @apply opacity-disabled;
+    }
+  }
+
+  .coim-input-wrapper + .coim-form-helper-text,
+  .coim-input-root + .coim-form-helper-text {
+    @apply ms-4 me-4;
+  }
+
+  /* Adornments */
+  .coim-input-adornment {
+    @apply text-text-secondary flex shrink-0 items-center;
+
+    &.coim-input-adornment-start {
+      @apply ms-0 me-2;
+    }
+
+    &.coim-input-adornment-end {
+      @apply ms-2 me-0;
+    }
+
+    .coim-btn-base:hover svg,
+    .coim-icon-btn:hover svg {
+      @apply text-primary;
+    }
+  }
+
+  .coim-input-root.coim-input-adorned-start.coim-input-outlined,
+  .coim-input-root.coim-input-adorned-start.coim-input-filled {
+    @apply ps-4!;
+
+    .coim-input-field {
+      @apply ps-2!;
+    }
+  }
+
+  .coim-input-root.coim-input-adorned-end.coim-input-outlined,
+  .coim-input-root.coim-input-adorned-end.coim-input-filled {
+    @apply pe-4!;
+
+    .coim-input-field {
+      @apply pe-2!;
+    }
+  }
+
+  .coim-input-root.coim-input-adorned-start.coim-input-standard .coim-input-field,
+  .coim-input-root.coim-input-adorned-start.coim-input-standard-outlined .coim-input-field,
+  .coim-input-root.coim-input-adorned-start.coim-input-surface-standard .coim-input-field {
+    @apply ps-2!;
+  }
+
+  .coim-input-root.coim-input-adorned-end.coim-input-standard .coim-input-field,
+  .coim-input-root.coim-input-adorned-end.coim-input-standard-outlined .coim-input-field,
+  .coim-input-root.coim-input-adorned-end.coim-input-surface-standard .coim-input-field {
+    @apply pe-2!;
+  }
+
+  /* Number field */
+  .coim-number-field .coim-input-root.coim-input-standard,
+  .coim-number-field .coim-input-root.coim-input-standard-outlined {
+    @apply py-0!;
+  }
+
+  /* Textarea */
+  .coim-input-root textarea.coim-input-field {
+    @apply placeholder:opacity-disabled placeholder:text-text-primary font-body resize-none leading-5;
+  }
+
+  /* FormControlLabel */
+  .coim-form-control-label {
+    @apply inline-flex cursor-pointer items-center select-none;
+
+    &.coim-disabled {
+      @apply cursor-default;
+    }
+
+    &.coim-label-placement-end {
+      @apply flex-row;
+    }
+
+    &.coim-label-placement-start {
+      @apply flex-row-reverse;
+    }
+
+    &.coim-label-placement-top {
+      @apply flex-col-reverse items-center;
+    }
+
+    &.coim-label-placement-bottom {
+      @apply flex-col items-center;
+    }
+
+    .coim-form-control-label-text {
+      @apply font-body text-text-primary cursor-pointer text-base leading-5;
+    }
+
+    &.coim-disabled .coim-form-control-label-text {
+      @apply cursor-default;
+    }
+  }
+
+  /* OTP input */
+  .coim-otp-group {
+    @apply flex items-center gap-1 md:gap-2;
+
+    .coim-otp-cell {
+      @apply w-11 shrink-0 text-center;
+
+      .coim-input-field {
+        @apply text-center font-semibold;
+      }
+    }
+  }
+
+  /* Dropzone */
+  .coim-dropzone {
+    @apply bg-grey-25 hover:bg-grey-50 flex min-h-22.5 cursor-pointer flex-row flex-wrap gap-2.5 rounded-md p-4 transition-all;
+
+    &.coim-dropzone-outlined {
+      @apply border-grey-200 hover:border-grey-500 border border-solid bg-transparent hover:bg-transparent;
+    }
+
+    &.coim-dropzone-drag-active {
+      @apply border-primary bg-primary-light/10 outline-primary/40 outline-2 -outline-offset-1;
+    }
+
+    &.coim-dropzone-error {
+      @apply border-error bg-error-light/10;
+    }
+
+    &.coim-disabled {
+      @apply pointer-events-none opacity-disabled;
+    }
+  }
+
+  /* RTL Floating Labels */
+  html[dir="rtl"] .coim-input-label-filled {
+    transform: translate(-1rem, 0.875rem) scale(1);
+    transform-origin: top right;
+
+    &.coim-input-label-shrink {
+      transform: translate(-1rem, 0.25rem) scale(0.85);
+    }
+
+    &.coim-input-label-size-small {
+      transform: translate(-1rem, 0.675rem) scale(1);
+
+      &.coim-input-label-shrink {
+        transform: translate(-1rem, 0.125rem) scale(0.85);
+      }
+    }
+  }
+
+  html[dir="rtl"] .coim-input-label-outlined {
+    transform: translate(-1rem, 0.75rem) scale(1);
+    transform-origin: top right;
+
+    &.coim-input-label-shrink {
+      transform: translate(-1rem, calc(-0.5rem - 2px)) scale(0.85);
+    }
+
+    &.coim-input-label-size-small {
+      transform: translate(-1rem, 0.5rem) scale(1);
+
+      &.coim-input-label-shrink {
+        transform: translate(-1rem, calc(-0.5rem - 2px)) scale(0.85);
+      }
+    }
+  }
+}

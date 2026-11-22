@@ -1,0 +1,100 @@
+/* --------------------------- */
+/* Dialog                      */
+/* --------------------------- */
+
+@layer components {
+  .coim-dialog {
+    margin: auto;
+    border: 0;
+    padding: 0;
+    background-color: hsl(var(--background-paper));
+    color: hsl(var(--text-primary));
+    border-radius: var(--border-radius-3xl);
+    box-shadow: var(--coim-shadow-darker-md);
+    overscroll-behavior: contain;
+    max-width: calc(100vw - 2rem);
+    max-height: calc(100dvh - 4rem);
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .coim-dialog[open] {
+    display: flex;
+  }
+
+  .coim-dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
+    overscroll-behavior: contain;
+  }
+
+  .flat .coim-dialog {
+    box-shadow: none;
+    border: 1px solid hsl(var(--grey-100));
+  }
+
+  .coim-dialog-fullscreen {
+    width: calc(100% - 2rem);
+    height: calc(100% - 2rem);
+    max-width: none;
+    max-height: none;
+  }
+
+  .coim-dialog-scroll-body {
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
+  }
+
+  .coim-dialog-scroll-body .coim-dialog-content {
+    overflow-y: visible;
+  }
+
+  .coim-dialog-title,
+  .coim-dialog-content,
+  .coim-dialog-actions {
+    padding: 1.75rem;
+  }
+
+  .coim-dialog-title {
+    margin: 0;
+    padding-bottom: 1rem;
+    font-family: var(--coim-font-heading);
+    color: hsl(var(--text-primary));
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .coim-dialog-content {
+    padding-top: 0;
+    padding-bottom: 0;
+    flex: 1 1 auto;
+    overflow-y: auto;
+  }
+
+  .coim-dialog-content-dividers {
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-top: 1px solid hsl(var(--grey-100));
+    border-bottom: 1px solid hsl(var(--grey-100));
+  }
+
+  .coim-dialog-content-text {
+    margin: 0;
+    font-family: var(--coim-font-body);
+    color: hsl(var(--text-primary));
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .coim-dialog-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding-top: 1rem;
+    flex-shrink: 0;
+  }
+}

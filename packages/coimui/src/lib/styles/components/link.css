@@ -1,0 +1,110 @@
+/* --------------------------- */
+/* Link                        */
+/* --------------------------- */
+
+@layer components {
+  .coim-link {
+    font-family: var(--coim-font-body);
+    cursor: pointer;
+    text-underline-offset: 2px;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    transition: color 300ms, text-decoration-color 300ms;
+  }
+
+  .coim-link-underline-always {
+    text-decoration: underline;
+    text-decoration-color: currentColor;
+  }
+
+  .coim-link-underline-always:hover {
+    text-decoration-color: transparent;
+  }
+
+  .coim-link-underline-hover {
+    text-decoration: underline;
+    text-decoration-color: transparent;
+  }
+
+  .coim-link-underline-hover:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .coim-link-underline-none {
+    text-decoration: none;
+    text-decoration-color: transparent;
+  }
+
+  .coim-link-variant-body1 {
+    font-size: var(--text-base);
+    line-height: 1.5rem;
+    font-weight: 400;
+  }
+
+  .coim-link-variant-body2 {
+    font-size: var(--text-sm);
+    line-height: 1.5rem;
+    font-weight: 500;
+  }
+
+  .coim-link-variant-button {
+    font-size: var(--text-base);
+    line-height: 1.5rem;
+    font-weight: 500;
+  }
+
+  .coim-link-color-primary {
+    color: hsl(var(--primary));
+  }
+  .coim-link-color-secondary {
+    color: hsl(var(--secondary));
+  }
+  .coim-link-color-accent-1 {
+    color: hsl(var(--accent-1));
+  }
+  .coim-link-color-accent-2 {
+    color: hsl(var(--accent-2));
+  }
+  .coim-link-color-accent-3 {
+    color: hsl(var(--accent-3));
+  }
+  .coim-link-color-accent-4 {
+    color: hsl(var(--accent-4));
+  }
+  .coim-link-color-accent-5 {
+    color: hsl(var(--accent-5));
+  }
+  .coim-link-color-accent-6 {
+    color: hsl(var(--accent-6));
+  }
+  .coim-link-color-text-primary {
+    color: hsl(var(--text-primary));
+  }
+  .coim-link-color-text-secondary {
+    color: hsl(var(--text-secondary));
+  }
+  .coim-link-color-text-disabled {
+    color: hsl(var(--text-disabled));
+  }
+  .coim-link-color-info {
+    color: hsl(var(--info));
+  }
+  .coim-link-color-success {
+    color: hsl(var(--success));
+  }
+  .coim-link-color-warning {
+    color: hsl(var(--warning));
+  }
+  .coim-link-color-error {
+    color: hsl(var(--error));
+  }
+  .coim-link-color-grey {
+    color: hsl(var(--grey-600));
+  }
+
+  .coim-link.is-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}

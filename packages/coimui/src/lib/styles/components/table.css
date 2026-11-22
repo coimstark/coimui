@@ -1,0 +1,198 @@
+/* --------------------------- */
+/* Table                       */
+/* --------------------------- */
+
+@layer components {
+  .coim-table-container {
+    width: 100%;
+    overflow: auto;
+    max-inline-size: 100%;
+    container-type: inline-size;
+  }
+
+  .coim-table-container:focus-visible {
+    outline: 2px solid hsl(var(--primary) / 0.5);
+    outline-offset: 2px;
+  }
+
+  .coim-table {
+    display: table;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .coim-table-cell {
+    display: table-cell;
+    vertical-align: middle;
+    font-family: var(--coim-font-body);
+    font-size: var(--text-base);
+    line-height: 1.5rem;
+    letter-spacing: normal;
+    text-transform: none;
+    text-align: start;
+    color: hsl(var(--text-primary));
+    border-bottom: 1px solid hsl(var(--grey-50));
+    padding: 0.75rem;
+  }
+
+  .coim-table-cell-head,
+  .coim-table-sort-button {
+    font-weight: 700;
+  }
+
+  .coim-table-cell-align-right {
+    text-align: end;
+  }
+
+  .coim-table-cell-align-center {
+    text-align: center;
+  }
+
+  .coim-table-cell-align-left {
+    text-align: start;
+  }
+
+  .coim-table-size-small .coim-table-cell,
+  .coim-table-cell-small {
+    padding: 0.4375rem;
+  }
+
+  .coim-table-cell-padding-none {
+    padding: 0;
+  }
+
+  .coim-table-cell-padding-checkbox {
+    width: 3rem;
+    padding-block: 0;
+    padding-inline: 0.25rem 0;
+  }
+
+  .coim-table-head .coim-table-row:first-of-type .coim-table-cell-head {
+    padding-block-start: 0;
+  }
+
+  .coim-table-sticky-header .coim-table-head {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 2;
+  }
+
+  .coim-table-sticky-header .coim-table-head .coim-table-cell {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 2;
+    background-color: hsl(var(--background-paper));
+  }
+
+  .coim-table-footer .coim-table-cell {
+    border-bottom-color: transparent;
+  }
+
+  .coim-table-body .coim-table-row:last-child td,
+  .coim-table-body .coim-table-row:last-child th {
+    border-bottom-color: transparent;
+  }
+
+  .coim-table-row.is-hover:hover {
+    background-color: hsl(var(--grey-25));
+  }
+
+  .coim-table-row.is-selected {
+    background-color: hsl(var(--primary) / 0.08);
+  }
+
+  .coim-table-no-left-padding .coim-table-row .coim-table-cell:first-child {
+    padding-inline-start: 0;
+  }
+
+  .coim-table-no-right-padding .coim-table-row .coim-table-cell:last-child {
+    padding-inline-end: 0;
+  }
+
+  /* Sortable header button fills cell and keeps padding aligned */
+  th.coim-table-cell:has(> .coim-table-sort-button) {
+    padding: 0;
+  }
+
+  .coim-table-sort-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    width: 100%;
+    min-height: 24px;
+    padding: 0.75rem;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-weight: 700;
+    text-align: inherit;
+    cursor: pointer;
+  }
+
+  .coim-table-size-small .coim-table-sort-button {
+    padding: 0.4375rem;
+  }
+
+  .coim-table-cell-align-right .coim-table-sort-button {
+    justify-content: flex-end;
+  }
+
+  .coim-table-cell-align-center .coim-table-sort-button {
+    justify-content: center;
+  }
+
+  .coim-table-sort-icon {
+    display: inline-flex;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 150ms, transform 150ms;
+  }
+
+  .coim-table-sort-button:hover .coim-table-sort-icon,
+  th[aria-sort] .coim-table-sort-icon,
+  .coim-table-sort-button.is-active .coim-table-sort-icon {
+    opacity: 1;
+  }
+
+  th[aria-sort="descending"] .coim-table-sort-icon,
+  .coim-table-sort-button[data-direction="desc"] .coim-table-sort-icon {
+    transform: rotate(180deg);
+  }
+
+  .coim-table-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding-block: 0.5rem;
+    font-family: var(--coim-font-body);
+    font-size: var(--text-base);
+    line-height: 1.25rem;
+    color: hsl(var(--text-primary));
+  }
+
+  .coim-table-pagination-centered {
+    justify-content: space-between;
+  }
+
+  .coim-table-pagination-select {
+    font-family: var(--coim-font-body);
+    font-size: var(--text-base);
+    color: hsl(var(--text-primary));
+    background-color: hsl(var(--background-paper));
+    border: 1px solid hsl(var(--grey-200));
+    border-radius: var(--border-radius-xs);
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+  }
+
+  .coim-table-pagination-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-inline-start: 0.75rem;
+  }
+}

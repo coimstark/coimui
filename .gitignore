@@ -1,0 +1,14 @@
+node_modules
+.svelte-kit
+dist
+build
+.DS_Store
+*.log
+*.tgz
+coverage
+playwright-report
+test-results
+tests/visual-parity/.artifacts
+.env
+.env.*
+!.env.example

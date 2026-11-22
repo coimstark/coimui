@@ -1,0 +1,48 @@
+/* --------------------------- */
+/* Tooltip                     */
+/* --------------------------- */
+
+@layer components {
+  .coim-tooltip-content {
+    z-index: 100;
+    margin: 0;
+    max-width: 18.75rem;
+    border: 1px solid hsl(var(--grey-200));
+    background-color: hsl(var(--background-paper));
+    color: hsl(var(--text-primary));
+    font-family: var(--coim-font-body);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    line-height: 1.25rem;
+    border-radius: var(--border-radius-sm);
+    padding: 0.375rem 0.75rem;
+    box-shadow: var(--coim-shadow-darker-sm);
+  }
+
+  .flat .coim-tooltip-content {
+    box-shadow: none;
+  }
+
+  .coim-tooltip-content.coim-tooltip-large {
+    border-radius: var(--border-radius-sm);
+    padding: calc(0.5rem - 1px) 1.1875rem;
+    font-size: var(--text-base);
+    line-height: 1rem;
+  }
+
+  .coim-tooltip-arrow {
+    color: hsl(var(--background-paper));
+    fill: currentColor;
+    filter: drop-shadow(0 0 0.5px hsl(var(--grey-200)));
+  }
+
+  .coim-tooltip-content[data-side="top"],
+  .coim-tooltip-content[data-side="bottom"] {
+    margin-block: 0.25rem;
+  }
+
+  .coim-tooltip-content[data-side="left"],
+  .coim-tooltip-content[data-side="right"] {
+    margin-inline: 0.25rem;
+  }
+}

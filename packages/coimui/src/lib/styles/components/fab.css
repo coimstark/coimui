@@ -1,0 +1,141 @@
+/* --------------------------- */
+/* Fab                         */
+/* --------------------------- */
+
+@layer components {
+  .coim-fab {
+    @apply shadow-darker-sm font-body inline-flex h-auto min-h-0 w-auto min-w-0 cursor-pointer items-center justify-center font-medium no-underline transition-all select-none;
+
+    &:focus {
+      @apply shadow-darker-sm!;
+    }
+
+    &.coim-fab-disabled,
+    &:disabled,
+    &[aria-disabled="true"] {
+      @apply pointer-events-none opacity-disabled;
+    }
+  }
+
+  /* Sizes */
+  .coim-fab-size-xlarge {
+    &.coim-fab-extended {
+      @apply rounded-xl px-8 py-3 text-base leading-6;
+    }
+    &.coim-fab-circular {
+      @apply rounded-xl px-3 py-3 text-base leading-6;
+    }
+  }
+
+  .coim-fab-size-large {
+    &.coim-fab-extended {
+      @apply rounded-lg px-6 py-2 text-base leading-6;
+    }
+    &.coim-fab-circular {
+      @apply rounded-lg px-2 py-2 text-base leading-6;
+    }
+  }
+
+  .coim-fab-size-medium {
+    &.coim-fab-extended {
+      @apply rounded-md px-5 py-2 text-base leading-5;
+    }
+    &.coim-fab-circular {
+      @apply rounded-md px-2 py-2 text-base leading-5;
+    }
+  }
+
+  .coim-fab-size-small {
+    &.coim-fab-extended {
+      @apply rounded-sm px-4 py-2 text-base leading-4;
+    }
+    &.coim-fab-circular {
+      @apply rounded-sm px-2 py-2 text-base leading-4;
+    }
+  }
+
+  /* Colors */
+  .coim-fab-color-primary {
+    @apply bg-primary text-text-contrast;
+    &:hover { @apply bg-primary-light; }
+    &:active { @apply bg-primary-dark; }
+  }
+  .coim-fab-color-secondary {
+    @apply bg-secondary text-text-contrast;
+    &:hover { @apply bg-secondary-light; }
+    &:active { @apply bg-secondary-dark; }
+  }
+  .coim-fab-color-accent-1 {
+    @apply bg-accent-1 text-text-contrast;
+    &:hover { @apply bg-accent-1-light; }
+    &:active { @apply bg-accent-1-dark; }
+  }
+  .coim-fab-color-accent-2 {
+    @apply bg-accent-2 text-text-contrast;
+    &:hover { @apply bg-accent-2-light; }
+    &:active { @apply bg-accent-2-dark; }
+  }
+  .coim-fab-color-accent-3 {
+    @apply bg-accent-3 text-text-contrast;
+    &:hover { @apply bg-accent-3-light; }
+    &:active { @apply bg-accent-3-dark; }
+  }
+  .coim-fab-color-accent-4 {
+    @apply bg-accent-4 text-text-contrast;
+    &:hover { @apply bg-accent-4-light; }
+    &:active { @apply bg-accent-4-dark; }
+  }
+  .coim-fab-color-accent-5 {
+    @apply bg-accent-5 text-text-contrast;
+    &:hover { @apply bg-accent-5-light; }
+    &:active { @apply bg-accent-5-dark; }
+  }
+  .coim-fab-color-accent-6 {
+    @apply bg-accent-6 text-text-contrast;
+    &:hover { @apply bg-accent-6-light; }
+    &:active { @apply bg-accent-6-dark; }
+  }
+  .coim-fab-color-text-primary {
+    @apply bg-text-primary text-text-contrast-alternative;
+    &:hover { @apply bg-text-primary-light; }
+    &:active { @apply bg-text-primary-dark; }
+  }
+  .coim-fab-color-text-secondary {
+    @apply bg-text-secondary text-text-contrast-alternative;
+    &:hover { @apply bg-text-secondary-light; }
+    &:active { @apply bg-text-secondary-dark; }
+  }
+  .coim-fab-color-text-disabled {
+    @apply bg-text-disabled text-text-contrast-alternative;
+    &:hover { @apply bg-text-disabled-light; }
+    &:active { @apply bg-text-disabled-dark; }
+  }
+  .coim-fab-color-success {
+    @apply bg-success text-text-contrast;
+    &:hover { @apply bg-success-light; }
+    &:active { @apply bg-success-dark; }
+  }
+  .coim-fab-color-error {
+    @apply bg-error text-text-contrast;
+    &:hover { @apply bg-error-light; }
+    &:active { @apply bg-error-dark; }
+  }
+  .coim-fab-color-warning {
+    @apply bg-warning text-text-contrast;
+    &:hover { @apply bg-warning-light; }
+    &:active { @apply bg-warning-dark; }
+  }
+  .coim-fab-color-info {
+    @apply bg-info text-text-contrast;
+    &:hover { @apply bg-info-light; }
+    &:active { @apply bg-info-dark; }
+  }
+  .coim-fab-color-grey {
+    @apply bg-background-paper text-text-primary;
+    &:hover { @apply text-primary bg-grey-25; }
+  }
+
+  .flat .coim-fab {
+    @apply shadow-none;
+  }
+}

@@ -1,0 +1,62 @@
+/* --------------------------- */
+/* Snackbar                    */
+/* --------------------------- */
+
+@layer components {
+  .coim-snackbar-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 18rem;
+    max-width: 28rem;
+    padding: 0.625rem 1rem;
+    border: 1px solid hsl(var(--grey-100));
+    background-color: hsl(var(--background-paper));
+    color: hsl(var(--text-primary));
+    font-family: var(--coim-font-body);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--coim-shadow-darker-sm);
+  }
+
+  .coim-snackbar-message {
+    flex: 1 1 auto;
+    min-width: 0;
+    color: hsl(var(--text-primary));
+    font-family: var(--coim-font-body);
+    font-size: 0.875rem;
+  }
+
+  .coim-snackbar-icon {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    margin-inline-end: 0.25rem;
+  }
+
+  .coim-snackbar-success .coim-snackbar-icon {
+    color: hsl(var(--success));
+  }
+
+  .coim-snackbar-info .coim-snackbar-icon {
+    color: hsl(var(--info));
+  }
+
+  .coim-snackbar-warning .coim-snackbar-icon {
+    color: hsl(var(--warning));
+  }
+
+  .coim-snackbar-error .coim-snackbar-icon {
+    color: hsl(var(--error));
+  }
+
+  .coim-snackbar-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-shrink: 0;
+    margin-inline-start: auto;
+    padding-inline-start: 1rem;
+  }
+}

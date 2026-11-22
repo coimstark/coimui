@@ -1,0 +1,64 @@
+/* --------------------------- */
+/* Paper & Surface             */
+/* --------------------------- */
+
+@layer components {
+  .coim-paper {
+    background-color: hsl(var(--background-paper));
+    color: hsl(var(--text-primary));
+    box-shadow: none;
+    transition: box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .coim-paper-rounded {
+    border-radius: var(--border-radius-3xl);
+  }
+
+  .coim-paper-square {
+    border-radius: 0;
+  }
+
+  .coim-paper-elevation-0 {
+    box-shadow: none;
+  }
+
+  .coim-paper-elevation-1 {
+    box-shadow: var(--coim-shadow-2xs);
+  }
+
+  .coim-paper-elevation-2 {
+    box-shadow: var(--coim-shadow-xs);
+  }
+
+  .coim-paper-elevation-3 {
+    box-shadow: var(--coim-shadow-sm);
+  }
+
+  .coim-paper-elevation-4 {
+    box-shadow: var(--coim-shadow-md);
+  }
+
+  .coim-paper-elevation-5 {
+    box-shadow: var(--coim-shadow-lg);
+  }
+
+  .coim-paper-elevation-6 {
+    box-shadow: var(--coim-shadow-2xl);
+  }
+
+  .coim-paper-outlined,
+  .coim-paper.outlined {
+    border: 1px solid hsl(var(--grey-50));
+    box-shadow: none;
+  }
+
+  .coim-surface,
+  .coim-paper.surface {
+    background-color: hsl(var(--background-paper));
+  }
+
+  .flat .coim-paper,
+  .flat .coim-surface {
+    box-shadow: none;
+  }
+}

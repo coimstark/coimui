@@ -1,0 +1,79 @@
+/* --------------------------- */
+/* Base & Accessibility Rules  */
+/* --------------------------- */
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+
+  html {
+    box-sizing: border-box;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: inherit;
+    letter-spacing: 0em;
+  }
+
+  body {
+    @apply bg-background text-text-primary m-0 p-0 font-sans text-base;
+  }
+
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  :where(a:any-link, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 2px solid hsl(var(--primary) / 0.75);
+    outline-offset: 2px;
+  }
+
+  *::selection {
+    background-color: hsl(var(--primary) / 0.5);
+  }
+
+  /* Native top-layer modal scroll containment */
+  dialog:modal {
+    overscroll-behavior: contain;
+  }
+
+  dialog::backdrop {
+    overflow: hidden;
+    overscroll-behavior: contain;
+  }
+
+  /* Visually hidden helper for screen-reader labels & skip links */
+  .coim-visually-hidden:where(:not(:focus-within, :active)) {
+    position: absolute !important;
+    clip-path: inset(50%) !important;
+    overflow: hidden !important;
+    width: 1px !important;
+    height: 1px !important;
+    margin: -1px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    white-space: nowrap !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --layout-duration: 0ms !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

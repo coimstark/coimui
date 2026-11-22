@@ -1,0 +1,163 @@
+/* --------------------------- */
+/* Switch                      */
+/* --------------------------- */
+
+@layer components {
+  .coim-switch {
+    @apply border-grey-50 bg-grey-50 relative inline-flex shrink-0 cursor-pointer items-center rounded-lg border border-solid transition-colors select-none;
+
+    .coim-switch-thumb {
+      @apply bg-background-paper pointer-events-none block rounded-full shadow-none transition-transform;
+    }
+
+    &.coim-switch-size-medium {
+      @apply h-5.5 w-8 p-[3px];
+
+      .coim-switch-thumb {
+        @apply h-3.5 w-3.5 translate-x-0;
+      }
+
+      &[data-state="checked"] .coim-switch-thumb {
+        @apply translate-x-2.5 rtl:-translate-x-2.5;
+      }
+    }
+
+    &.coim-switch-size-small {
+      @apply h-4.5 w-6.5 p-[2px];
+
+      .coim-switch-thumb {
+        @apply h-3 w-3 translate-x-0;
+      }
+
+      &[data-state="checked"] .coim-switch-thumb {
+        @apply translate-x-2 rtl:-translate-x-2;
+      }
+    }
+
+    &:not(.coim-disabled):not([data-state="checked"]):hover,
+    .coim-form-control-label:not(.coim-disabled):hover &:not([data-state="checked"]) {
+      @apply border-grey-100 bg-grey-100;
+    }
+
+    &.coim-switch-outlined {
+      @apply border-grey-200 bg-transparent;
+
+      .coim-switch-thumb {
+        @apply bg-grey-50;
+      }
+
+      &:not(.coim-disabled):not([data-state="checked"]):hover,
+      .coim-form-control-label:not(.coim-disabled):hover &:not([data-state="checked"]) {
+        @apply border-grey-500 bg-transparent;
+      }
+
+      &[data-state="checked"] .coim-switch-thumb {
+        @apply bg-background-paper;
+      }
+    }
+
+    &[data-state="checked"] {
+      &.coim-switch-color-primary {
+        @apply border-primary bg-primary;
+        &:not(.coim-disabled):hover,
+        .coim-form-control-label:not(.coim-disabled):hover & { @apply border-primary-light bg-primary-light; }
+      }
+      &.coim-switch-color-secondary {
+        @apply border-secondary bg-secondary;
+        &:not(.coim-disabled):hover,
+        .coim-form-control-label:not(.coim-disabled):hover & { @apply border-secondary-light bg-secondary-light; }
+      }
+      &.coim-switch-color-accent-1 {
+        @apply border-accent-1 bg-accent-1;
+        &:not(.coim-disabled):hover,
+        .coim-form-control-label:not(.coim-disabled):hover & { @apply border-accent-1-light bg-accent-1-light; }
+      }
+      &.coim-switch-color-accent-2 {
+        @apply border-accent-2 bg-accent-2;
+        &:not(.coim-disabled):hover,
+        .coim-form-control-label:not(.coim-disabled):hover & { @apply border-accent-2-light bg-accent-2-light; }
+      }
+      &.coim-switch-color-accent-3 {
+        @apply border-accent-3 bg-accent-3;
+        &:not(.coim-disabled):hover,
+        .coim-form-control-label:not(.coim-disabled):hover & { @apply border-accent-3-light bg-accent-3-light; }
+      }
+      &.coim-switch-color-accent-4 {
+        @apply border-accent-4 bg-accent-4;
+        &:not(.coim-disabled):hover,
+        .coim-form-control-label:not(.coim-disabled):hover & { @apply border-accent-4-light bg-accent-4-light; }
+      }
+      &.coim-switch-color-accent-5 {
+        @apply border-accent-5 bg-accent-5;
+        &:not(.coim-disabled):hover,
+        .coim-form-control-label:not(.coim-disabled):hover & { @apply border-accent-5-light bg-accent-5-light; }
+      }
+      &.coim-switch-color-accent-6 {
+        @apply border-accent-6 bg-accent-6;
+        &:not(.coim-disabled):hover,
+        .coim-form-control-label:not(.coim-disabled):hover & { @apply border-accent-6-light bg-accent-6-light; }
+      }
+      &.coim-switch-color-warning {
+        @apply border-warning bg-warning;
+        &:not(.coim-disabled):hover,
+        .coim-form-control-label:not(.coim-disabled):hover & { @apply border-warning-light bg-warning-light; }
+      }
+      &.coim-switch-color-error {
+        @apply border-error bg-error;
+        &:not(.coim-disabled):hover,
+        .coim-form-control-label:not(.coim-disabled):hover & { @apply border-error-light bg-error-light; }
+      }
+      &.coim-switch-color-info {
+        @apply border-info bg-info;
+        &:not(.coim-disabled):hover,
+        .coim-form-control-label:not(.coim-disabled):hover & { @apply border-info-light bg-info-light; }
+      }
+      &.coim-switch-color-success {
+        @apply border-success bg-success;
+        &:not(.coim-disabled):hover,
+        .coim-form-control-label:not(.coim-disabled):hover & { @apply border-success-light bg-success-light; }
+      }
+      &.coim-switch-color-text-primary {
+        @apply border-text-primary bg-text-primary;
+        &:not(.coim-disabled):hover,
+        .coim-form-control-label:not(.coim-disabled):hover & { @apply border-text-primary-light bg-text-primary-light; }
+      }
+      &.coim-switch-color-text-secondary {
+        @apply border-text-secondary bg-text-secondary;
+        &:not(.coim-disabled):hover,
+        .coim-form-control-label:not(.coim-disabled):hover & { @apply border-text-secondary-light bg-text-secondary-light; }
+      }
+      &.coim-switch-color-text-disabled {
+        @apply border-text-disabled bg-text-disabled;
+        &:not(.coim-disabled):hover,
+        .coim-form-control-label:not(.coim-disabled):hover & { @apply border-text-disabled-light bg-text-disabled-light; }
+      }
+      &.coim-switch-color-grey {
+        @apply border-grey-500 bg-grey-500;
+        &:not(.coim-disabled):hover,
+        .coim-form-control-label:not(.coim-disabled):hover & { @apply border-grey-400 bg-grey-400; }
+      }
+    }
+
+    &.coim-disabled,
+    &[data-disabled] {
+      @apply pointer-events-none cursor-default opacity-disabled;
+    }
+  }
+
+  .coim-label-placement-end .coim-switch {
+    @apply me-2.5;
+  }
+
+  .coim-label-placement-start .coim-switch {
+    @apply ms-2.5;
+  }
+
+  .coim-label-placement-top .coim-switch {
+    @apply mt-1.5;
+  }
+
+  .coim-label-placement-bottom .coim-switch {
+    @apply mb-1.5;
+  }
+}

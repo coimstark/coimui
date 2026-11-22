@@ -1,0 +1,69 @@
+/* --------------------------- */
+/* Autocomplete                */
+/* --------------------------- */
+
+@layer components {
+  .coim-autocomplete-root {
+    @apply relative flex w-full flex-col;
+
+    .coim-autocomplete-chip {
+      @apply bg-grey-25 text-text-primary font-body -ms-0.5 me-1.5 mt-0.5 mb-0.5 inline-flex h-auto items-center gap-1 rounded-sm px-2 py-0.5 text-sm leading-4 font-medium;
+    }
+
+    .coim-autocomplete-chip-delete {
+      @apply bg-text-disabled text-background-paper hover:bg-text-disabled-dark inline-flex h-4 w-4 cursor-pointer items-center justify-center rounded-full border-0 p-0 transition-all;
+    }
+
+    .coim-autocomplete-input-wrap {
+      @apply flex flex-1 flex-wrap items-center gap-y-1;
+    }
+
+    .coim-autocomplete-input {
+      @apply font-body text-text-primary placeholder:opacity-disabled min-w-16 flex-1 border-0 bg-transparent px-0 py-1 text-base leading-5 outline-hidden;
+    }
+
+    &.coim-autocomplete-size-small .coim-autocomplete-input {
+      @apply py-0.5;
+    }
+  }
+
+  .coim-autocomplete-clear,
+  .coim-autocomplete-popup {
+    @apply text-text-secondary hover:text-primary inline-flex cursor-pointer items-center justify-center border-0 bg-transparent p-0.5 transition-colors;
+  }
+
+  .coim-autocomplete-paper {
+    @apply bg-background-paper shadow-darker-sm! outline-grey-50 font-body z-100 mt-1 mb-1 max-h-72 overflow-y-auto rounded-lg px-2 py-2 text-base leading-5 outline-1;
+
+    &.outlined {
+      @apply outline-primary/40 outline-2 -outline-offset-1;
+    }
+
+    &:empty {
+      @apply m-0! border-none! p-0! outline-hidden!;
+    }
+  }
+
+  .coim-autocomplete-option {
+    @apply font-body text-text-primary my-0.5 flex cursor-pointer items-center gap-2 rounded-sm px-4 py-2 text-base leading-5 font-medium tracking-normal normal-case shadow-none transition-colors outline-none select-none;
+
+    &:hover,
+    &[data-highlighted] {
+      @apply bg-grey-500/10 text-text-primary;
+    }
+
+    &[data-selected],
+    &[aria-selected="true"] {
+      @apply bg-grey-500/10! text-primary;
+    }
+
+    &[data-disabled] {
+      @apply pointer-events-none opacity-disabled;
+    }
+  }
+
+  .coim-autocomplete-no-options,
+  .coim-autocomplete-loading {
+    @apply font-body text-text-secondary px-4 py-2 text-base leading-5;
+  }
+}

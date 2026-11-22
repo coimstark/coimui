@@ -1,0 +1,150 @@
+/* --------------------------- */
+/* CoimUI Plugins              */
+/* --------------------------- */
+
+@layer components {
+  .coim-rich-editor {
+    border: 1px solid hsl(var(--grey-200));
+    border-radius: var(--border-radius-md);
+    background-color: hsl(var(--background-paper));
+    color: hsl(var(--text-primary));
+    overflow: hidden;
+    font-family: var(--coim-font-body);
+  }
+
+  .coim-rich-editor .ql-toolbar.ql-snow {
+    border: 0;
+    border-bottom: 1px solid hsl(var(--grey-100));
+    background-color: hsl(var(--grey-25));
+  }
+
+  .coim-rich-editor .ql-container.ql-snow {
+    border: 0;
+    font-family: var(--coim-font-body);
+    font-size: var(--text-base);
+    min-height: 10rem;
+  }
+
+  .coim-markdown {
+    font-family: var(--coim-font-body);
+    color: hsl(var(--text-primary));
+    line-height: 1.65;
+  }
+
+  .coim-markdown h1,
+  .coim-markdown h2,
+  .coim-markdown h3,
+  .coim-markdown h4 {
+    font-family: var(--coim-font-heading);
+    font-weight: 700;
+    margin-top: 1.25em;
+    margin-bottom: 0.5em;
+  }
+
+  .coim-markdown p {
+    margin-bottom: 0.875em;
+  }
+
+  .coim-markdown a {
+    color: hsl(var(--primary));
+    text-decoration: underline;
+  }
+
+  .coim-markdown pre,
+  .coim-markdown code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    border-radius: var(--border-radius-xs);
+  }
+
+  .coim-code-block {
+    border: 1px solid hsl(var(--grey-100));
+    border-radius: var(--border-radius-md);
+    background-color: hsl(var(--grey-25));
+    overflow: hidden;
+    font-family: var(--coim-font-body);
+  }
+
+  .coim-code-block-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid hsl(var(--grey-100));
+    background-color: hsl(var(--background-paper));
+    font-size: var(--text-xs);
+    color: hsl(var(--text-secondary));
+  }
+
+  .coim-code-block-pre {
+    margin: 0;
+    padding: 0.875rem 1rem;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+  }
+
+  .coim-carousel {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius-lg);
+  }
+
+  .coim-carousel-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 9999px;
+    border: 1px solid hsl(var(--grey-100));
+    background-color: hsl(var(--background-paper) / 0.9);
+    color: hsl(var(--text-primary));
+    box-shadow: var(--coim-shadow-xs);
+    cursor: pointer;
+  }
+
+  .coim-lightbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .coim-sortable-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .coim-sortable-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.625rem 0.875rem;
+    border-radius: var(--border-radius-md);
+    border: 1px solid hsl(var(--grey-100));
+    background-color: hsl(var(--background-paper));
+    box-shadow: var(--coim-shadow-2xs);
+  }
+
+  .coim-video-player-wrap {
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    background-color: hsl(var(--grey-900));
+  }
+
+  .coim-event-calendar {
+    border: 1px solid hsl(var(--grey-100));
+    border-radius: var(--border-radius-lg);
+    background-color: hsl(var(--background-paper));
+    padding: 0.75rem;
+  }
+}

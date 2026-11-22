@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en" class="theme-purple light elevated">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="color-scheme" content="light dark" />
+		<link rel="icon" href="%sveltekit.assets%/favicon.ico" />
+		<title>CoimUI — Svelte 5 Admin & Component System</title>
+		<script>
+			(function(){try{var d=document.documentElement,c=d.classList;function rd(k,f){var v=localStorage.getItem(k);if(!v)return f;if(v[0]==='"')v=JSON.parse(v);return v||f;}var t=rd("coimui-showcase-theme-color","theme-purple");var m=rd("coimui-showcase-theme-mode","system");var e=rd("coimui-showcase-elevation","elevated");var sys=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';var fm=m==='system'?sys:m;c.remove('theme-purple','theme-blue','theme-green','theme-orange','light','dark','elevated','flat');c.add(t,fm,e);d.style.colorScheme=fm;}catch(_){}})();
+		</script>
+		%sveltekit.head%
+	</head>
+	<body class="antialiased" data-sveltekit-preload-data="hover">
+		<div style="display: contents">%sveltekit.body%</div>
+	</body>
+</html>

@@ -1,0 +1,38 @@
+/* --------------------------- */
+/* Scrollbar */
+/* --------------------------- */
+
+@layer base {
+  :root {
+    --coim-scrollbar-thumb: hsla(var(--grey-300));
+    --coim-scrollbar-thumb-hover: hsla(var(--grey-400));
+    --coim-scrollbar-track: transparent;
+    scrollbar-color: var(--coim-scrollbar-thumb) var(--coim-scrollbar-track);
+  }
+
+  @supports not (scrollbar-color: auto) {
+    *::-webkit-scrollbar {
+      width: 0.375rem;
+      height: 0.375rem;
+      border-radius: 0.375rem;
+      background-color: inherit;
+    }
+
+    *::-webkit-scrollbar-thumb {
+      background-color: var(--coim-scrollbar-thumb);
+      border-radius: 0.375rem;
+    }
+
+    *::-webkit-scrollbar-thumb:hover {
+      background-color: var(--coim-scrollbar-thumb-hover);
+    }
+
+    *::-webkit-scrollbar-button {
+      visibility: hidden;
+    }
+
+    *::-webkit-scrollbar-corner {
+      background: rgba(0, 0, 0, 0);
+    }
+  }
+}

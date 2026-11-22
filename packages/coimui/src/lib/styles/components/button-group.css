@@ -1,0 +1,55 @@
+/* --------------------------- */
+/* Button Group                */
+/* --------------------------- */
+
+@layer components {
+  .coim-btn-group {
+    @apply inline-flex;
+
+    &.coim-btn-group-horizontal {
+      @apply flex-row;
+
+      > .coim-btn-base:not(:last-child) {
+        @apply rounded-e-none border-e border-r-0;
+      }
+
+      > .coim-btn-base:not(:first-child) {
+        @apply rounded-s-none;
+      }
+    }
+
+    &.coim-btn-group-vertical {
+      @apply flex-col;
+
+      > .coim-btn-base:not(:last-child) {
+        @apply rounded-b-none;
+      }
+
+      > .coim-btn-base:not(:first-child) {
+        @apply rounded-t-none;
+      }
+
+      &.coim-btn-group-contained > .coim-btn-base:not(:last-child),
+      &.coim-btn-group-text > .coim-btn-base:not(:last-child) {
+        @apply border-text-contrast/25! border-b;
+      }
+    }
+
+    &.coim-btn-group-horizontal.coim-btn-group-contained > .coim-btn-base:not(:last-child),
+    &.coim-btn-group-horizontal.coim-btn-group-text > .coim-btn-base:not(:last-child) {
+      @apply border-text-contrast/25! border-e;
+    }
+
+    &.coim-btn-group-full-width {
+      @apply w-full;
+
+      > .coim-btn-base {
+        @apply flex-1;
+      }
+    }
+
+    > .coim-btn-base {
+      @apply ring-0;
+    }
+  }
+}

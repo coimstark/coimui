@@ -1,0 +1,218 @@
+/* --------------------------- */
+/* CoimUI Design Tokens        */
+/* --------------------------- */
+
+@layer base {
+  :root {
+    --coim-font-body: "Mulish", ui-sans-serif, system-ui, sans-serif;
+    --coim-font-heading: "Urbanist", ui-sans-serif, system-ui, sans-serif;
+
+    /* --------- Globals --------- */
+    --main-padding: 12px;
+
+    /* --------- Background Colors --------- */
+    --background: 0 0% 98%;
+    --background-paper: 0 0% 100%;
+
+    /* --------- Grey Scales --------- */
+    --grey-20: 0 0% 98%;
+    --grey-25: 0 0% 97%;
+    --grey-50: 0 0% 95%;
+    --grey-100: 0 0% 91%;
+    --grey-200: 0 0% 87%;
+    --grey-300: 0 0% 83%;
+    --grey-400: 0 0% 79%;
+    --grey-500: 0 0% 75%;
+    --grey-600: 0 0% 71%;
+    --grey-700: 0 0% 67%;
+    --grey-800: 0 0% 63%;
+    --grey-900: 0 0% 59%;
+
+    /* --------- Text Colors --------- */
+    --text-primary: 0 0% 30%;
+    --text-primary-light: 0 0% 40%;
+    --text-primary-dark: 0 0% 20%;
+
+    --text-secondary: 0 0% 42%;
+    --text-secondary-light: 0 0% 52%;
+    --text-secondary-dark: 0 0% 32%;
+
+    --text-disabled: 0 0% 80%;
+    --text-disabled-light: 0 0% 90%;
+    --text-disabled-dark: 0 0% 70%;
+
+    --text-muted: 0 0% 80%;
+    --text-muted-light: 0 0% 90%;
+    --text-muted-dark: 0 0% 70%;
+
+    --text-contrast: 0 0% 100%;
+    --text-contrast-alternative: 0 0% 100%;
+
+    /* --------- Feedback Colors --------- */
+    --error: 347 68% 46%;
+    --error-light: 347 68% 56%;
+    --error-dark: 347 68% 36%;
+
+    --info: 193 84% 31%;
+    --info-light: 193 76% 48%;
+    --info-dark: 193 84% 25%;
+
+    --success: 115 60% 30%;
+    --success-light: 115 50% 46%;
+    --success-dark: 115 60% 24%;
+
+    --warning: 25 88% 37%;
+    --warning-light: 25 84% 52%;
+    --warning-dark: 25 88% 31%;
+
+    --rating: 35 99% 54%;
+    --rating-light: 35 99% 64%;
+    --rating-dark: 35 99% 44%;
+
+    /* --------- Shadows --------- */
+    --coim-shadow-line-left: -1px 0 0 0 hsla(var(--grey-50));
+    --coim-shadow-line-right: 1px 0 0 0 hsla(var(--grey-50));
+
+    --coim-shadow-2xs: 0px 3px 2px rgba(0, 0, 0, 0.05);
+    --coim-shadow-xs: 0px 3px 4px rgba(0, 0, 0, 0.05);
+    --coim-shadow-sm: 0px 3px 6px rgba(0, 0, 0, 0.05);
+    --coim-shadow-md: 0px 3px 8px rgba(0, 0, 0, 0.05);
+    --coim-shadow-lg: 0px 3px 10px rgba(0, 0, 0, 0.05);
+    --coim-shadow-xl: 0px 3px 12px rgba(0, 0, 0, 0.05);
+    --coim-shadow-2xl: 0px 3px 14px rgba(0, 0, 0, 0.05);
+
+    --coim-shadow-darker-2xs: 0px 3px 2px rgba(0, 0, 0, 0.07);
+    --coim-shadow-darker-xs: 0px 3px 4px rgba(0, 0, 0, 0.07);
+    --coim-shadow-darker-sm: 0px 3px 6px rgba(0, 0, 0, 0.07);
+    --coim-shadow-darker-md: 0px 3px 8px rgba(0, 0, 0, 0.07);
+    --coim-shadow-darker-lg: 0px 3px 10px rgba(0, 0, 0, 0.07);
+    --coim-shadow-darker-xl: 0px 3px 12px rgba(0, 0, 0, 0.07);
+    --coim-shadow-darker-2xl: 0px 3px 14px rgba(0, 0, 0, 0.07);
+
+    /* --------- Light Line --------- */
+    --line: hsl(0, 0%, 100%, 0.85);
+
+    /* --------- Border Radius --------- */
+    --border-radius-4xs: 0.5rem;
+    --border-radius-3xs: 0.65rem;
+    --border-radius-2xs: 0.75rem;
+    --border-radius-xs: 0.785rem;
+    --border-radius-sm: 0.875rem;
+    --border-radius-md: 1rem;
+    --border-radius-lg: 1.125rem;
+    --border-radius-xl: 1.375rem;
+    --border-radius-2xl: 1.5rem;
+    --border-radius-3xl: 1.75rem;
+    --border-radius-4xl: 2rem;
+
+    --layout-duration: 0ms;
+
+    /* --------- Background --------- */
+    --bg-waves: url("/images/misc/bg-light.jpg");
+
+    color-scheme: light;
+  }
+
+  .dark {
+    /* --------- Background Colors --------- */
+    --background: 226 4% 12%;
+    --background-paper: 226 4% 14%;
+
+    /* --------- Grey Scales --------- */
+    --grey-20: 226 4% 16%;
+    --grey-25: 226 4% 17%;
+    --grey-50: 226 4% 19%;
+    --grey-100: 226 4% 22%;
+    --grey-200: 226 4% 26%;
+    --grey-300: 226 4% 30%;
+    --grey-400: 226 4% 34%;
+    --grey-500: 226 4% 38%;
+    --grey-600: 226 4% 42%;
+    --grey-700: 226 4% 46%;
+    --grey-800: 226 4% 50%;
+    --grey-900: 226 4% 54%;
+
+    /* --------- Text Colors --------- */
+    --text-primary: 0 0% 90%;
+    --text-primary-light: 0 0% 100%;
+    --text-primary-dark: 0 0% 80%;
+
+    --text-secondary: 0 0% 70%;
+    --text-secondary-light: 0 0% 80%;
+    --text-secondary-dark: 0 0% 60%;
+
+    --text-disabled: 0 0% 40%;
+    --text-disabled-light: 0 0% 50%;
+    --text-disabled-dark: 0 0% 30%;
+
+    --text-muted: 0 0% 40%;
+    --text-muted-light: 0 0% 50%;
+    --text-muted-dark: 0 0% 30%;
+
+    --text-contrast: 0 0% 100%;
+    --text-contrast-alternative: 0 0% 25%;
+
+    /* --------- Feedback Colors --------- */
+    --error: 347 68% 62%;
+    --error-light: 347 72% 72%;
+    --error-dark: 347 64% 48%;
+
+    --info: 193 74% 60%;
+    --info-light: 193 76% 72%;
+    --info-dark: 193 72% 48%;
+
+    --success: 115 48% 58%;
+    --success-light: 115 52% 70%;
+    --success-dark: 115 48% 46%;
+
+    --warning: 25 84% 62%;
+    --warning-light: 25 86% 74%;
+    --warning-dark: 25 82% 50%;
+
+    --rating: 35 99% 54%;
+    --rating-light: 35 99% 64%;
+    --rating-dark: 35 99% 44%;
+
+    /* --------- Shadows --------- */
+    --coim-shadow-line-left: -1px 0 0 0 hsla(var(--grey-50));
+    --coim-shadow-line-right: 1px 0 0 0 hsla(var(--grey-50));
+
+    --coim-shadow-2xs: 0px 3px 2px rgba(0, 0, 0, 0.15);
+    --coim-shadow-xs: 0px 3px 4px rgba(0, 0, 0, 0.15);
+    --coim-shadow-sm: 0px 3px 6px rgba(0, 0, 0, 0.15);
+    --coim-shadow-md: 0px 3px 8px rgba(0, 0, 0, 0.15);
+    --coim-shadow-lg: 0px 3px 10px rgba(0, 0, 0, 0.15);
+    --coim-shadow-xl: 0px 3px 12px rgba(0, 0, 0, 0.15);
+    --coim-shadow-2xl: 0px 3px 14px rgba(0, 0, 0, 0.15);
+
+    --coim-shadow-darker-2xs: 0px 3px 2px rgba(0, 0, 0, 0.25);
+    --coim-shadow-darker-xs: 0px 3px 4px rgba(0, 0, 0, 0.25);
+    --coim-shadow-darker-sm: 0px 3px 6px rgba(0, 0, 0, 0.25);
+    --coim-shadow-darker-md: 0px 3px 8px rgba(0, 0, 0, 0.25);
+    --coim-shadow-darker-lg: 0px 3px 10px rgba(0, 0, 0, 0.25);
+    --coim-shadow-darker-xl: 0px 3px 12px rgba(0, 0, 0, 0.25);
+    --coim-shadow-darker-2xl: 0px 3px 14px rgba(0, 0, 0, 0.25);
+
+    /* --------- Light Line --------- */
+    --line: hsl(0, 0%, 100%, 0.03);
+
+    /* --------- Background --------- */
+    --bg-waves: url("/images/misc/bg-dark.jpg");
+
+    color-scheme: dark;
+  }
+
+  .flat.light {
+    --background: 0 0% 97%;
+  }
+
+  .flat.dark {
+    --background: 226 4% 12%;
+  }
+}
+
+@media only screen and (max-width: 960px) {
+  :root {
+    --main-padding: 8px;
+  }
+}

@@ -1,0 +1,167 @@
+/* --------------------------- */
+/* Accordion                   */
+/* --------------------------- */
+
+@layer components {
+  .coim-accordion-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .coim-accordion {
+    margin: 0;
+    min-height: 0;
+    border-radius: 0;
+    background-color: transparent;
+    padding: 0;
+    box-shadow: none;
+  }
+
+  .coim-accordion::before {
+    display: none;
+  }
+
+  .coim-accordion-rounded {
+    border-radius: var(--border-radius-xl);
+  }
+
+  .coim-accordion-disabled,
+  .coim-accordion[data-disabled] {
+    opacity: 0.5;
+  }
+
+  .coim-accordion-header {
+    margin: 0;
+    padding: 0;
+  }
+
+  .coim-accordion-summary {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--coim-font-body);
+    margin: 0;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    background-color: transparent;
+    color: inherit;
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .coim-accordion-summary[disabled],
+  .coim-accordion-summary[aria-disabled="true"],
+  .coim-accordion-summary[data-disabled] {
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .coim-accordion-summary-content {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    margin: 0;
+    min-height: 0;
+    padding: 0;
+  }
+
+  .coim-accordion-expand-icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    margin-inline-start: auto;
+    transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .coim-accordion-details {
+    font-family: var(--coim-font-body);
+    margin: 0;
+    min-height: 0;
+    padding: 0;
+  }
+
+  .coim-accordion-details[hidden] {
+    display: none;
+  }
+
+  .coim-accordion-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  .coim-accordion-actions[hidden],
+  .coim-accordion[data-state="closed"] > .coim-accordion-actions {
+    display: none;
+  }
+
+  .coim-accordion-bordered:has(+ .coim-accordion-bordered) {
+    border-style: solid;
+    border-color: hsl(var(--grey-100));
+    border-inline-start-width: 0;
+    border-inline-end-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 1px;
+    border-radius: 0;
+  }
+
+  .coim-accordion-basic .coim-accordion-summary-content,
+  .coim-accordion-bordered .coim-accordion-summary-content {
+    padding-block: 1rem;
+  }
+
+  .coim-accordion-basic[data-state="open"] .coim-accordion-details,
+  .coim-accordion-bordered[data-state="open"] .coim-accordion-details {
+    padding-bottom: 1rem;
+  }
+
+  .coim-accordion-summary .accordion-rotate {
+    transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  [dir="rtl"] .coim-accordion-summary .accordion-rotate {
+    transform: rotate(180deg);
+  }
+
+  .coim-accordion-summary[data-state="open"] .accordion-rotate,
+  .coim-accordion-summary[aria-expanded="true"] .accordion-rotate {
+    transform: rotate(90deg);
+  }
+
+  .coim-accordion-summary[data-state="open"]
+    .coim-accordion-expand-icon:not(.accordion-rotate):not(:has(.accordion-rotate)),
+  .coim-accordion-summary[aria-expanded="true"]
+    .coim-accordion-expand-icon:not(.accordion-rotate):not(:has(.accordion-rotate)) {
+    transform: rotate(180deg);
+  }
+
+  .coim-accordion-surface,
+  .surface-accordion .accordion-container {
+    background-color: hsl(var(--background-paper));
+    box-shadow: var(--coim-shadow-sm);
+    border-radius: var(--border-radius-3xl);
+  }
+
+  .coim-accordion-surface .coim-accordion-summary {
+    padding: 1.5rem 1.75rem;
+    transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .coim-accordion-surface .coim-accordion-summary:hover:not([disabled]):not([aria-disabled="true"]) {
+    color: hsl(var(--primary));
+  }
+
+  .coim-accordion-surface .coim-accordion-details {
+    padding: 0 1.75rem 1.5rem 1.75rem;
+  }
+
+  .flat .coim-accordion-surface,
+  .flat .surface-accordion .accordion-container {
+    box-shadow: none;
+  }
+}

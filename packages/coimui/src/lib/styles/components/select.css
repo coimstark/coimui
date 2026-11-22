@@ -1,0 +1,59 @@
+/* --------------------------- */
+/* Select                      */
+/* --------------------------- */
+
+@layer components {
+  .coim-select-trigger {
+    @apply w-full cursor-pointer justify-between text-start;
+
+    &.coim-select-readonly {
+      @apply cursor-default!;
+    }
+
+    &.coim-disabled {
+      @apply pointer-events-none cursor-default;
+    }
+  }
+
+  .coim-select-icon {
+    @apply text-text-secondary ms-2 shrink-0 transition-transform;
+
+    &:hover {
+      @apply text-primary;
+    }
+  }
+
+  .coim-select-content {
+    @apply bg-background-paper shadow-darker-sm! outline-grey-50 z-100 mt-1 mb-1 max-h-72 overflow-y-auto rounded-lg px-2 py-2 outline-1;
+
+    &.outlined {
+      @apply outline-primary/40 outline-2 -outline-offset-1;
+    }
+  }
+
+  .coim-select-item {
+    @apply font-body text-text-primary my-0.5 flex min-h-auto! cursor-pointer items-center justify-between gap-2 rounded-sm px-4 py-2 text-base leading-5 font-medium tracking-normal normal-case shadow-none transition-colors outline-none select-none;
+
+    &:hover,
+    &[data-highlighted] {
+      @apply bg-grey-500/10 text-text-primary;
+    }
+
+    &[data-selected],
+    &[aria-selected="true"] {
+      @apply bg-grey-500/10! text-primary;
+    }
+
+    &[data-disabled] {
+      @apply pointer-events-none opacity-disabled;
+    }
+  }
+
+  .coim-select-group-heading {
+    @apply font-body text-text-secondary my-0.5 rounded-sm px-4 py-2 text-sm leading-5 font-semibold tracking-normal normal-case;
+  }
+
+  .coim-select-chip {
+    @apply bg-grey-25 text-text-primary font-body inline-flex h-auto items-center gap-1 rounded-sm px-2 py-0.5 text-sm leading-4 font-medium;
+  }
+}

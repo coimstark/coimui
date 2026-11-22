@@ -1,0 +1,145 @@
+<script lang="ts">
+  import {
+    CoimBreadcrumbs,
+    CoimButton,
+    CoimGrid,
+    CoimPaper,
+    CoimStack,
+    CoimTypography,
+    toast,
+  } from "@coimui/svelte";
+  import {
+    CoimCarousel,
+    CoimCodeBlock,
+    CoimEmojiPicker,
+    CoimEventCalendar,
+    CoimLightbox,
+    CoimMarkdown,
+    CoimRichTextEditor,
+    CoimSortableList,
+    CoimVideoPlayer,
+    printElement,
+    type CoimCalendarEvent,
+    type CoimSortableItem,
+  } from "@coimui/svelte/plugins";
+  import ComponentDocCard from "#lib/components/ComponentDocCard.svelte";
+  import { COMPONENT_CODE_EXAMPLES } from "#lib/examples/component-docs.ts";
+
+  let htmlNotes = $state("<p>CoimUI <strong>v1.0.0</strong> ships isolated rich-text, media, and calendar plugins.</p>");
+  let chosenEmoji = $state("🚀");
+  let printSectionEl = $state<HTMLElement | null>(null);
+
+  let backlog = $state<CoimSortableItem[]>([
+    { id: "t-1", label: "Verify external consumer minimal bundle", description: "Priority P0" },
+    { id: "t-2", label: "Execute axe-core WCAG 2.1 AA audit", description: "Priority P0" },
+    { id: "t-3", label: "Publish release tag v1.0.0", description: "Priority P1" },
+  ]);
+
+  const slides = [
+    { id: "s1", title: "Workspace Overview", subtitle: "Adaptive telemetry dashboard", imageSrc: "/images/misc/screen-1.jpg", imageAlt: "Workspace analytics preview" },
+    { id: "s2", title: "Modular Themes", subtitle: "Four accent presets & RTL", imageSrc: "/images/misc/screen-2.jpg", imageAlt: "Modular theme preview" },
+  ];
+
+  const gallery = [
+    { src: "/images/products/product-1.jpg", width: 800, height: 600, alt: "Audio Hardware Kit", caption: "Audio Hardware" },
+    { src: "/images/products/product-2.jpg", width: 800, height: 600, alt: "Desk Lamp Series", caption: "Lighting" },
+    { src: "/images/products/product-3.jpg", width: 800, height: 600, alt: "Ceramic Studio Set", caption: "Workspace" },
+  ];
+
+  const calendarEvents: CoimCalendarEvent[] = [
+    { id: "e1", title: "Design Token Review", start: "2026-11-22T10:00:00", end: "2026-11-22T11:30:00" },
+    { id: "e2", title: "CoimUI v1.0.0 Release Freeze", start: "2026-11-24T14:00:00", end: "2026-11-24T16:00:00" },
+  ];
+</script>
+
+<svelte:head>
+  <title>CoimUI Showcase — Plugins</title>
+</svelte:head>
+
+<CoimStack spacing={6}>
+  <div>
+    <CoimBreadcrumbs items={[{ label: "Home", href: "/" }, { label: "Plugins" }]} />
+    <CoimTypography variant="h1" class="mt-2">Plugin Ecosystem</CoimTypography>
+    <p class="text-text-secondary mt-1">
+      Client-guarded optional integrations for rich text, carousels, lightboxes, emoji picking, markdown, syntax highlighting, video, scheduling, print, and drag-and-drop.
+    </p>
+  </div>
+
+  <CoimTypography variant="h2">Rich Editing, Media &amp; Scheduling</CoimTypography>
+
+  <ComponentDocCard
+    title="RichTextEditor, Markdown, CodeBlock & Print"
+    description="Quill editor, DOMPurify-sanitized Marked renderer, highlight.js code viewer, and DOM print utility."
+    packageEntry="@coimui/svelte/plugins"
+    code={COMPONENT_CODE_EXAMPLES.plugins}
+  >
+    <CoimGrid container spacing={4}>
+      <CoimGrid size={{ xs: 12, lg: 6 }}>
+        <CoimRichTextEditor bind:value={htmlNotes} ariaLabel="Release notes editor" />
+      </CoimGrid>
+      <CoimGrid size={{ xs: 12, lg: 6 }}>
+        <div bind:this={printSectionEl} class="border-grey-100 rounded-xl border p-4">
+          <div class="mb-2 flex items-center justify-between gap-2">
+            <span class="font-semibold">Markdown &amp; Print Snapshot</span>
+            <CoimButton
+              size="small"
+              variant="outlined"
+              onclick={() => {
+                if (printSectionEl) printElement(printSectionEl, { title: "CoimUI Notes" });
+              }}
+            >
+              Print Snippet
+            </CoimButton>
+          </div>
+          <CoimMarkdown content={"### Release Checklist\n- **Core package**: Clean\n- **TS 7.0.2 check**: Passing\n\n`npm install @coimui/svelte`"} />
+        </div>
+      </CoimGrid>
+      <CoimGrid size={12}>
+        <CoimCodeBlock
+          language="typescript"
+          filename="coimui.config.ts"
+          code={`import { THEME_OPTIONS } from "@coimui/svelte";\nexport const defaultTheme = THEME_OPTIONS.PURPLE;`}
+        />
+      </CoimGrid>
+    </CoimGrid>
+  </ComponentDocCard>
+
+  <ComponentDocCard
+    title="Carousel, Lightbox, EmojiPicker, VideoPlayer, SortableList & EventCalendar"
+    description="Lazy-hydrated rich widgets that keep SSR deterministic."
+    packageEntry="@coimui/svelte/plugins"
+    code={COMPONENT_CODE_EXAMPLES.plugins}
+  >
+    <CoimGrid container spacing={4}>
+      <CoimGrid size={{ xs: 12, lg: 6 }}>
+        <CoimCarousel items={slides} ariaLabel="Showcase slides" />
+      </CoimGrid>
+      <CoimGrid size={{ xs: 12, lg: 6 }}>
+        <CoimLightbox images={gallery} />
+      </CoimGrid>
+      <CoimGrid size={{ xs: 12, md: 6 }}>
+        <CoimStack spacing={3}>
+          <CoimPaper variant="outlined" class="p-4">
+            <p class="mb-2 text-sm font-medium">Selected Reaction: {chosenEmoji}</p>
+            <CoimEmojiPicker onSelect={(ev) => (chosenEmoji = ev.unicode)} />
+          </CoimPaper>
+          <CoimSortableList
+            bind:items={backlog}
+            ariaLabel="Prioritized backlog"
+            onReorder={() => toast.info("Order updated")}
+          />
+        </CoimStack>
+      </CoimGrid>
+      <CoimGrid size={{ xs: 12, md: 6 }}>
+        <CoimVideoPlayer poster="/images/misc/video-poster-light.svg" ariaLabel="Demo overview player" />
+      </CoimGrid>
+      <CoimGrid size={12}>
+        <CoimEventCalendar
+          events={calendarEvents}
+          date="2026-11-22"
+          onEventClick={(id) => toast.info(`Selected event ${id}`)}
+        />
+      </CoimGrid>
+    </CoimGrid>
+  </ComponentDocCard>
+</CoimStack>

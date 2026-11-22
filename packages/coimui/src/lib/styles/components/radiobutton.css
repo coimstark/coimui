@@ -1,0 +1,102 @@
+/* --------------------------- */
+/* Radio Button                */
+/* --------------------------- */
+
+@layer components {
+  .coim-radio-group-fieldset {
+    @apply m-0 border-0 p-0;
+  }
+
+  .coim-radio-group {
+    @apply flex flex-col gap-2;
+
+    &.coim-radio-group-row {
+      @apply flex-row flex-wrap gap-4;
+    }
+  }
+
+  .coim-radio {
+    @apply inline-flex cursor-pointer items-center justify-center border-0 bg-transparent p-0 transition-colors select-none;
+
+    svg {
+      @apply transition-colors;
+    }
+
+    .contained {
+      @apply text-grey-50;
+    }
+
+    .outlined {
+      @apply text-grey-200;
+    }
+
+    &:not(.coim-disabled):hover svg.contained,
+    .coim-form-control-label:not(.coim-disabled):hover & svg.contained {
+      @apply text-grey-100;
+    }
+
+    &:not(.coim-disabled):hover svg.outlined,
+    .coim-form-control-label:not(.coim-disabled):hover & svg.outlined {
+      @apply text-grey-500;
+    }
+
+    &.coim-radio-checked {
+      &.coim-radio-color-primary .contained { @apply text-primary; }
+      &.coim-radio-color-secondary .contained { @apply text-secondary; }
+      &.coim-radio-color-accent-1 .contained { @apply text-accent-1; }
+      &.coim-radio-color-accent-2 .contained { @apply text-accent-2; }
+      &.coim-radio-color-accent-3 .contained { @apply text-accent-3; }
+      &.coim-radio-color-accent-4 .contained { @apply text-accent-4; }
+      &.coim-radio-color-accent-5 .contained { @apply text-accent-5; }
+      &.coim-radio-color-accent-6 .contained { @apply text-accent-6; }
+      &.coim-radio-color-success .contained { @apply text-success; }
+      &.coim-radio-color-error .contained { @apply text-error; }
+      &.coim-radio-color-info .contained { @apply text-info; }
+      &.coim-radio-color-warning .contained { @apply text-warning; }
+      &.coim-radio-color-text-primary .contained { @apply text-text-primary; }
+      &.coim-radio-color-text-secondary .contained { @apply text-text-secondary; }
+      &.coim-radio-color-text-disabled .contained { @apply text-text-disabled; }
+      &.coim-radio-color-grey .contained { @apply text-grey-500; }
+
+      &:not(.coim-disabled):hover,
+      .coim-form-control-label:not(.coim-disabled):hover & {
+        &.coim-radio-color-primary svg.contained { @apply text-primary-light; }
+        &.coim-radio-color-secondary svg.contained { @apply text-secondary-light; }
+        &.coim-radio-color-accent-1 svg.contained { @apply text-accent-1-light; }
+        &.coim-radio-color-accent-2 svg.contained { @apply text-accent-2-light; }
+        &.coim-radio-color-accent-3 svg.contained { @apply text-accent-3-light; }
+        &.coim-radio-color-accent-4 svg.contained { @apply text-accent-4-light; }
+        &.coim-radio-color-accent-5 svg.contained { @apply text-accent-5-light; }
+        &.coim-radio-color-accent-6 svg.contained { @apply text-accent-6-light; }
+        &.coim-radio-color-success svg.contained { @apply text-success-light; }
+        &.coim-radio-color-error svg.contained { @apply text-error-light; }
+        &.coim-radio-color-info svg.contained { @apply text-info-light; }
+        &.coim-radio-color-warning svg.contained { @apply text-warning-light; }
+        &.coim-radio-color-text-primary svg.contained { @apply text-text-primary-light; }
+        &.coim-radio-color-text-secondary svg.contained { @apply text-text-secondary-light; }
+        &.coim-radio-color-text-disabled svg.contained { @apply text-text-disabled-light; }
+        &.coim-radio-color-grey svg.contained { @apply text-grey-400; }
+      }
+    }
+
+    &.coim-disabled {
+      @apply pointer-events-none cursor-default opacity-disabled;
+    }
+  }
+
+  .coim-label-placement-end .coim-radio {
+    @apply me-2;
+  }
+
+  .coim-label-placement-start .coim-radio {
+    @apply ms-2;
+  }
+
+  .coim-label-placement-top .coim-radio {
+    @apply mt-1;
+  }
+
+  .coim-label-placement-bottom .coim-radio {
+    @apply mb-1;
+  }
+}

@@ -1,0 +1,232 @@
+{
+  "name": "@coimui/svelte",
+  "version": "1.0.0",
+  "description": "CoimUI Svelte 5 component library, design system tokens, layouts, data grid, charts, date pickers, and specialized UI plugins",
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "svelte",
+    "svelte5",
+    "sveltekit",
+    "ui",
+    "components",
+    "design-system",
+    "tailwindcss",
+    "coimui"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "svelte": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./theme": {
+      "types": "./dist/theme/index.d.ts",
+      "svelte": "./dist/theme/index.js",
+      "default": "./dist/theme/index.js"
+    },
+    "./icons": {
+      "types": "./dist/icons/index.d.ts",
+      "svelte": "./dist/icons/index.js",
+      "default": "./dist/icons/index.js"
+    },
+    "./icons/ui/*": {
+      "types": "./dist/icons/ui/*.svelte.d.ts",
+      "svelte": "./dist/icons/ui/*.svelte",
+      "default": "./dist/icons/ui/*.svelte"
+    },
+    "./icons/illustrations/*": {
+      "types": "./dist/icons/illustrations/*.svelte.d.ts",
+      "svelte": "./dist/icons/illustrations/*.svelte",
+      "default": "./dist/icons/illustrations/*.svelte"
+    },
+    "./layouts": {
+      "types": "./dist/layouts/index.d.ts",
+      "svelte": "./dist/layouts/index.js",
+      "default": "./dist/layouts/index.js"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "svelte": "./dist/components/index.js",
+      "default": "./dist/components/index.js"
+    },
+    "./data-grid": {
+      "types": "./dist/data-grid/index.d.ts",
+      "svelte": "./dist/data-grid/index.js",
+      "default": "./dist/data-grid/index.js"
+    },
+    "./charts": {
+      "types": "./dist/charts/index.d.ts",
+      "svelte": "./dist/charts/index.js",
+      "default": "./dist/charts/index.js"
+    },
+    "./date-pickers": {
+      "types": "./dist/date-pickers/index.d.ts",
+      "svelte": "./dist/date-pickers/index.js",
+      "default": "./dist/date-pickers/index.js"
+    },
+    "./plugins": {
+      "types": "./dist/plugins/index.d.ts",
+      "svelte": "./dist/plugins/index.js",
+      "default": "./dist/plugins/index.js"
+    },
+    "./forms": {
+      "types": "./dist/forms/index.d.ts",
+      "svelte": "./dist/forms/index.js",
+      "default": "./dist/forms/index.js"
+    },
+    "./utilities": {
+      "types": "./dist/utilities/index.d.ts",
+      "svelte": "./dist/utilities/index.js",
+      "default": "./dist/utilities/index.js"
+    },
+    "./styles": "./dist/styles/index.css",
+    "./styles/core.css": "./dist/styles/core.css",
+    "./styles/*.css": "./dist/styles/*.css"
+  },
+  "files": [
+    "dist",
+    "!dist/**/*.test.*",
+    "!dist/**/*.spec.*"
+  ],
+  "scripts": {
+    "package": "rm -rf .svelte-kit dist && svelte-package -i src/lib -o dist",
+    "typecheck:ts7": "node ../../node_modules/@typescript/native/bin/tsc --noEmit -p tsconfig.json",
+    "check": "svelte-check --tsgo --tsconfig ./tsconfig.json",
+    "test:unit": "vitest run && vitest run --config ./vitest.ssr.config.ts"
+  },
+  "peerDependencies": {
+    "@atlaskit/pragmatic-drag-and-drop": "^4.0.0",
+    "@event-calendar/core": "^5.21.1",
+    "@tanstack/svelte-table": "^9.3.2",
+    "@tanstack/svelte-virtual": "^3.13.52",
+    "d3-array": "^3.2.5",
+    "d3-scale": "^4.0.3",
+    "d3-shape": "^3.2.1",
+    "dompurify": "^3.4.18",
+    "emoji-picker-element": "^1.29.1",
+    "exceljs": "^4.4.0",
+    "highlight.js": "^11.12.0",
+    "imask": "^7.6.1",
+    "layerchart": "^2.11.0",
+    "marked": "^18.2.1",
+    "papaparse": "^5.7.1",
+    "photoswipe": "^5.4.4",
+    "quill": "^2.0.3",
+    "svelte": "^5.59.0",
+    "swiper": "^14.4.0",
+    "tailwindcss": "^4.0.0",
+    "@videojs/html": "^10.6.0"
+  },
+  "peerDependenciesMeta": {
+    "@atlaskit/pragmatic-drag-and-drop": {
+      "optional": true
+    },
+    "@event-calendar/core": {
+      "optional": true
+    },
+    "@tanstack/svelte-table": {
+      "optional": true
+    },
+    "@tanstack/svelte-virtual": {
+      "optional": true
+    },
+    "d3-array": {
+      "optional": true
+    },
+    "d3-scale": {
+      "optional": true
+    },
+    "d3-shape": {
+      "optional": true
+    },
+    "dompurify": {
+      "optional": true
+    },
+    "emoji-picker-element": {
+      "optional": true
+    },
+    "exceljs": {
+      "optional": true
+    },
+    "highlight.js": {
+      "optional": true
+    },
+    "imask": {
+      "optional": true
+    },
+    "layerchart": {
+      "optional": true
+    },
+    "marked": {
+      "optional": true
+    },
+    "papaparse": {
+      "optional": true
+    },
+    "photoswipe": {
+      "optional": true
+    },
+    "quill": {
+      "optional": true
+    },
+    "swiper": {
+      "optional": true
+    },
+    "@videojs/html": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@fontsource/mulish": "5.3.0",
+    "@fontsource/urbanist": "5.3.0",
+    "@internationalized/date": "3.12.4",
+    "bits-ui": "2.22.0",
+    "clsx": "2.1.1",
+    "dayjs": "1.11.23",
+    "tailwind-merge": "3.7.1"
+  },
+  "devDependencies": {
+    "@atlaskit/pragmatic-drag-and-drop": "4.0.0",
+    "@event-calendar/core": "5.21.1",
+    "@sveltejs/package": "3.0.3",
+    "@sveltejs/vite-plugin-svelte": "7.3.1",
+    "@tailwindcss/vite": "4.3.5",
+    "@tanstack/svelte-table": "9.3.2",
+    "@tanstack/svelte-virtual": "3.13.52",
+    "@testing-library/jest-dom": "8.0.0",
+    "@testing-library/svelte": "5.4.2",
+    "@types/d3-array": "3.2.2",
+    "@types/d3-scale": "4.0.9",
+    "@types/d3-shape": "3.2.0",
+    "@types/papaparse": "5.5.2",
+    "@typescript/native": "npm:typescript@7.0.2",
+    "d3-array": "3.2.5",
+    "d3-scale": "4.0.3",
+    "d3-shape": "3.2.1",
+    "dompurify": "3.4.18",
+    "emoji-picker-element": "1.29.1",
+    "exceljs": "4.4.0",
+    "highlight.js": "11.12.0",
+    "imask": "7.6.1",
+    "jsdom": "31.0.1",
+    "layerchart": "2.11.0",
+    "marked": "18.2.1",
+    "papaparse": "5.7.1",
+    "photoswipe": "5.4.4",
+    "quill": "2.0.3",
+    "svelte": "5.59.1",
+    "svelte-check": "4.7.8",
+    "swiper": "14.4.0",
+    "tailwindcss": "4.3.5",
+    "typescript": "6.0.3",
+    "@videojs/html": "10.6.0",
+    "vite": "8.3.8",
+    "vitest": "5.1.1"
+  }
+}
