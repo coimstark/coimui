@@ -15,7 +15,7 @@
 
 <div
   class={cn(
-    "mx-auto w-full px-4 py-4 md:px-6 lg:px-8 lg:py-8",
+    "mx-auto w-full px-4 py-5 md:px-6 lg:px-8 lg:py-7 xl:pe-20",
     theme.content === ContentType.Boxed && "max-w-340",
     className,
   )}

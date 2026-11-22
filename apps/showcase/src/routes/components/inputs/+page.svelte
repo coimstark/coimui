@@ -30,6 +30,7 @@
   import { COMPONENT_CODE_EXAMPLES } from "#lib/examples/component-docs.ts";
 
   let toggleView = $state("grid");
+  let cadenceRange = $state<"day" | "week" | "month">("week");
   let projectTitle = $state("CoimUI Launch Playbook");
   let seatLimit = $state<number | null>(25);
   let tier = $state("enterprise");
@@ -71,22 +72,46 @@
     <CoimStack spacing={4}>
       <div class="flex flex-wrap items-center gap-3">
         <CoimButton variant="contained" color="primary" onclick={() => toast.success("Primary trigger clicked")}>Contained</CoimButton>
-        <CoimButton variant="outlined" color="secondary">Outlined</CoimButton>
-        <CoimButton variant="pastel" color="success">Pastel</CoimButton>
-        <CoimButton variant="text" color="primary">Text</CoimButton>
-        <CoimButton variant="contained" loading>Loading</CoimButton>
+        <CoimButton variant="outlined" color="secondary" onclick={() => toast.info("Outlined secondary clicked")}>Outlined</CoimButton>
+        <CoimButton variant="pastel" color="success" onclick={() => toast.success("Pastel confirmation triggered")}>Pastel</CoimButton>
+        <CoimButton variant="text" color="primary" onclick={() => toast.info("Text action triggered")}>Text</CoimButton>
+        <CoimButton variant="contained" loading aria-label="Loading submission">Loading</CoimButton>
       </div>
       <div class="flex flex-wrap items-center gap-4">
-        <CoimIconButton aria-label="Edit configuration" color="primary" variant="pastel">
+        <CoimIconButton aria-label="Edit configuration" color="primary" variant="pastel" onclick={() => toast.info("Edit mode opened")}>
           <CiPen />
         </CoimIconButton>
-        <CoimIconButton aria-label="Remove item" color="error" variant="outlined">
+        <CoimIconButton aria-label="Remove item" color="error" variant="outlined" onclick={() => toast.warning("Delete confirmation requested")}>
           <CiBinEmpty />
         </CoimIconButton>
         <CoimButtonGroup variant="outlined">
-          <CoimButton>Day</CoimButton>
-          <CoimButton>Week</CoimButton>
-          <CoimButton>Month</CoimButton>
+          <CoimButton
+            variant={cadenceRange === "day" ? "contained" : "outlined"}
+            onclick={() => {
+              cadenceRange = "day";
+              toast.info("Switched cadence: Day");
+            }}
+          >
+            Day
+          </CoimButton>
+          <CoimButton
+            variant={cadenceRange === "week" ? "contained" : "outlined"}
+            onclick={() => {
+              cadenceRange = "week";
+              toast.info("Switched cadence: Week");
+            }}
+          >
+            Week
+          </CoimButton>
+          <CoimButton
+            variant={cadenceRange === "month" ? "contained" : "outlined"}
+            onclick={() => {
+              cadenceRange = "month";
+              toast.info("Switched cadence: Month");
+            }}
+          >
+            Month
+          </CoimButton>
         </CoimButtonGroup>
         <CoimToggleButtonGroup type="single" bind:value={toggleView} color="primary">
           <CoimToggleButton value="list">List</CoimToggleButton>

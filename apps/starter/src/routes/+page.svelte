@@ -109,8 +109,8 @@
       { label: starterI18n.t("kpi-uptime"), value: "99.98%", delta: "SLA OK", color: "info" as const, progress: 99 },
     ] as kpi (kpi.label)}
       <CoimGrid size={{ xs: 12, sm: 6, lg: 3 }}>
-        <CoimCard>
-          <CoimCardContent>
+        <CoimCard class="h-full">
+          <CoimCardContent class="flex h-full flex-col justify-between">
             <div class="flex items-start justify-between gap-3">
               <div>
                 <div class="text-text-secondary text-sm">{kpi.label}</div>

@@ -17,8 +17,8 @@
   }
 
   let {
-    variant = "indeterminate",
-    value = 0,
+    variant,
+    value,
     valueBuffer = 0,
     color = "primary",
     label,
@@ -26,23 +26,26 @@
     ...rest
   }: Props = $props();
 
-  const clampedValue = $derived(Math.min(100, Math.max(0, value)));
+  const resolvedVariant = $derived<LinearProgressVariant>(
+    variant ?? (value !== undefined ? "determinate" : "indeterminate"),
+  );
+  const clampedValue = $derived(Math.min(100, Math.max(0, value ?? 0)));
   const clampedBuffer = $derived(Math.min(100, Math.max(clampedValue, valueBuffer)));
   const colorClass = $derived(PROGRESS_COLOR_TEXT_CLASS[color] ?? "text-primary");
   const resolvedAriaLabel = $derived(
     label ??
       (rest["aria-label"] as string | undefined) ??
-      (variant !== "indeterminate" ? `Progress ${clampedValue}%` : "Loading"),
+      (resolvedVariant !== "indeterminate" ? `Progress ${clampedValue}%` : "Loading"),
   );
 </script>
 
 <div
   role="progressbar"
   aria-label={resolvedAriaLabel}
-  aria-valuemin={variant !== "indeterminate" ? 0 : undefined}
-  aria-valuemax={variant !== "indeterminate" ? 100 : undefined}
-  aria-valuenow={variant !== "indeterminate" ? clampedValue : undefined}
-  data-variant={variant}
+  aria-valuemin={resolvedVariant !== "indeterminate" ? 0 : undefined}
+  aria-valuemax={resolvedVariant !== "indeterminate" ? 100 : undefined}
+  aria-valuenow={resolvedVariant !== "indeterminate" ? clampedValue : undefined}
+  data-variant={resolvedVariant}
   class={cn(
     "coim-linear-progress bg-grey-50 relative block h-1 w-full overflow-hidden rounded-2xl",
     colorClass,
@@ -50,7 +53,7 @@
   )}
   {...rest}
 >
-  {#if variant === "buffer"}
+  {#if resolvedVariant === "buffer"}
     <div class="coim-linear-progress-dashed" aria-hidden="true"></div>
     <div
       class="coim-linear-progress-bar coim-linear-progress-bar-buffer rounded-2xl bg-current opacity-35"
@@ -60,7 +63,7 @@
       class="coim-linear-progress-bar coim-linear-progress-bar-primary rounded-2xl bg-current"
       style:width="{clampedValue}%"
     ></div>
-  {:else if variant === "determinate"}
+  {:else if resolvedVariant === "determinate"}
     <div
       class="coim-linear-progress-bar coim-linear-progress-bar-primary rounded-2xl bg-current"
       style:width="{clampedValue}%"

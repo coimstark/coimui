@@ -25,6 +25,7 @@
     showPresets?: boolean;
     locale?: string;
     onValueChange?: (value: DateRange) => void;
+    onOpenChange?: (open: boolean) => void;
     class?: string;
   }
 
@@ -45,6 +46,7 @@
     showPresets = true,
     locale = "en",
     onValueChange,
+    onOpenChange,
     class: className = "",
   }: Props = $props();
 
@@ -54,7 +56,11 @@
 <DateRangePicker.Root
   bind:value
   bind:placeholder
-  bind:open
+  {open}
+  onOpenChange={(next) => {
+    open = next;
+    onOpenChange?.(next);
+  }}
   {disabled}
   {readonly}
   {required}
@@ -130,6 +136,7 @@
                   value = preset.range;
                   onValueChange?.(preset.range);
                   open = false;
+                  onOpenChange?.(false);
                 }}
               >
                 {preset.label}

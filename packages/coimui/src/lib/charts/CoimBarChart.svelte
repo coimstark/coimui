@@ -22,6 +22,8 @@
   }: Props = $props();
 
   let hiddenKeys = $state<Record<string, boolean>>({});
+  let containerWidth = $state(0);
+  const chartWidth = $derived(containerWidth > 0 ? Math.max(240, Math.floor(containerWidth)) : 600);
 
   const legendItems = $derived(
     series.map((s, idx) => ({
@@ -57,16 +59,25 @@
     />
   {/if}
 
-  <div class="coim-chart-container" role="img" aria-label={title ?? ariaLabel} style={`height: ${height}px;`}>
+  <div
+    bind:clientWidth={containerWidth}
+    class="coim-chart-container coim-bar-chart"
+    role="img"
+    aria-label={title ?? ariaLabel}
+    style={`height: ${height}px;`}
+  >
     <BarChart
       ssr
-      width={600}
+      width={chartWidth}
       {height}
       {data}
       x={xKey}
       series={layerSeries}
       seriesLayout={layout}
       {orientation}
+      props={{
+        bars: { stroke: "none", radius: 4 },
+      }}
       grid={grid}
       axis={true}
       padding={{ top: 16, right: 16, bottom: 28, left: 40 }}

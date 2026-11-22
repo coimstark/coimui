@@ -8,28 +8,33 @@
     versions?: CoimVersionOption[];
     selectedVersion?: string;
     onSelectVersion?: (version: string) => void;
+    onNavigate?: (href: string) => void;
     class?: string;
   }
 
   const defaultVersions: CoimVersionOption[] = [
-    { label: "CoimUI v1.0.0" },
-    { label: "CoimUI Starter v1.0" },
-    { label: "CoimUI Docs v1.0" },
+    { label: "CoimUI v1.0.0", href: "/" },
+    { label: "Components", href: "/components" },
+    { label: "Documentation", href: "/docs" },
   ];
 
   let {
     versions = defaultVersions,
     selectedVersion = $bindable("CoimUI v1.0.0"),
     onSelectVersion,
+    onNavigate,
     class: className = "",
   }: Props = $props();
 
   let open = $state(false);
 
-  function selectVersion(label: string) {
-    selectedVersion = label;
+  function selectVersion(item: CoimVersionOption) {
+    selectedVersion = item.label;
     open = false;
-    onSelectVersion?.(label);
+    onSelectVersion?.(item.label);
+    if (item.href) {
+      onNavigate?.(item.href);
+    }
   }
 </script>
 
@@ -40,15 +45,15 @@
         {...props}
         type="button"
         class={cn(
-          "border-grey-200 text-text-primary hover:bg-grey-200/10 hover:text-text-primary-dark font-body inline-flex max-w-30 cursor-pointer items-center gap-1 rounded-md border border-solid bg-transparent px-4 py-[calc(0.5rem-1px)] text-base leading-5 font-medium transition-all sm:max-w-none",
+          "border-grey-200 text-text-primary hover:bg-grey-200/10 hover:text-text-primary-dark font-body inline-flex max-w-36 cursor-pointer items-center gap-1 rounded-full border border-solid bg-transparent px-3.5 py-1.5 text-xs leading-4 font-medium whitespace-nowrap transition-all sm:max-w-none sm:text-sm",
           className,
         )}
       >
-        <span class="w-full truncate text-clip">{selectedVersion}</span>
+        <span class="truncate">{selectedVersion}</span>
         <CiChevronRightSmall
-          size="medium"
+          size="small"
           class={cn(
-            "-ms-1 shrink-0 transition-transform rtl:rotate-180",
+            "shrink-0 transition-transform rtl:rotate-180",
             open && "rotate-90 rtl:rotate-90",
           )}
         />
@@ -60,11 +65,11 @@
     <DropdownMenu.Content
       align="start"
       sideOffset={6}
-      class="bg-background-paper shadow-darker-sm outline-grey-50 z-100 mt-1 min-w-36 rounded-lg px-2 py-2 outline-1"
+      class="bg-background-paper shadow-darker-sm outline-grey-50 z-100 mt-1 min-w-40 rounded-lg px-2 py-2 outline-1"
     >
       {#each versions as item (item.label)}
         <DropdownMenu.Item
-          onSelect={() => selectVersion(item.label)}
+          onSelect={() => selectVersion(item)}
           class={cn(
             "font-body text-text-primary hover:bg-grey-500/10 my-0.5 flex cursor-pointer items-center rounded-sm px-4 py-2 text-base leading-5 font-medium transition-colors outline-none",
             item.label === selectedVersion && "bg-grey-500/15 text-primary",

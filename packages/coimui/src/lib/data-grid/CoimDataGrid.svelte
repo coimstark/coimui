@@ -597,16 +597,31 @@
                 aria-sort={sorted === "asc" ? "ascending" : sorted === "desc" ? "descending" : "none"}
                 style={`width: ${header.getSize()}px; ${pinStyle}`}
                 class={cn(
-                  "relative",
                   pinned === "start" && "coim-data-grid-cell-pinned-left",
                   pinned === "end" && "coim-data-grid-cell-pinned-right",
                 )}
               >
-                <div class="flex items-center justify-between gap-1">
+                <div
+                  class={cn(
+                    "flex items-center gap-1",
+                    colDef?.align === "right"
+                      ? "justify-end text-end"
+                      : colDef?.align === "center"
+                        ? "justify-center text-center"
+                        : "justify-between",
+                  )}
+                >
                   {#if header.column.getCanSort()}
                     <button
                       type="button"
-                      class="inline-flex min-w-0 flex-1 items-center gap-1 text-start font-bold"
+                      class={cn(
+                        "inline-flex min-w-0 items-center gap-1 font-bold",
+                        colDef?.align === "right"
+                          ? "justify-end text-end"
+                          : colDef?.align === "center"
+                            ? "justify-center text-center"
+                            : "flex-1 text-start",
+                      )}
                       onclick={header.column.getToggleSortingHandler()}
                     >
                       <span class="truncate">{colDef?.headerName ?? header.column.id}</span>
@@ -818,7 +833,14 @@
                       />
                     {/if}
                   {:else}
-                    <div class="flex items-center gap-1.5" style={row.depth > 0 && cell.column.getIndex() === 0 ? `padding-inline-start: ${row.depth * 1.25}rem;` : undefined}>
+                    <div
+                      class={cn(
+                        "flex items-center gap-1.5",
+                        colDef?.align === "right" && "justify-end",
+                        colDef?.align === "center" && "justify-center",
+                      )}
+                      style={row.depth > 0 && cell.column.getIndex() === 0 ? `padding-inline-start: ${row.depth * 1.25}rem;` : undefined}
+                    >
                       {#if row.getCanExpand() && cell.column.getIndex() === 0}
                         <button
                           type="button"

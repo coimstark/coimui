@@ -18,6 +18,7 @@
     minuteStep?: number;
     analogClock?: boolean;
     onValueChange?: (value: Time | undefined) => void;
+    onOpenChange?: (open: boolean) => void;
     class?: string;
   }
 
@@ -34,6 +35,7 @@
     minuteStep = 15,
     analogClock = false,
     onValueChange,
+    onOpenChange,
     class: className = "",
   }: Props = $props();
 
@@ -65,7 +67,13 @@
 </script>
 
 <div class={cn("coim-date-field-wrap", className)}>
-  <Popover.Root bind:open>
+  <Popover.Root
+    {open}
+    onOpenChange={(next) => {
+      open = next;
+      onOpenChange?.(next);
+    }}
+  >
     <div class="flex items-end gap-1.5">
       <CoimTimeField
         bind:value

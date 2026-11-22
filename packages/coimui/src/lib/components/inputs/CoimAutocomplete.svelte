@@ -41,6 +41,7 @@
     filterOptions?: (opts: CoimNormalizedOption[], query: string) => CoimNormalizedOption[];
     onValueChange?: (value: string | string[] | null) => void;
     onInputChange?: (query: string) => void;
+    onOpenChange?: (open: boolean) => void;
     class?: string;
   }
 
@@ -70,6 +71,7 @@
     filterOptions,
     onValueChange,
     onInputChange,
+    onOpenChange,
     class: className = "",
   }: Props = $props();
 
@@ -186,7 +188,10 @@
       }}
       {open}
       onOpenChange={(next) => {
-        if (!isReadOnly) open = next;
+        if (!isReadOnly) {
+          open = next;
+          onOpenChange?.(next);
+        }
       }}
       disabled={isDisabled}
       {inputValue}
@@ -309,7 +314,10 @@
       }}
       {open}
       onOpenChange={(next) => {
-        if (!isReadOnly) open = next;
+        if (!isReadOnly) {
+          open = next;
+          onOpenChange?.(next);
+        }
       }}
       disabled={isDisabled}
       {inputValue}

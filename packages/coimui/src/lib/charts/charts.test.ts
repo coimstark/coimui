@@ -128,6 +128,6 @@ describe("Charts Subpath", () => {
         ],
       },
     });
-    expect(funnel.getByText(/Visits · 1000/)).toBeInTheDocument();
+    expect(funnel.getByText(/Visits · 1,000/)).toBeInTheDocument();
   });
 });

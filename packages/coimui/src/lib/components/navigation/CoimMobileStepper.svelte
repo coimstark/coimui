@@ -17,6 +17,7 @@
     nextButton?: Snippet;
     onBack?: () => void;
     onNext?: () => void;
+    onStepChange?: (step: number) => void;
     class?: string;
   }
 
@@ -31,6 +32,7 @@
     nextButton,
     onBack,
     onNext,
+    onStepChange,
     class: className = "",
     ...rest
   }: Props = $props();
@@ -43,14 +45,18 @@
 
   function handleBack() {
     if (clampedStep <= 0) return;
-    activeStep = clampedStep - 1;
+    const next = clampedStep - 1;
+    activeStep = next;
     onBack?.();
+    onStepChange?.(next);
   }
 
   function handleNext() {
     if (clampedStep >= safeSteps - 1) return;
-    activeStep = clampedStep + 1;
+    const next = clampedStep + 1;
+    activeStep = next;
     onNext?.();
+    onStepChange?.(next);
   }
 </script>
 

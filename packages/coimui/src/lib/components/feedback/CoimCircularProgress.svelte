@@ -20,8 +20,8 @@
   }
 
   let {
-    variant = "indeterminate",
-    value = 0,
+    variant,
+    value,
     size = 40,
     color = "primary",
     thickness = 3.6,
@@ -31,7 +31,10 @@
     ...rest
   }: Props = $props();
 
-  const clampedValue = $derived(Math.min(100, Math.max(0, value)));
+  const resolvedVariant = $derived<CircularProgressVariant>(
+    variant ?? (value !== undefined ? "determinate" : "indeterminate"),
+  );
+  const clampedValue = $derived(Math.min(100, Math.max(0, value ?? 0)));
   const radius = $derived((44 - thickness) / 2);
   const circumference = $derived(2 * Math.PI * radius);
   const dashOffset = $derived(((100 - clampedValue) / 100) * circumference);
@@ -42,22 +45,22 @@
   const resolvedAriaLabel = $derived(
     label ??
       (rest["aria-label"] as string | undefined) ??
-      (variant === "determinate" ? `Progress ${clampedValue}%` : "Loading"),
+      (resolvedVariant === "determinate" ? `Progress ${clampedValue}%` : "Loading"),
   );
 </script>
 
 <span
   role="progressbar"
   aria-label={resolvedAriaLabel}
-  aria-valuemin={variant === "determinate" ? 0 : undefined}
-  aria-valuemax={variant === "determinate" ? 100 : undefined}
-  aria-valuenow={variant === "determinate" ? clampedValue : undefined}
-  data-variant={variant}
+  aria-valuemin={resolvedVariant === "determinate" ? 0 : undefined}
+  aria-valuemax={resolvedVariant === "determinate" ? 100 : undefined}
+  aria-valuenow={resolvedVariant === "determinate" ? clampedValue : undefined}
+  data-variant={resolvedVariant}
   style:width={numericPx}
   style:height={numericPx}
   class={cn(
     "coim-circular-progress inline-block leading-none",
-    variant === "indeterminate"
+    resolvedVariant === "indeterminate"
       ? "coim-circular-progress-indeterminate"
       : "coim-circular-progress-determinate",
     isNamedSize && size,
@@ -69,7 +72,7 @@
   <svg class="coim-circular-progress-svg block h-full w-full" viewBox="22 22 44 44">
     <circle
       class={cn(
-        variant === "determinate"
+        resolvedVariant === "determinate"
           ? "coim-circular-progress-circle-determinate"
           : !disableShrink && "coim-circular-progress-circle-indeterminate",
       )}
@@ -79,8 +82,8 @@
       fill="none"
       stroke="currentColor"
       stroke-width={thickness}
-      stroke-dasharray={variant === "determinate" ? circumference.toFixed(3) : undefined}
-      stroke-dashoffset={variant === "determinate" ? `${dashOffset.toFixed(3)}px` : undefined}
+      stroke-dasharray={resolvedVariant === "determinate" ? circumference.toFixed(3) : undefined}
+      stroke-dashoffset={resolvedVariant === "determinate" ? `${dashOffset.toFixed(3)}px` : undefined}
       stroke-linecap="round"
     />
   </svg>

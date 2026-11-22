@@ -13,6 +13,7 @@ import {
   CoimStack,
 } from "../layout/index.js";
 import AccordionTestHost from "../../../tests/AccordionTestHost.svelte";
+import GridTestHost from "../../../tests/GridTestHost.svelte";
 import {
   CoimCard,
   CoimCardActionArea,
@@ -206,5 +207,15 @@ describe("Foundation, Layout & Surfaces", () => {
     await tick();
     expect(onStandaloneChange).toHaveBeenCalledWith(true);
     expect(triggerStandalone).toHaveAttribute("aria-expanded", "true");
+  });
+
+  it("shares spacing context between parent and child CoimGrid across instances", async () => {
+    const view = render(GridTestHost);
+    await tick();
+    const childA = view.getByTestId("grid-child-a");
+    const styleText = childA.getAttribute("style") ?? "";
+    expect(styleText).toContain("--coim-gi-gw-lg:");
+    expect(styleText).toContain("calc(100% * 3 / 12");
+    expect(styleText).toContain("16px");
   });
 });

@@ -73,17 +73,45 @@
     { id: "design", name: "Design Systems", snippet: "Orange and Purple dark tokens aligned." },
   ];
   let selectedThread = $state("eng");
-  let messages = $state([
-    { id: "m1", author: "Laura Ellis", time: "09:14", text: "Consumer minimal build bundle size checked cleanly." },
-    { id: "m2", author: "Mateo Khan", time: "09:18", text: "Let's finalize Playwright verification across viewports." },
-  ]);
+  let messagesByThread = $state<Record<string, { id: string; author: string; time: string; text: string }[]>>({
+    eng: [
+      { id: "m1", author: "Laura Ellis", time: "09:14", text: "Consumer minimal build bundle size checked cleanly." },
+      { id: "m2", author: "Mateo Khan", time: "09:18", text: "Let's finalize Playwright verification across viewports." },
+    ],
+    design: [
+      { id: "d1", author: "Sora Park", time: "10:02", text: "Verified dark mode contrast ratios for Orange and Purple presets." },
+      { id: "d2", author: "Laura Ellis", time: "10:15", text: "ButtonGroup and ToggleButton framing now consistent across themes." },
+    ],
+  });
+  const activeThreadMeta = $derived(threads.find((t) => t.id === selectedThread) ?? threads[0]);
+  const activeMessages = $derived(messagesByThread[selectedThread] ?? []);
   let chatDraft = $state("");
 
   function sendChatMessage() {
     const text = chatDraft.trim();
     if (!text) return;
-    messages = [...messages, { id: `m-${Date.now()}`, author: "You", time: "Now", text }];
+    const current = messagesByThread[selectedThread] ?? [];
+    messagesByThread = {
+      ...messagesByThread,
+      [selectedThread]: [...current, { id: `m-${Date.now()}`, author: "You", time: "Now", text }],
+    };
     chatDraft = "";
+  }
+
+  function moveKanbanTask(id: string, direction: "forward" | "back") {
+    if (direction === "forward") {
+      const target = backlogTasks.find((t) => t.id === id);
+      if (!target) return;
+      backlogTasks = backlogTasks.filter((t) => t.id !== id);
+      inProgressTasks = [target, ...inProgressTasks];
+      toast.info(`Moved "${target.label}" to In Progress`);
+    } else {
+      const target = inProgressTasks.find((t) => t.id === id);
+      if (!target) return;
+      inProgressTasks = inProgressTasks.filter((t) => t.id !== id);
+      backlogTasks = [target, ...backlogTasks];
+      toast.info(`Moved "${target.label}" back to Backlog`);
+    }
   }
 
   // Invoices state
@@ -117,16 +145,37 @@
   let invoicePrintEl = $state<HTMLElement | null>(null);
 
   // Mail state
-  const mailItems = [
-    { id: "mail-1", folder: "inbox", sender: "Security Bot", subject: "Dependabot weekly digest: 0 high severity advisories", body: "All workspace dependencies resolved cleanly against frozen lockfile." },
-    { id: "mail-2", folder: "inbox", sender: "Design Ops", subject: "Urbanist & Mulish font assets verified", body: "Fontsource local assets bundle reliably with zero external CDN requests." },
-    { id: "mail-3", folder: "sent", sender: "Release Team", subject: "CoimUI v1.0.0 candidate staged", body: "Ready for final smoke test run." },
-  ];
+  let mailItems = $state([
+    { id: "mail-1", folder: "inbox" as const, sender: "Security Bot", subject: "Dependabot weekly digest: 0 high severity advisories", body: "All workspace dependencies resolved cleanly against frozen lockfile." },
+    { id: "mail-2", folder: "inbox" as const, sender: "Design Ops", subject: "Urbanist & Mulish font assets verified", body: "Fontsource local assets bundle reliably with zero external CDN requests." },
+    { id: "mail-3", folder: "sent" as const, sender: "Release Team", subject: "CoimUI v1.0.0 candidate staged", body: "Ready for final smoke test run." },
+  ]);
   let mailFolder = $state<"inbox" | "sent">("inbox");
   let selectedMailId = $state("mail-1");
   let composeOpen = $state(false);
+  let composeRecipient = $state("");
+  let composeSubject = $state("");
+  let composeBody = $state("");
   const visibleMails = $derived(mailItems.filter((m) => m.folder === mailFolder));
   const selectedMail = $derived(mailItems.find((m) => m.id === selectedMailId) ?? visibleMails[0] ?? mailItems[0]);
+
+  function sendComposedMail() {
+    const recipient = composeRecipient.trim() || "team@coimui.dev";
+    const subject = composeSubject.trim() || "Release Update";
+    const body = composeBody.trim() || "Sent from CoimUI Workspace Inbox.";
+    const createdId = `mail-${Date.now()}`;
+    mailItems = [
+      { id: createdId, folder: "sent", sender: `To: ${recipient}`, subject, body },
+      ...mailItems,
+    ];
+    mailFolder = "sent";
+    selectedMailId = createdId;
+    composeRecipient = "";
+    composeSubject = "";
+    composeBody = "";
+    composeOpen = false;
+    toast.success("Message dispatched to Sent");
+  }
 </script>
 
 <svelte:head>
@@ -169,12 +218,30 @@
             <CoimPaper variant="outlined" class="p-4">
               <CoimTypography variant="h2" class="mb-3 text-base">Backlog ({backlogTasks.length})</CoimTypography>
               <CoimSortableList bind:items={backlogTasks} ariaLabel="Backlog tasks" />
+              {#if backlogTasks.length > 0}
+                <div class="mt-3 flex flex-wrap gap-2">
+                  {#each backlogTasks as t (t.id)}
+                    <CoimButton size="tiny" variant="outlined" onclick={() => moveKanbanTask(t.id, "forward")}>
+                      Start "{t.label}" →
+                    </CoimButton>
+                  {/each}
+                </div>
+              {/if}
             </CoimPaper>
           </CoimGrid>
           <CoimGrid size={{ xs: 12, md: 6 }}>
             <CoimPaper variant="outlined" class="p-4">
               <CoimTypography variant="h2" class="mb-3 text-base">In Progress ({inProgressTasks.length})</CoimTypography>
               <CoimSortableList bind:items={inProgressTasks} ariaLabel="In progress tasks" />
+              {#if inProgressTasks.length > 0}
+                <div class="mt-3 flex flex-wrap gap-2">
+                  {#each inProgressTasks as t (t.id)}
+                    <CoimButton size="tiny" variant="outlined" onclick={() => moveKanbanTask(t.id, "back")}>
+                      ← Return "{t.label}"
+                    </CoimButton>
+                  {/each}
+                </div>
+              {/if}
             </CoimPaper>
           </CoimGrid>
         </CoimGrid>
@@ -209,10 +276,10 @@
       </CoimGrid>
       <CoimGrid size={{ xs: 12, md: 8 }}>
         <CoimCard>
-          <CoimCardHeader title="Channel Thread" />
+          <CoimCardHeader title={`# ${activeThreadMeta.name}`} subheader={activeThreadMeta.snippet} />
           <CoimCardContent>
             <div class="mb-4 space-y-3">
-              {#each messages as msg (msg.id)}
+              {#each activeMessages as msg (msg.id)}
                 <CoimPaper variant="outlined" class="p-3">
                   <div class="flex items-center justify-between text-xs">
                     <span class="font-semibold">{msg.author}</span>
@@ -307,16 +374,10 @@
       <div class="w-80 max-w-full p-6">
         <h2 class="font-heading text-lg font-bold">New Message</h2>
         <CoimStack spacing={3} class="mt-4">
-          <CoimTextField label="Recipient" placeholder="team@coimui.dev" fullWidth />
-          <CoimTextField label="Subject" placeholder="Release status" fullWidth />
-          <CoimTextField label="Message" multiline rows={4} fullWidth />
-          <CoimButton
-            variant="contained"
-            onclick={() => {
-              composeOpen = false;
-              toast.success("Message dispatched");
-            }}
-          >
+          <CoimTextField label="Recipient" bind:value={composeRecipient} placeholder="team@coimui.dev" fullWidth />
+          <CoimTextField label="Subject" bind:value={composeSubject} placeholder="Release status" fullWidth />
+          <CoimTextField label="Message" bind:value={composeBody} multiline rows={4} fullWidth />
+          <CoimButton variant="contained" onclick={sendComposedMail}>
             Send Message
           </CoimButton>
         </CoimStack>

@@ -12,6 +12,7 @@
     disableBackdropClick?: boolean;
     disableEscapeKeyDown?: boolean;
     onClose?: (reason?: DialogCloseReason) => void;
+    onOpenChange?: (open: boolean) => void;
     "aria-label"?: string;
     "aria-labelledby"?: string;
     class?: string;
@@ -28,6 +29,7 @@
     disableBackdropClick = false,
     disableEscapeKeyDown = false,
     onClose,
+    onOpenChange,
     "aria-label": ariaLabel,
     "aria-labelledby": ariaLabelledBy,
     class: className = "",
@@ -96,6 +98,17 @@
     }
     restoreFocus();
   }
+
+  let lastReportedOpen: boolean | undefined = undefined;
+  $effect(() => {
+    const isOpen = open;
+    untrack(() => {
+      if (lastReportedOpen !== undefined && lastReportedOpen !== isOpen) {
+        onOpenChange?.(isOpen);
+      }
+      lastReportedOpen = isOpen;
+    });
+  });
 
   $effect(() => {
     if (variant !== "temporary") return;

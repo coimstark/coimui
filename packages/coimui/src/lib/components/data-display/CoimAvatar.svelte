@@ -114,7 +114,7 @@
     aria-label={!showImage && alt ? alt : undefined}
     {...rest}
     class={cn(
-      "coim-avatar bg-grey-300 font-body text-text-primary relative inline-flex shrink-0 items-center justify-center overflow-hidden font-semibold select-none",
+      "coim-avatar font-body relative inline-flex shrink-0 items-center justify-center overflow-hidden font-semibold select-none",
       `coim-avatar-${resolvedVariant}`,
       sizeClassMap[resolvedSize],
       variantRadiusMap[resolvedVariant][resolvedSize],

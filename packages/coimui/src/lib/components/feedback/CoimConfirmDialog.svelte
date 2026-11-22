@@ -28,6 +28,7 @@
     onConfirm?: () => void | Promise<void>;
     onCancel?: () => void;
     onClose?: (reason?: DialogCloseReason) => void;
+    onOpenChange?: (open: boolean) => void;
     class?: string;
     children?: Snippet;
   }
@@ -47,6 +48,7 @@
     onConfirm,
     onCancel,
     onClose,
+    onOpenChange,
     class: className = "",
     children,
   }: Props = $props();
@@ -119,6 +121,7 @@
   disableBackdropClick={disableBackdropClick || isLoading}
   disableEscapeKeyDown={disableEscapeKeyDown || isLoading}
   onClose={handleDialogClose}
+  {onOpenChange}
   class={className}
 >
   <CoimDialogTitle class="flex items-center gap-3">

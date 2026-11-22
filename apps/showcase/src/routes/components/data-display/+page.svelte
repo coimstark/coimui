@@ -50,7 +50,8 @@
     { id: "5", initials: "NR", alt: "Nadia Rahman" },
   ];
 
-  let tags = $state(["TypeScript 7", "Svelte 5", "Tailwind 4", "WCAG AA"]);
+  const defaultTags = ["TypeScript 7", "Svelte 5", "Tailwind 4", "WCAG AA"];
+  let tags = $state([...defaultTags]);
 
   interface MetricRow {
     id: string;
@@ -141,7 +142,7 @@
           </CoimTooltip>
         </div>
 
-        <div class="flex flex-wrap gap-2">
+        <div class="flex flex-wrap items-center gap-2">
           {#each tags as tag (tag)}
             <CoimChip
               label={tag}
@@ -154,6 +155,15 @@
               }}
             />
           {/each}
+          {#if tags.length < defaultTags.length}
+            <button
+              type="button"
+              onclick={() => (tags = [...defaultTags])}
+              class="text-primary hover:bg-primary/10 cursor-pointer rounded-md border-0 bg-transparent px-2.5 py-1 text-xs font-semibold transition-colors"
+            >
+              Restore chips
+            </button>
+          {/if}
         </div>
       </CoimStack>
     </ComponentDocCard>

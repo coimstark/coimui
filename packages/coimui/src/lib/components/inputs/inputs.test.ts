@@ -8,6 +8,7 @@ import {
   CoimDropzone,
   CoimFab,
   CoimIconButton,
+  CoimNumberField,
   CoimNumberSpinner,
   CoimOtpInput,
   CoimRating,
@@ -183,5 +184,25 @@ describe("Inputs Component Library", () => {
     expect(onDrop).toHaveBeenCalledTimes(1);
     expect(dz.getByText("notes.txt")).toBeInTheDocument();
     expect(dz.getByRole("alert")).toBeInTheDocument();
+  });
+
+  it("centers fullWidth CoimButton, preserves loading content styling, and renders standalone CoimNumberField label", () => {
+    const fw = render(CoimButton, {
+      props: {
+        fullWidth: true,
+        loading: true,
+        children: createRawSnippet(() => ({ render: () => `<span>Submit</span>` })),
+      },
+    });
+    const fwBtn = fw.getByRole("button");
+    expect(fwBtn.className).not.toContain("justify-start");
+    expect(fwBtn.className).not.toContain("text-transparent!");
+    fw.unmount();
+
+    const num = render(CoimNumberField, {
+      props: { label: "License Seats", value: 25 },
+    });
+    const spinInput = num.getByLabelText("License Seats") as HTMLInputElement;
+    expect(spinInput).toHaveValue(25);
   });
 });

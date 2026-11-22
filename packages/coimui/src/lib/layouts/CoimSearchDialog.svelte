@@ -20,6 +20,7 @@
 
   interface Props {
     items?: CoimSearchItem[];
+    advancedSearchHref?: string;
     onNavigate?: NavigateFn;
     class?: string;
   }
@@ -27,36 +28,36 @@
   const defaultItems: CoimSearchItem[] = [
     {
       id: "s-1",
-      title: "Stretchy",
-      subtitle: "/pages/ecommerce/product-detail",
-      href: "/pages/ecommerce/product-detail",
+      title: "Executive Overview",
+      subtitle: "/",
+      href: "/",
       category: "products",
       avatarSrc: "/images/products/product-1.jpg",
       status: "active",
     },
     {
       id: "s-2",
-      title: "Pony Soprano",
-      subtitle: "/pages/ecommerce/product-detail",
-      href: "/pages/ecommerce/product-detail",
+      title: "Data Grid Engine",
+      subtitle: "/data-grid",
+      href: "/data-grid",
       category: "products",
       avatarSrc: "/images/products/product-2.jpg",
       status: "active",
     },
     {
       id: "s-3",
-      title: "Buck Rogers",
-      subtitle: "/pages/ecommerce/products",
-      href: "/pages/ecommerce/products",
+      title: "Charts Gallery",
+      subtitle: "/charts",
+      href: "/charts",
       category: "products",
       avatarSrc: "/images/products/product-3.jpg",
-      status: "inactive",
+      status: "active",
     },
     {
       id: "s-4",
-      title: "Electronic Devices",
-      subtitle: "314 products",
-      href: "/pages/ecommerce/products",
+      title: "UI Components",
+      subtitle: "Inputs, Surfaces & Data Display",
+      href: "/components",
       category: "categories",
       icon: "CiController",
       iconBgClass: "bg-primary-light/10",
@@ -64,9 +65,9 @@
     },
     {
       id: "s-5",
-      title: "Digital Products",
-      subtitle: "14 products",
-      href: "/pages/ecommerce/products",
+      title: "Date & Time Pickers",
+      subtitle: "ISO calendar & clock controls",
+      href: "/date-pickers",
       category: "categories",
       icon: "CiDocumentCode",
       iconBgClass: "bg-secondary-light/10",
@@ -74,9 +75,9 @@
     },
     {
       id: "s-6",
-      title: "Bags",
-      subtitle: "24 products",
-      href: "/pages/ecommerce/products",
+      title: "Forms & Validation",
+      subtitle: "Zod 4 & Superforms schemas",
+      href: "/forms",
       category: "categories",
       icon: "CiBriefcase",
       iconBgClass: "bg-accent-1/10",
@@ -84,9 +85,9 @@
     },
     {
       id: "s-7",
-      title: "Zoila Vittorino",
-      subtitle: "zoila.vittorino@coimui.dev",
-      href: "/pages/user/overview",
+      title: "Laura Ellis",
+      subtitle: "laura.ellis@coimui.dev",
+      href: "/pages/profile",
       category: "users",
       avatarSrc: "/images/avatars/avatar-1.jpg",
     },
@@ -94,21 +95,18 @@
       id: "s-8",
       title: "Travis Howard",
       subtitle: "travis.howard@coimui.dev",
-      href: "/pages/user/overview",
+      href: "/pages/profile",
       category: "users",
       avatarSrc: "/images/avatars/avatar-2.jpg",
     },
-    {
-      id: "s-9",
-      title: "Olivia Bennett",
-      subtitle: "olivia.bennett@coimui.dev",
-      href: "/pages/user/overview",
-      category: "users",
-      avatarSrc: "/images/avatars/avatar-3.jpg",
-    },
   ];
 
-  let { items = defaultItems, onNavigate, class: className = "" }: Props = $props();
+  let {
+    items = defaultItems,
+    advancedSearchHref,
+    onNavigate,
+    class: className = "",
+  }: Props = $props();
   const theme = getThemeContext();
 
   let open = $state(false);
@@ -436,16 +434,20 @@
     </Tabs.Root>
   </div>
 
-  <div class="flex justify-center px-7 pt-2 pb-5">
-    <button
-      type="button"
-      onclick={() => {
-        closeDialog();
-        onNavigate?.("/pages/miscellaneous/search");
-      }}
-      class="font-body text-primary hover:bg-primary-light/10 cursor-pointer rounded-xs border-0 bg-transparent px-3.5 py-1.5 text-sm font-medium transition-colors"
-    >
-      Advanced Search
-    </button>
-  </div>
+  {#if advancedSearchHref}
+    <div class="flex justify-center px-7 pt-2 pb-5">
+      <button
+        type="button"
+        onclick={() => {
+          closeDialog();
+          onNavigate?.(advancedSearchHref);
+        }}
+        class="font-body text-primary hover:bg-primary-light/10 cursor-pointer rounded-xs border-0 bg-transparent px-3.5 py-1.5 text-sm font-medium transition-colors"
+      >
+        Advanced Search
+      </button>
+    </div>
+  {:else}
+    <div class="h-3"></div>
+  {/if}
 </dialog>

@@ -71,6 +71,14 @@ export interface CoimNotificationItem {
   markedUnread: boolean;
 }
 
+export interface CoimUserMenuLink {
+  id: string;
+  label: string;
+  href: string;
+  icon: IconName;
+  external?: boolean;
+}
+
 export interface CoimUserAccount {
   id: string;
   name: string;

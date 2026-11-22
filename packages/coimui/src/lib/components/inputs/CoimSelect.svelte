@@ -35,6 +35,7 @@
     allowDeselect?: boolean;
     optionSnippet?: Snippet<[{ option: CoimSelectOption; selected: boolean }]>;
     onValueChange?: (value: string | string[]) => void;
+    onOpenChange?: (open: boolean) => void;
     class?: string;
   }
 
@@ -60,6 +61,7 @@
     allowDeselect = false,
     optionSnippet,
     onValueChange,
+    onOpenChange,
     class: className = "",
   }: Props = $props();
 
@@ -104,6 +106,7 @@
   function handleOpenChange(nextOpen: boolean) {
     if (isReadOnly) return;
     open = nextOpen;
+    onOpenChange?.(nextOpen);
   }
 
   function removeChip(val: string, event: Event) {

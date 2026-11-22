@@ -38,6 +38,7 @@
   let mobileStep = $state(1);
   let bottomNav = $state<string | number>("home");
   let dialOpen = $state(false);
+  let textFormats = $state({ bold: true, italic: false, underline: false });
 
   const menubarSections: CoimMenubarSection[] = [
     { value: "file", label: "File", items: fileItems },
@@ -107,9 +108,39 @@
       </div>
 
       <CoimToolbar ariaLabel="Quick formatting bar" class="border-grey-200 rounded-lg border px-2 py-1">
-        <CoimButton size="small" onclick={() => toast.info("Bold")}>Bold</CoimButton>
-        <CoimButton size="small" onclick={() => toast.info("Italic")}>Italic</CoimButton>
-        <CoimButton size="small" onclick={() => toast.info("Underline")}>Underline</CoimButton>
+        <CoimButton
+          size="small"
+          variant={textFormats.bold ? "pastel" : "text"}
+          aria-pressed={textFormats.bold}
+          onclick={() => {
+            textFormats = { ...textFormats, bold: !textFormats.bold };
+            toast.info(`Bold ${textFormats.bold ? "on" : "off"}`);
+          }}
+        >
+          Bold
+        </CoimButton>
+        <CoimButton
+          size="small"
+          variant={textFormats.italic ? "pastel" : "text"}
+          aria-pressed={textFormats.italic}
+          onclick={() => {
+            textFormats = { ...textFormats, italic: !textFormats.italic };
+            toast.info(`Italic ${textFormats.italic ? "on" : "off"}`);
+          }}
+        >
+          Italic
+        </CoimButton>
+        <CoimButton
+          size="small"
+          variant={textFormats.underline ? "pastel" : "text"}
+          aria-pressed={textFormats.underline}
+          onclick={() => {
+            textFormats = { ...textFormats, underline: !textFormats.underline };
+            toast.info(`Underline ${textFormats.underline ? "on" : "off"}`);
+          }}
+        >
+          Underline
+        </CoimButton>
       </CoimToolbar>
     </CoimStack>
   </ComponentDocCard>
@@ -134,20 +165,30 @@
 
       <CoimGrid container spacing={4}>
         <CoimGrid size={{ xs: 12, md: 6 }}>
-          <CoimStepper bind:activeStep nonLinear>
-            <CoimStep index={0}>
-              <CoimStepLabel>Profile</CoimStepLabel>
-              <CoimStepContent>Step 1: Verify workspace owner details.</CoimStepContent>
-            </CoimStep>
-            <CoimStep index={1}>
-              <CoimStepLabel optional="Optional">Integrations</CoimStepLabel>
-              <CoimStepContent>Step 2: Configure optional webhook targets.</CoimStepContent>
-            </CoimStep>
-            <CoimStep index={2}>
-              <CoimStepLabel>Launch</CoimStepLabel>
-              <CoimStepContent>Step 3: Review checklist and publish live.</CoimStepContent>
-            </CoimStep>
-          </CoimStepper>
+          <CoimStack spacing={3}>
+            <CoimStepper bind:activeStep nonLinear>
+              <CoimStep index={0}>
+                <CoimStepLabel>Profile</CoimStepLabel>
+                <CoimStepContent>Step 1: Verify workspace owner details.</CoimStepContent>
+              </CoimStep>
+              <CoimStep index={1}>
+                <CoimStepLabel optional="Optional">Integrations</CoimStepLabel>
+                <CoimStepContent>Step 2: Configure optional webhook targets.</CoimStepContent>
+              </CoimStep>
+              <CoimStep index={2}>
+                <CoimStepLabel>Launch</CoimStepLabel>
+                <CoimStepContent>Step 3: Review checklist and publish live.</CoimStepContent>
+              </CoimStep>
+            </CoimStepper>
+            <div class="flex gap-2">
+              <CoimButton size="small" variant="outlined" disabled={activeStep <= 0} onclick={() => (activeStep = Math.max(0, activeStep - 1))}>
+                Previous Step
+              </CoimButton>
+              <CoimButton size="small" variant="contained" disabled={activeStep >= 2} onclick={() => (activeStep = Math.min(2, activeStep + 1))}>
+                Next Step
+              </CoimButton>
+            </div>
+          </CoimStack>
         </CoimGrid>
 
         <CoimGrid size={{ xs: 12, md: 6 }}>

@@ -162,8 +162,8 @@
   }
 
   .coim-avatar-group > .coim-avatar {
-    outline: 2px solid hsl(var(--background-paper));
-    outline-offset: -1px;
+    border: 2px solid hsl(var(--background-paper));
+    outline: 0;
   }
 
   .coim-avatar-group > .coim-avatar + .coim-avatar {

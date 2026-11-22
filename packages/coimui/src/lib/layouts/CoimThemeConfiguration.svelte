@@ -31,17 +31,20 @@
   } from "../theme/types.js";
   import { cn } from "../utilities/utils.js";
   import { getLayoutContext } from "./layout-state.svelte.js";
+  import { resolveLabel } from "./nav-utils.js";
   import type { NavigateFn, TranslateFn } from "./types.js";
 
   interface Props {
     translate?: TranslateFn;
     purchaseHref?: string;
+    showPurchaseLink?: boolean;
     onNavigate?: NavigateFn;
   }
 
   let {
     translate = (k) => k,
-    purchaseHref = "/pages/miscellaneous/plans",
+    purchaseHref = "/pages/pricing",
+    showPurchaseLink = true,
     onNavigate,
   }: Props = $props();
 
@@ -116,12 +119,29 @@
     { value: Elevation.Flat },
   ];
 
+  function themeSwatchColor(option: string, isDark: boolean): string {
+    switch (option) {
+      case THEME_OPTIONS.BLUE:
+        return isDark ? "#22B2D6" : "#007C9E";
+      case THEME_OPTIONS.GREEN:
+        return isDark ? "#62B834" : "#3D8218";
+      case THEME_OPTIONS.ORANGE:
+        return isDark ? "#E89226" : "#B86300";
+      case THEME_OPTIONS.PURPLE:
+      default:
+        return isDark ? "#D85EC9" : "#B124A4";
+    }
+  }
+
   const optionBtnClass =
     "bg-background-paper hover:bg-grey-25! text-text-primary font-body flex w-full cursor-pointer items-center justify-between gap-2 rounded-lg border border-transparent px-4 py-2 text-base font-medium shadow-none! outline-none! transition-colors";
 </script>
 
 <div
-  class="bg-background-paper shadow-darker-xs fixed inset-e-0 top-1/2 z-20 flex w-15 -translate-y-1/2 flex-col gap-2 rounded-s-3xl p-2.5"
+  class={cn(
+    "bg-background-paper shadow-darker-xs fixed inset-e-0 bottom-4 z-20 flex w-13 flex-col gap-2 rounded-s-3xl p-2 transition-opacity md:top-1/2 md:bottom-auto md:w-15 md:-translate-y-1/2 md:p-2.5",
+    layout.leftShowBackdrop && "pointer-events-none opacity-0",
+  )}
 >
   <Tooltip.Root>
     <Tooltip.Trigger>
@@ -150,36 +170,38 @@
     </Tooltip.Portal>
   </Tooltip.Root>
 
-  <Tooltip.Root>
-    <Tooltip.Trigger>
-      {#snippet child({ props })}
-        <a
-          {...props}
-          href={purchaseHref}
-          aria-label="Plans"
-          onclick={(e) => {
-            if (onNavigate) {
-              e.preventDefault();
-              onNavigate(purchaseHref);
-            }
-          }}
-          class="icon-only text-secondary hover:bg-grey-25 inline-flex h-10 w-full items-center justify-center rounded-lg no-underline transition-colors"
+  {#if showPurchaseLink && purchaseHref}
+    <Tooltip.Root>
+      <Tooltip.Trigger>
+        {#snippet child({ props })}
+          <a
+            {...props}
+            href={purchaseHref}
+            aria-label="Plans"
+            onclick={(e) => {
+              if (onNavigate) {
+                e.preventDefault();
+                onNavigate(purchaseHref);
+              }
+            }}
+            class="icon-only text-secondary hover:bg-grey-25 inline-flex h-10 w-full items-center justify-center rounded-lg no-underline transition-colors"
+          >
+            <CiBasket size="large" />
+          </a>
+        {/snippet}
+      </Tooltip.Trigger>
+      <Tooltip.Portal>
+        <Tooltip.Content
+          side="left"
+          sideOffset={8}
+          class="border-grey-200 bg-background-paper font-body text-text-primary shadow-darker-sm z-100 rounded-sm border border-solid px-3 py-1.5 text-sm font-semibold"
         >
-          <CiBasket size="large" />
-        </a>
-      {/snippet}
-    </Tooltip.Trigger>
-    <Tooltip.Portal>
-      <Tooltip.Content
-        side="left"
-        sideOffset={8}
-        class="border-grey-200 bg-background-paper font-body text-text-primary shadow-darker-sm z-100 rounded-sm border border-solid px-3 py-1.5 text-sm font-semibold"
-      >
-        <Tooltip.Arrow class="text-background-paper fill-current" />
-        Plans
-      </Tooltip.Content>
-    </Tooltip.Portal>
-  </Tooltip.Root>
+          <Tooltip.Arrow class="text-background-paper fill-current" />
+          Plans
+        </Tooltip.Content>
+      </Tooltip.Portal>
+    </Tooltip.Root>
+  {/if}
 </div>
 
 <dialog
@@ -192,40 +214,43 @@
   class="bg-background-paper text-text-primary shadow-darker-lg fixed inset-y-0 inset-s-auto inset-e-0 m-0 h-dvh max-h-dvh w-80 max-w-full flex-col overflow-y-auto rounded-s-2xl border-0 p-0 backdrop:bg-black/40 open:flex"
 >
   <div class="flex min-h-full min-w-80 flex-col p-5">
-    <h6 id="coim-theme-config-title" class="card-title font-heading text-text-primary px-4 pt-4 text-lg font-bold">
+    <h2 id="coim-theme-config-title" class="card-title font-heading text-text-primary px-4 pt-4 text-lg font-bold">
       Configuration
-    </h6>
+    </h2>
 
     <div class="mb-4 flex flex-1 flex-col gap-2 px-5">
-      <div class="font-body text-sm font-semibold">{translate("palette")}</div>
+      <div class="font-body text-sm font-semibold">{resolveLabel(translate, "palette")}</div>
       <div class="flex flex-col gap-2">
         {#each Object.values(THEME_OPTIONS) as option (option)}
-          <button
-            type="button"
-            onclick={() => theme.setTheme(option)}
-            class={cn(
-              optionBtnClass,
-              option,
-              theme.theme === option && "active bg-grey-25! text-primary!",
-            )}
-          >
-            <span class="flex items-center gap-2">
-              <CiPalette class="text-primary" />
-              <span>{translate(option)}</span>
-            </span>
-            <span class={cn("flex justify-end", theme.theme !== option ? "text-grey-200" : "text-primary")}>
-              {#if theme.theme === option}
-                <RadiobuttonSmallChecked />
-              {:else}
-                <RadiobuttonSmallEmptyOutlined />
-              {/if}
-            </span>
-          </button>
+          <div class={cn(option, theme.resolvedMode)}>
+            <button
+              type="button"
+              onclick={() => theme.setTheme(option)}
+              class={cn(
+                optionBtnClass,
+                theme.theme === option && "active bg-grey-25! text-primary!",
+              )}
+            >
+              <span class="flex items-center gap-2">
+                <span style={`color: ${themeSwatchColor(option, theme.resolvedMode === "dark")};`} class="inline-flex">
+                  <CiPalette />
+                </span>
+                <span>{resolveLabel(translate, option)}</span>
+              </span>
+              <span class={cn("flex justify-end", theme.theme !== option ? "text-grey-200" : "text-primary")}>
+                {#if theme.theme === option}
+                  <RadiobuttonSmallChecked />
+                {:else}
+                  <RadiobuttonSmallEmptyOutlined />
+                {/if}
+              </span>
+            </button>
+          </div>
         {/each}
       </div>
 
       <hr class="border-grey-100 my-2 border-0 border-t" />
-      <div class="font-body text-sm font-semibold">{translate("mode")}</div>
+      <div class="font-body text-sm font-semibold">{resolveLabel(translate, "mode")}</div>
       <div class="flex flex-col gap-2">
         {#each themeModeOptions as option (option.value)}
           <button
@@ -244,7 +269,7 @@
               {:else}
                 <CiMoon />
               {/if}
-              <span>{translate(`mode-${option.value}`)}</span>
+              <span>{resolveLabel(translate, `mode-${option.value}`)}</span>
             </span>
             <span class={cn("flex justify-end", theme.mode !== option.value ? "text-grey-200" : "text-primary")}>
               {#if theme.mode === option.value}
@@ -258,7 +283,7 @@
       </div>
 
       <hr class="border-grey-100 my-2 border-0 border-t" />
-      <div class="font-body text-sm font-semibold">{translate("left-menu")}</div>
+      <div class="font-body text-sm font-semibold">{resolveLabel(translate, "left-menu")}</div>
       <div class="flex flex-col gap-2">
         {#each leftMenuOptions as option (option.value)}
           <button
@@ -277,7 +302,7 @@
               {:else}
                 <CiMenu />
               {/if}
-              <span>{translate(`menu-${option.value}`)}</span>
+              <span>{resolveLabel(translate, `menu-${option.value}`)}</span>
             </span>
             <span
               class={cn(
@@ -296,7 +321,7 @@
       </div>
 
       <hr class="border-grey-100 my-2 border-0 border-t" />
-      <div class="font-body text-sm font-semibold">{translate("content")}</div>
+      <div class="font-body text-sm font-semibold">{resolveLabel(translate, "content")}</div>
       <div class="flex flex-col gap-2">
         {#each contentOptions as option (option.value)}
           <button
@@ -313,7 +338,7 @@
               {:else}
                 <CiChevronLeftRightSmall />
               {/if}
-              <span>{translate(`content-${option.value}`)}</span>
+              <span>{resolveLabel(translate, `content-${option.value}`)}</span>
             </span>
             <span
               class={cn(
@@ -332,7 +357,7 @@
       </div>
 
       <hr class="border-grey-100 my-2 border-0 border-t" />
-      <div class="font-body text-sm font-semibold">{translate("top-nav")}</div>
+      <div class="font-body text-sm font-semibold">{resolveLabel(translate, "top-nav")}</div>
       <div class="flex flex-col gap-2">
         {#each topNavOptions as option (option.value)}
           <button
@@ -349,7 +374,7 @@
               {:else}
                 <CiButton />
               {/if}
-              <span>{translate(`top-nav-${option.value}`)}</span>
+              <span>{resolveLabel(translate, `top-nav-${option.value}`)}</span>
             </span>
             <span
               class={cn(
@@ -368,7 +393,7 @@
       </div>
 
       <hr class="border-grey-100 my-2 border-0 border-t" />
-      <div class="font-body text-sm font-semibold">{translate("elevation")}</div>
+      <div class="font-body text-sm font-semibold">{resolveLabel(translate, "elevation")}</div>
       <div class="flex flex-col gap-2">
         {#each elevationOptions as option (option.value)}
           <button
@@ -385,7 +410,7 @@
               {:else}
                 <CiArrowOutDown />
               {/if}
-              <span>{translate(`elevation-${option.value}`)}</span>
+              <span>{resolveLabel(translate, `elevation-${option.value}`)}</span>
             </span>
             <span
               class={cn(
@@ -411,7 +436,7 @@
         class="border-grey-200 text-text-primary hover:bg-grey-200/10 font-body inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xs border border-solid bg-transparent px-3.5 py-1.5 text-sm leading-4 font-medium transition-colors"
       >
         <CiArrowCircleLeft size="small" />
-        <span>{translate("reset-theme")}</span>
+        <span>{resolveLabel(translate, "reset-theme")}</span>
       </button>
     </div>
   </div>

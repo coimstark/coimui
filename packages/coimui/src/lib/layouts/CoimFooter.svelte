@@ -1,5 +1,6 @@
 <script lang="ts">
   import { cn } from "../utilities/utils.js";
+  import { resolveLabel } from "./nav-utils.js";
   import type { CoimFooterLink, NavigateFn, TranslateFn } from "./types.js";
 
   interface Props {
@@ -11,8 +12,7 @@
 
   const defaultLinks: CoimFooterLink[] = [
     { label: "footer-about", href: "/" },
-    { label: "footer-docs", href: "/docs/welcome/introduction" },
-    { label: "footer-purchase", href: "/pages/miscellaneous/plans" },
+    { label: "footer-docs", href: "/docs" },
   ];
 
   let {
@@ -43,7 +43,7 @@
       onclick={(e) => handleLinkClick(e, link)}
       class="font-body text-text-secondary hover:text-primary inline-flex min-w-7 items-center justify-center rounded-xs px-3.5 py-1.5 text-sm leading-4 font-normal no-underline transition-colors"
     >
-      {translate(link.label)}
+      {resolveLabel(translate, link.label)}
     </a>
   {/each}
 </footer>

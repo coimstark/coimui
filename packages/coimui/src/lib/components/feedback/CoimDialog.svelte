@@ -7,6 +7,7 @@
   interface Props {
     open?: boolean;
     onClose?: (reason?: DialogCloseReason) => void;
+    onOpenChange?: (open: boolean) => void;
     maxWidth?: DialogMaxWidth;
     fullWidth?: boolean;
     fullScreen?: boolean;
@@ -25,6 +26,7 @@
   let {
     open = $bindable(false),
     onClose,
+    onOpenChange,
     maxWidth = "sm",
     fullWidth = false,
     fullScreen = false,
@@ -120,6 +122,17 @@
     }
     restoreFocus();
   }
+
+  let lastReportedOpen: boolean | undefined = undefined;
+  $effect(() => {
+    const isOpen = open;
+    untrack(() => {
+      if (lastReportedOpen !== undefined && lastReportedOpen !== isOpen) {
+        onOpenChange?.(isOpen);
+      }
+      lastReportedOpen = isOpen;
+    });
+  });
 
   $effect(() => {
     const el = dialogEl;

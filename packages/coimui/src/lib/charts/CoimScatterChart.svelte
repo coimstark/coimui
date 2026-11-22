@@ -22,6 +22,9 @@
     class: className = "",
   }: Props = $props();
 
+  let containerWidth = $state(0);
+  const chartWidth = $derived(containerWidth > 0 ? Math.max(240, Math.floor(containerWidth)) : 600);
+
   const groupedSeries = $derived.by(() => {
     const names = Array.from(new Set(data.map((d) => d.series ?? "Series")));
     return names.map((name, idx) => ({
@@ -38,10 +41,16 @@
     <div class="font-heading text-text-primary text-base font-semibold">{title}</div>
   {/if}
 
-  <div class="coim-chart-container" role="img" aria-label={title ?? ariaLabel} style={`height: ${height}px;`}>
+  <div
+    bind:clientWidth={containerWidth}
+    class="coim-chart-container"
+    role="img"
+    aria-label={title ?? ariaLabel}
+    style={`height: ${height}px;`}
+  >
     <ScatterChart
       ssr
-      width={600}
+      width={chartWidth}
       {height}
       x="x"
       y="y"

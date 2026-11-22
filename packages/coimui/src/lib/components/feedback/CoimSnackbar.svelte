@@ -31,6 +31,7 @@
     actionLabel?: string;
     onAction?: () => void;
     onClose?: (reason: SnackbarCloseReason) => void;
+    onOpenChange?: (open: boolean) => void;
     closable?: boolean;
     closeOnClickAway?: boolean;
     inline?: boolean;
@@ -52,6 +53,7 @@
     actionLabel,
     onAction,
     onClose,
+    onOpenChange,
     closable = true,
     closeOnClickAway = false,
     inline = false,
@@ -61,12 +63,19 @@
     ...rest
   }: Props = $props();
 
+  function setOpen(next: boolean) {
+    if (open !== next) {
+      open = next;
+      onOpenChange?.(next);
+    }
+  }
+
   $effect(() => {
     if (inline || !open || typeof window === "undefined") return;
     if (autoHideDuration === null || autoHideDuration <= 0) return;
 
     const timer = setTimeout(() => {
-      open = false;
+      setOpen(false);
       onClose?.("timeout");
     }, autoHideDuration);
 
@@ -75,14 +84,14 @@
 
   function handleDismiss() {
     if (!inline) {
-      open = false;
+      setOpen(false);
     }
     onClose?.("dismiss");
   }
 
   function handleClickAway() {
     if (!closeOnClickAway || inline || !open) return;
-    open = false;
+    setOpen(false);
     onClose?.("clickaway");
   }
 

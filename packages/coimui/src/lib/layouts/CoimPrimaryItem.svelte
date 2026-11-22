@@ -3,6 +3,7 @@
   import CoimIcon from "../icons/CoimIcon.svelte";
   import { MenuType } from "../theme/types.js";
   import { cn, isPathMatch } from "../utilities/utils.js";
+  import { navItemMatchesPath, resolveLabel } from "./nav-utils.js";
   import type { CoimNavItem, TranslateFn } from "./types.js";
 
   interface Props {
@@ -29,10 +30,10 @@
 
   const selected = $derived.by(() => {
     if (!item) return false;
-    if (item.href && isPathMatch(currentPath, item.href)) return true;
-    if (item.children) {
-      return item.children.some((child) => child.href && isPathMatch(currentPath, child.href));
+    if (item.children && item.children.some((child) => navItemMatchesPath(child, currentPath))) {
+      return true;
     }
+    if (item.href && isPathMatch(currentPath, item.href)) return true;
     return false;
   });
 
@@ -76,7 +77,7 @@
           (selected || isActive) && "text-primary mt-0 mb-0",
         )}
       >
-        {translate(item.label)}
+        {resolveLabel(translate, item.label)}
       </span>
     </a>
   {:else}
@@ -108,7 +109,7 @@
           (selected || isActive) && "text-primary mt-0 mb-0",
         )}
       >
-        {translate(item.label)}
+        {resolveLabel(translate, item.label)}
       </span>
     </button>
   {/if}
@@ -124,7 +125,7 @@
               href={item.href}
               target="_blank"
               rel="noreferrer"
-              aria-label={translate(item.label)}
+              aria-label={resolveLabel(translate, item.label)}
               class={cn(
                 "icon-only hover:bg-grey-25 text-text-primary inline-flex h-11 w-11 items-center justify-center rounded-lg no-underline transition-all",
                 selected && `bg-grey-25 active ${activeColorClass}`,
@@ -149,7 +150,7 @@
               id={item.id}
               type="button"
               onclick={handleSelect}
-              aria-label={translate(item.label)}
+              aria-label={resolveLabel(translate, item.label)}
               aria-current={selected ? "page" : undefined}
               class={cn(
                 "icon-only hover:bg-grey-25 text-text-primary inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg border-0 bg-transparent transition-all",
@@ -182,7 +183,7 @@
           )}
         >
           <Tooltip.Arrow class="text-background-paper fill-current" />
-          {translate(item.label)}
+          {resolveLabel(translate, item.label)}
         </Tooltip.Content>
       </Tooltip.Portal>
     </Tooltip.Root>

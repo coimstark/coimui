@@ -1,7 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render } from "@testing-library/svelte";
-import { tick } from "svelte";
+import { createRawSnippet, tick } from "svelte";
 import DataDisplayTestHost from "../../../tests/DataDisplayTestHost.svelte";
+import { CoimAvatar } from "./index.js";
 
 describe("Data Display Component Library", () => {
   beforeEach(() => {
@@ -92,5 +93,18 @@ describe("Data Display Component Library", () => {
     // Disabled node in RichTreeView
     const locked = trees[1].querySelector('[data-item-id="locked"]') as HTMLElement;
     expect(locked).toHaveAttribute("aria-disabled", "true");
+  });
+
+  it("renders colored CoimAvatar without neutral bg-grey-300 override", () => {
+    const view = render(CoimAvatar, {
+      props: {
+        color: "primary",
+        initials: "CU",
+        children: createRawSnippet(() => ({ render: () => `<span>CU</span>` })),
+      },
+    });
+    const el = view.container.querySelector(".coim-avatar") as HTMLElement;
+    expect(el.className).toContain("coim-avatar-color-primary");
+    expect(el.className).not.toContain("bg-grey-300");
   });
 });

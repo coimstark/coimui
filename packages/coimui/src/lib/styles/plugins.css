@@ -145,6 +145,62 @@
     border: 1px solid hsl(var(--grey-100));
     border-radius: var(--border-radius-lg);
     background-color: hsl(var(--background-paper));
+    color: hsl(var(--text-primary));
     padding: 0.75rem;
   }
+}
+
+.coim-event-calendar .ec {
+  color-scheme: light;
+  --ec-color-50: hsl(var(--grey-20));
+  --ec-color-100: hsl(var(--grey-25));
+  --ec-color-200: hsl(var(--grey-50));
+  --ec-color-300: hsl(var(--grey-100));
+  --ec-color-400: hsl(var(--grey-200));
+  --ec-bg-color: hsl(var(--background-paper));
+  --ec-day-bg-color: hsl(var(--background-paper));
+  --ec-text-color: hsl(var(--text-primary));
+  --ec-border-color: hsl(var(--grey-100));
+  --ec-today-bg-color: hsl(var(--primary) / 0.08);
+  --ec-highlight-color: hsl(var(--primary) / 0.12);
+  --ec-event-bg-color: hsl(var(--primary));
+  --ec-event-text-color: hsl(var(--text-contrast));
+  --ec-button-bg-color: hsl(var(--grey-25));
+  --ec-button-border-color: hsl(var(--grey-200));
+  --ec-button-text-color: hsl(var(--text-primary));
+  --ec-button-active-bg-color: hsl(var(--primary));
+  --ec-button-active-border-color: hsl(var(--primary));
+  --ec-button-active-text-color: hsl(var(--text-contrast));
+  --ec-popup-bg-color: hsl(var(--background-paper));
+  --ec-now-indicator-color: hsl(var(--error));
+  color: hsl(var(--text-primary));
+  background-color: hsl(var(--background-paper));
+}
+
+.dark .coim-event-calendar .ec {
+  color-scheme: dark;
+  --ec-color-50: hsl(var(--grey-20));
+  --ec-color-100: hsl(var(--grey-25));
+  --ec-color-200: hsl(var(--grey-100));
+  --ec-color-300: hsl(var(--grey-200));
+  --ec-color-400: hsl(var(--grey-400));
+  --ec-bg-color: hsl(var(--background-paper));
+  --ec-day-bg-color: hsl(var(--background-paper));
+  --ec-today-bg-color: hsl(var(--primary) / 0.16);
+}
+
+.coim-event-calendar .ec-button:hover:not(:disabled) {
+  background-color: hsl(var(--grey-50));
+}
+
+.coim-event-calendar .ec-button.ec-active,
+.coim-event-calendar .ec-button.ec-active:hover {
+  background-color: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+  color: hsl(var(--text-contrast));
+}
+
+.coim-event-calendar .ec-day-head,
+.coim-event-calendar .ec-other-month {
+  color: hsl(var(--text-secondary));
 }

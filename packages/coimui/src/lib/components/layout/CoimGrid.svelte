@@ -1,3 +1,14 @@
+<script lang="ts" module>
+  import type { LayoutBreakpoint } from "./types.js";
+
+  interface GridContext {
+    columns: () => Record<LayoutBreakpoint, number>;
+    columnSpacing: () => Record<LayoutBreakpoint, string>;
+  }
+
+  const GRID_CONTEXT_KEY = Symbol("coimui-grid-context");
+</script>
+
 <script lang="ts">
   import { getContext, setContext, untrack } from "svelte";
   import { cn } from "../../utilities/utils.js";
@@ -13,16 +24,7 @@
     GridDirection,
     GridOffsetValue,
     GridSizeValue,
-    LayoutBreakpoint,
-    ResponsiveValue,
   } from "./types.js";
-
-  interface GridContext {
-    columns: () => Record<LayoutBreakpoint, number>;
-    columnSpacing: () => Record<LayoutBreakpoint, string>;
-  }
-
-  const GRID_CONTEXT_KEY = Symbol("coimui-grid-context");
 
   let {
     container = false,

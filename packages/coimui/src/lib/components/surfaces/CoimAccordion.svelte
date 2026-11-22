@@ -10,6 +10,7 @@
     expanded?: boolean;
     defaultExpanded?: boolean;
     onChange?: (expanded: boolean) => void;
+    onExpandedChange?: (expanded: boolean) => void;
     variant?: AccordionVariant;
     disabled?: boolean;
     square?: boolean;
@@ -24,6 +25,7 @@
     expanded = $bindable<boolean | undefined>(undefined),
     defaultExpanded = false,
     onChange,
+    onExpandedChange,
     variant: variantProp,
     disabled = false,
     square = false,
@@ -64,6 +66,7 @@
       expanded = nextExpanded;
       internalExpanded = nextExpanded;
       onChange?.(nextExpanded);
+      onExpandedChange?.(nextExpanded);
     }}
     {disabled}
     class={cn(variant === "surface" && "surface-accordion")}

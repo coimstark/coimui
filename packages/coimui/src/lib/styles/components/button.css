@@ -15,7 +15,7 @@
     }
 
     &.coim-btn-loading-center {
-      @apply text-transparent!;
+      @apply opacity-90;
     }
 
     &.coim-btn-disabled,
@@ -717,7 +717,7 @@
   }
 
   .coim-btn-full-width {
-    @apply w-full justify-start;
+    @apply w-full;
 
     .coim-btn-end-icon {
       @apply ms-auto;

@@ -7,7 +7,11 @@
     brandText?: string;
   }
 
-  let { classNameFull = "", classNameMobile = "", brandText = "CoimUI" }: Props = $props();
+  let {
+    classNameFull = "inline-block",
+    classNameMobile = "hidden",
+    brandText = "CoimUI",
+  }: Props = $props();
 
   const uid = $props.id();
   const gradientID = `${uid}-full`;

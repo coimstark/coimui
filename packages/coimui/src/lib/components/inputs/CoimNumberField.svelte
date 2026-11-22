@@ -47,10 +47,11 @@
     class: className = "",
   }: Props = $props();
 
+  const uid = $props.id();
   const ctx = tryGetFormControlContext();
   let focused = $state(false);
 
-  const resolvedId = $derived(idProp ?? ctx?.id);
+  const resolvedId = $derived(idProp ?? ctx?.id ?? `coim-number-field-${uid}`);
   const resolvedVariant = $derived(variantProp ?? ctx?.variant ?? "standard");
   const resolvedSize = $derived(sizeProp ?? ctx?.size ?? "medium");
   const isSurface = $derived(surfaceProp ?? ctx?.surface ?? false);
@@ -112,6 +113,11 @@
     className,
   )}
 >
+  {#if label && !ctx}
+    <label for={resolvedId} class="coim-form-label mb-1.5 text-sm font-medium text-text-primary">
+      {label}{isRequired ? " *" : ""}
+    </label>
+  {/if}
   <div
     class={cn(
       "coim-input-root justify-between gap-1",

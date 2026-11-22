@@ -133,7 +133,7 @@
     <CoimAvatar
       {size}
       {variant}
-      class={cn("coim-avatar-group-surplus bg-grey-200 text-text-primary", surplusClass)}
+      class={cn("coim-avatar-group-surplus", surplusClass)}
       aria-label={`${surplusCount} more`}
     >
       {#if renderSurplus}

@@ -14,7 +14,7 @@
 
   let {
     stages,
-    width = 460,
+    width = 500,
     height = 240,
     title,
     ariaLabel = "Funnel chart",
@@ -26,11 +26,14 @@
     const maxVal = Math.max(1, stages[0].value, ...stages.map((s) => s.value));
     const slotH = height / stages.length;
     const cx = width / 2;
+    const minWidth = width * 0.48;
+    const maxWidth = width * 0.86;
+    const widthFor = (val: number) => minWidth + (val / maxVal) * (maxWidth - minWidth);
 
     return stages.map((stage, idx) => {
-      const topWidth = (stage.value / maxVal) * (width * 0.72);
-      const nextVal = stages[idx + 1]?.value ?? stage.value * 0.8;
-      const bottomWidth = (nextVal / maxVal) * (width * 0.72);
+      const topWidth = widthFor(stage.value);
+      const nextVal = stages[idx + 1]?.value ?? stage.value * 0.72;
+      const bottomWidth = Math.max(minWidth * 0.85, Math.min(topWidth, widthFor(nextVal)));
       const y1 = idx * slotH + 3;
       const y2 = (idx + 1) * slotH - 3;
       const points = [
@@ -60,17 +63,19 @@
 
   <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label={title ?? ariaLabel} class="w-full" style={`max-height: ${height}px;`}>
     {#each bars as item, idx (idx)}
-      <polygon points={item.points} fill={item.color} fill-opacity="0.88" rx={4}>
-        <title>{item.label}: {item.value} ({item.conversion}%)</title>
+      <polygon points={item.points} fill={item.color} fill-opacity="0.92">
+        <title>{item.label}: {item.value.toLocaleString()} ({item.conversion}%)</title>
       </polygon>
       <text
         x={item.cx}
         y={item.cy}
         text-anchor="middle"
         dominant-baseline="middle"
-        class="fill-text-contrast font-body text-xs font-semibold"
+        fill="#ffffff"
+        class="font-body text-xs font-semibold"
+        style="text-shadow: 0 1px 2px rgba(0,0,0,0.45);"
       >
-        {item.label} · {item.value} ({item.conversion}%)
+        {item.label} · {item.value.toLocaleString()} ({item.conversion}%)
       </text>
     {/each}
   </svg>

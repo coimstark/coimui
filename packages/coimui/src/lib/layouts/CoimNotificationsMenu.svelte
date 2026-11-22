@@ -10,11 +10,13 @@
   import CiUsers from "../icons/ui/CiUsers.svelte";
   import { getThemeContext } from "../theme/theme-state.svelte.js";
   import { cn } from "../utilities/utils.js";
-  import type { CoimNotificationItem, NavigateFn } from "./types.js";
+  import type { CoimNotificationAction, CoimNotificationItem, NavigateFn } from "./types.js";
 
   interface Props {
     notifications?: CoimNotificationItem[];
     settingsHref?: string;
+    viewAllHref?: string;
+    onAction?: (item: CoimNotificationItem, action: CoimNotificationAction) => void;
     onNavigate?: NavigateFn;
     class?: string;
   }
@@ -23,34 +25,34 @@
     {
       id: "100",
       labelBold: "Laura Ellis",
-      labelRegular: "added a product with an image.",
+      labelRegular: "published a component release note.",
       type: "user",
       time: "2 minutes ago",
-      href: "/pages/ecommerce/product-detail",
+      href: "/components",
       avatarImage: "/images/avatars/avatar-1.jpg",
       temporaryUnread: true,
       markedUnread: false,
-      chips: [{ label: "product-1.jpg", image: "/images/products/product-1.jpg", id: "1001" }],
+      chips: [{ label: "Release v1.0.0", image: "/images/products/product-1.jpg", id: "1001" }],
     },
     {
       id: "101",
       labelBold: "Zoila Vittorino",
-      labelRegular: "added an issue.",
+      labelRegular: "updated analytics targets.",
       type: "user",
       time: "14 minutes ago",
-      href: "/pages/support/issue-detail",
+      href: "/charts",
       avatarImage: "/images/avatars/avatar-2.jpg",
       temporaryUnread: true,
       markedUnread: false,
       chips: [
-        { label: "Products", id: "1011" },
-        { label: "Electronics", id: "1012" },
+        { label: "Charts", id: "1011" },
+        { label: "Telemetry", id: "1012" },
       ],
     },
     {
       id: "102",
       labelBold: "Travis Howard",
-      labelRegular: "requested editor access.",
+      labelRegular: "requested workspace reviewer access.",
       type: "user",
       time: "20 minutes ago",
       avatarImage: "/images/avatars/avatar-3.jpg",
@@ -64,21 +66,21 @@
     {
       id: "103",
       labelBold: "Cindy Baker",
-      labelRegular: "added a post.",
+      labelRegular: "shared Q4 billing invoices.",
       type: "user",
       time: "2 hours ago",
-      href: "/pages/user/social",
+      href: "/data-grid",
       avatarImage: "/images/avatars/avatar-4.jpg",
       temporaryUnread: false,
       markedUnread: false,
     },
     {
       id: "104",
-      labelBold: "New Version!",
-      labelRegular: "Introducing v2 with lots of new features.",
+      labelBold: "CoimUI v1.0.0",
+      labelRegular: "All WCAG 2.1 AA and visual checks passed.",
       type: "system",
       time: "4 hours ago",
-      href: "/pages/miscellaneous/article",
+      href: "/docs",
       avatarColorBackground: "bg-accent-3-light/10",
       avatarColorMain: "text-accent-3",
       avatarIcon: "CiFire",
@@ -88,26 +90,13 @@
     {
       id: "105",
       labelBold: "Tip:",
-      labelRegular: "Something is wrong? Create an issue.",
+      labelRegular: "Explore modular form validation schemas.",
       type: "system",
       time: "4 hours ago",
-      href: "/pages/support/add-issue",
+      href: "/forms",
       avatarColorBackground: "bg-accent-1-light/10",
       avatarColorMain: "text-accent-1",
       avatarIcon: "CiBulbOn",
-      temporaryUnread: false,
-      markedUnread: false,
-    },
-    {
-      id: "106",
-      labelBold: "Stuck somewhere?",
-      labelRegular: "Use Knowledge Base to get help.",
-      type: "system",
-      time: "6 hours ago",
-      href: "/pages/miscellaneous/knowledge-base",
-      avatarColorBackground: "bg-accent-2-light/10",
-      avatarColorMain: "text-accent-2",
-      avatarIcon: "CiQuestionHexagon",
       temporaryUnread: false,
       markedUnread: false,
     },
@@ -115,7 +104,9 @@
 
   let {
     notifications = defaultNotifications,
-    settingsHref = "/settings",
+    settingsHref = "/docs",
+    viewAllHref,
+    onAction,
     onNavigate,
     class: className = "",
   }: Props = $props();
@@ -123,12 +114,9 @@
   const theme = getThemeContext();
 
   let items = $state<CoimNotificationItem[]>([]);
-  let initialized = false;
+  let resolvedActions = $state<Record<string, string>>({});
   $effect(() => {
-    if (!initialized) {
-      items = notifications.map((n) => ({ ...n }));
-      initialized = true;
-    }
+    items = notifications.map((n) => ({ ...n }));
   });
 
   let open = $state(false);
@@ -159,7 +147,23 @@
   }
 
   function toggleReadState(id: string, unread: boolean) {
-    items = items.map((n) => (n.id === id ? { ...n, markedUnread: unread } : n));
+    items = items.map((n) => (n.id === id ? { ...n, markedUnread: unread, temporaryUnread: unread } : n));
+  }
+
+  function handleActionClick(item: CoimNotificationItem, action: CoimNotificationAction) {
+    const label = action.type === "positive" ? "Approved" : "Declined";
+    resolvedActions = { ...resolvedActions, [item.id]: label };
+    toggleReadState(item.id, false);
+    onAction?.(item, action);
+  }
+
+  function handleViewAll() {
+    items = items.map((n) => ({ ...n, temporaryUnread: false, markedUnread: false }));
+    tabValue = "all";
+    if (viewAllHref) {
+      open = false;
+      onNavigate?.(viewAllHref);
+    }
   }
 
   function handleItemNavigate(href?: string) {
@@ -235,9 +239,9 @@
       class="bg-background-paper shadow-darker-sm z-100 w-xs rounded-3xl p-3 outline-none md:w-sm"
     >
       <div class="flex flex-row items-start justify-between pe-4">
-        <h6 class="card-title font-heading text-text-primary mb-2 min-h-8 px-4 pt-4 text-lg font-bold">
+        <h2 class="card-title font-heading text-text-primary mb-2 min-h-8 px-4 pt-4 text-lg font-bold">
           Notifications
-        </h6>
+        </h2>
         <div class="mt-3 flex flex-row gap-1">
           <button
             type="button"
@@ -362,22 +366,28 @@
                     {/if}
 
                     {#if item.actions && item.actions.length > 0}
-                      <div class="flex flex-row gap-1">
-                        {#each item.actions as action (action.id)}
-                          <button
-                            type="button"
-                            onclick={() => toggleReadState(item.id, false)}
-                            class={cn(
-                              "font-body cursor-pointer rounded-xs border-0 px-3 py-1 text-sm leading-4 font-medium transition-colors",
-                              action.type === "positive"
-                                ? "bg-primary text-text-contrast hover:bg-primary-light"
-                                : "text-primary hover:bg-primary-light/10 bg-transparent",
-                            )}
-                          >
-                            {action.label}
-                          </button>
-                        {/each}
-                      </div>
+                      {#if resolvedActions[item.id]}
+                        <span class="bg-primary/10 text-primary rounded-xs px-2.5 py-0.5 text-xs font-semibold">
+                          {resolvedActions[item.id]}
+                        </span>
+                      {:else}
+                        <div class="flex flex-row gap-1">
+                          {#each item.actions as action (action.id)}
+                            <button
+                              type="button"
+                              onclick={() => handleActionClick(item, action)}
+                              class={cn(
+                                "font-body cursor-pointer rounded-xs border-0 px-3 py-1 text-sm leading-4 font-medium transition-colors",
+                                action.type === "positive"
+                                  ? "bg-primary text-text-contrast hover:bg-primary-light"
+                                  : "text-primary hover:bg-primary-light/10 bg-transparent",
+                              )}
+                            >
+                              {action.label}
+                            </button>
+                          {/each}
+                        </div>
+                      {/if}
                     {/if}
                   </div>
                 </div>
@@ -428,10 +438,10 @@
       <div class="px-4 pt-2 pb-4">
         <button
           type="button"
-          onclick={() => (open = false)}
+          onclick={handleViewAll}
           class="border-grey-200 text-text-primary hover:bg-grey-200/10 font-body w-full cursor-pointer rounded-xs border border-solid bg-transparent px-3.5 py-1.5 text-sm leading-4 font-medium transition-colors"
         >
-          View All
+          {viewAllHref ? "View All" : "Mark All Read"}
         </button>
       </div>
     </Popover.Content>

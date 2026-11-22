@@ -33,6 +33,7 @@
     disabled?: boolean;
     ariaLabel?: string;
     onChange?: (page: number) => void;
+    onPageChange?: (page: number) => void;
     class?: string;
   }
 
@@ -52,6 +53,7 @@
     disabled = false,
     ariaLabel = "Pagination navigation",
     onChange,
+    onPageChange,
     class: className = "",
     ...rest
   }: Props = $props();
@@ -128,6 +130,7 @@
     if (clamped === page) return;
     page = clamped;
     onChange?.(clamped);
+    onPageChange?.(clamped);
   }
 </script>
 

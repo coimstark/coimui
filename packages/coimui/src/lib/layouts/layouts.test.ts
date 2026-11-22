@@ -17,6 +17,7 @@ import {
   LayoutState,
   type CoimNavItem,
 } from "./index.js";
+import { findPrimaryNavItem, resolveLabel } from "./nav-utils.js";
 
 const sampleItems: CoimNavItem[] = [
   {
@@ -170,19 +171,19 @@ describe("LayoutState & CoimAppShell", () => {
     expect(drawerDialog).toHaveAttribute("open");
 
     // Switch menu type to minimal & single-layer
-    await fireEvent.click(getByRole("button", { name: "menu-minimal" }));
+    await fireEvent.click(getByRole("button", { name: "Minimal" }));
     await tick();
     expect(mainEl.style.paddingInlineStart).toBe("320px");
 
-    await fireEvent.click(getByRole("button", { name: "menu-single-layer" }));
+    await fireEvent.click(getByRole("button", { name: "Single Layer" }));
     await tick();
     expect(mainEl.style.paddingInlineStart).toBe("280px");
 
     // Switch palette, topNav, content, elevation
-    await fireEvent.click(getByRole("button", { name: "theme-blue" }));
-    await fireEvent.click(getByRole("button", { name: "top-nav-full" }));
-    await fireEvent.click(getByRole("button", { name: "content-fluid" }));
-    await fireEvent.click(getByRole("button", { name: "elevation-flat" }));
+    await fireEvent.click(getByRole("button", { name: "Blue" }));
+    await fireEvent.click(getByRole("button", { name: "Full Width" }));
+    await fireEvent.click(getByRole("button", { name: "Fluid" }));
+    await fireEvent.click(getByRole("button", { name: "Flat" }));
     await tick();
 
     expect(document.documentElement.classList.contains(THEME_OPTIONS.BLUE)).toBe(true);
@@ -193,7 +194,7 @@ describe("LayoutState & CoimAppShell", () => {
     expect(container.querySelector("header")).toBeTruthy();
 
     // Reset back to defaults
-    await fireEvent.click(getByRole("button", { name: "reset-theme" }));
+    await fireEvent.click(getByRole("button", { name: "Reset Defaults" }));
     await tick();
     expect(document.documentElement.classList.contains(THEME_OPTIONS.PURPLE)).toBe(true);
     expect(mainEl.style.paddingInlineStart).toBe("376px");
@@ -226,10 +227,10 @@ describe("LayoutState & CoimAppShell", () => {
     await fireEvent.click(getByLabelText("Open search"));
     await tick();
     const searchInput = getByPlaceholderText("Search");
-    await fireEvent.input(searchInput, { target: { value: "Stretchy" } });
+    await fireEvent.input(searchInput, { target: { value: "Data Grid" } });
     await tick();
-    expect(queryByText("Stretchy")).toBeTruthy();
-    expect(queryByText("Buck Rogers")).toBeNull();
+    expect(queryByText("Data Grid Engine")).toBeTruthy();
+    expect(queryByText("Charts Gallery")).toBeNull();
 
     // Notifications badge disappears on open & close
     const badge = getByLabelText("2 unread notifications");
@@ -297,5 +298,26 @@ describe("LayoutState & CoimAppShell", () => {
     expect(wrapped.getByText("Themed child")).toBeInTheDocument();
     expect(document.documentElement.classList.contains(THEME_OPTIONS.GREEN)).toBe(true);
     expect(document.documentElement.classList.contains(Elevation.Flat)).toBe(true);
+  });
+
+  it("resolves nested primary nav owners and built-in label fallbacks", () => {
+    const itemsWithRoot: CoimNavItem[] = [
+      {
+        id: "overview",
+        label: "Overview",
+        href: "/",
+        children: [{ id: "projects", label: "Projects", href: "/projects" }],
+      },
+      ...sampleItems,
+    ];
+
+    expect(findPrimaryNavItem(itemsWithRoot, [], "/")?.id).toBe("overview");
+    expect(findPrimaryNavItem(itemsWithRoot, [], "/projects")?.id).toBe("overview");
+    expect(findPrimaryNavItem(itemsWithRoot, [], "/dashboards/analytics")?.id).toBe("dashboards");
+    expect(findPrimaryNavItem(itemsWithRoot, [], "/users/list")?.id).toBe("users");
+
+    expect(resolveLabel(undefined, "menu-minimal")).toBe("Minimal");
+    expect(resolveLabel((k) => k, "reset-theme")).toBe("Reset Defaults");
+    expect(resolveLabel((k) => (k === "menu-minimal" ? "Kompakt" : k), "menu-minimal")).toBe("Kompakt");
   });
 });

@@ -5,6 +5,7 @@
   import { MenuShowState, MenuType } from "../theme/types.js";
   import { cn, isPathMatch } from "../utilities/utils.js";
   import { getLayoutContext } from "./layout-state.svelte.js";
+  import { findPrimaryNavItem, resolveLabel } from "./nav-utils.js";
   import CoimLogo from "./CoimLogo.svelte";
   import CoimPrimaryItem from "./CoimPrimaryItem.svelte";
   import CoimSecondaryItem from "./CoimSecondaryItem.svelte";
@@ -26,7 +27,7 @@
     bottomItems = [],
     currentPath,
     homeHref = "/",
-    ctaHref = "/pages/miscellaneous/plans",
+    ctaHref = "/docs",
     onNavigate,
     translate = (k) => k,
     ctaSlot,
@@ -40,10 +41,7 @@
   let openedAccordions = $state<OpenedAccordion[]>([]);
 
   function findPrimaryForPath(path: string): CoimNavItem | undefined {
-    return (
-      items.find((item) => item.href && isPathMatch(path, item.href)) ??
-      bottomItems.find((item) => item.href && isPathMatch(path, item.href))
-    );
+    return findPrimaryNavItem(items, bottomItems, path);
   }
 
   function findSelectedSecondary(menuItems: CoimNavItem[], path: string): CoimNavItem | undefined {
@@ -175,7 +173,8 @@
 <nav
   aria-label="Primary navigation"
   class={cn(
-    "bg-background fixed z-10",
+    "bg-background fixed",
+    layout.leftShowBackdrop ? "z-30" : "z-10",
     theme.isTopNavContained ? "h-full" : "h-[calc(100%-4rem)]",
   )}
 >
@@ -240,71 +239,70 @@
           <div class="flex w-full flex-1 flex-col">
             {@render customContentSnippet()}
           </div>
-        {:else}
-          <div
-            class={cn(
-              "flex w-full flex-1 flex-col gap-0.5",
-              layout.leftMenuType === MenuType.SingleLayer && "gap-1",
-            )}
-          >
-            {#each visiblePrimaryItems as item (`left-menu-primary-${layout.leftMenuType}-${item.id}`)}
-              {#if layout.leftMenuType === MenuType.SingleLayer}
-                <CoimSecondaryItem
-                  class={cn(layout.leftShowBackdrop && "z-20")}
-                  {item}
-                  {currentPath}
-                  indent={0}
-                  {openedAccordions}
-                  onToggleAccordion={(next) => (openedAccordions = next)}
-                  {onNavigate}
-                  {translate}
-                  onSelect={(selected) => {
-                    if (layout.temporaryShowPrimaryMenu) {
-                      layout.setTemporaryShowPrimaryMenu(false);
-                    }
-                    handleSelectPrimaryItem(selected);
-                    activeItem = selected;
-                  }}
-                />
-              {:else}
-                <CoimPrimaryItem
-                  class={cn(layout.leftShowBackdrop && "z-20")}
-                  {item}
-                  {currentPath}
-                  onSelect={handleSelectPrimaryItem}
-                  isActive={activeItem?.id === item.id}
-                  menuType={layout.leftMenuType}
-                  {translate}
-                />
-              {/if}
+        {:else if layout.leftMenuType === MenuType.SingleLayer}
+          <div class="flex w-full flex-1 flex-col gap-1">
+            {#each visiblePrimaryItems as item (item.id)}
+              <CoimSecondaryItem
+                class={cn(layout.leftShowBackdrop && "z-20")}
+                {item}
+                {currentPath}
+                indent={0}
+                {openedAccordions}
+                onToggleAccordion={(next) => (openedAccordions = next)}
+                {onNavigate}
+                {translate}
+                onSelect={(selected) => {
+                  if (layout.temporaryShowPrimaryMenu) {
+                    layout.setTemporaryShowPrimaryMenu(false);
+                  }
+                  handleSelectPrimaryItem(selected);
+                  activeItem = selected;
+                }}
+              />
             {/each}
           </div>
 
           <div class="mb-5 flex w-full flex-col gap-0.5">
-            {#each visibleBottomItems as item (`left-menu-bottom-${layout.leftMenuType}-${item.id}`)}
-              {#if layout.leftMenuType === MenuType.SingleLayer}
-                <CoimSecondaryItem
-                  class={cn(layout.leftShowBackdrop && "z-20")}
-                  {item}
-                  {currentPath}
-                  indent={0}
-                  {openedAccordions}
-                  onToggleAccordion={(next) => (openedAccordions = next)}
-                  {onNavigate}
-                  {translate}
-                  onSelect={handleSelectPrimaryItem}
-                />
-              {:else}
-                <CoimPrimaryItem
-                  class={cn(layout.leftShowBackdrop && "z-20")}
-                  {item}
-                  {currentPath}
-                  onSelect={handleSelectPrimaryItem}
-                  isActive={activeItem?.id === item.id}
-                  menuType={layout.leftMenuType}
-                  {translate}
-                />
-              {/if}
+            {#each visibleBottomItems as item (item.id)}
+              <CoimSecondaryItem
+                class={cn(layout.leftShowBackdrop && "z-20")}
+                {item}
+                {currentPath}
+                indent={0}
+                {openedAccordions}
+                onToggleAccordion={(next) => (openedAccordions = next)}
+                {onNavigate}
+                {translate}
+                onSelect={handleSelectPrimaryItem}
+              />
+            {/each}
+          </div>
+        {:else}
+          <div class="flex w-full flex-1 flex-col gap-0.5">
+            {#each visiblePrimaryItems as item (item.id)}
+              <CoimPrimaryItem
+                class={cn(layout.leftShowBackdrop && "z-20")}
+                {item}
+                {currentPath}
+                onSelect={handleSelectPrimaryItem}
+                isActive={activeItem?.id === item.id}
+                menuType={layout.leftMenuType}
+                {translate}
+              />
+            {/each}
+          </div>
+
+          <div class="mb-5 flex w-full flex-col gap-0.5">
+            {#each visibleBottomItems as item (item.id)}
+              <CoimPrimaryItem
+                class={cn(layout.leftShowBackdrop && "z-20")}
+                {item}
+                {currentPath}
+                onSelect={handleSelectPrimaryItem}
+                isActive={activeItem?.id === item.id}
+                menuType={layout.leftMenuType}
+                {translate}
+              />
             {/each}
           </div>
         {/if}
@@ -335,13 +333,13 @@
               >
                 {#if !customContentSnippet}
                   {#if activeItem?.label}
-                    <h6 class="font-heading text-primary mb-4 px-2.5 text-lg font-bold">
-                      {translate(activeItem.label)}
-                    </h6>
+                    <p class="font-heading text-primary mb-4 px-2.5 text-lg font-bold">
+                      {resolveLabel(translate, activeItem.label)}
+                    </p>
                   {/if}
                   <div class="flex h-full w-full flex-1 flex-col justify-between gap-2">
                     <div class="flex w-full flex-1 flex-col gap-1">
-                      {#each activeVisibleChildren as item (`left-menu-secondary-${layout.leftMenuType}-${activeItem?.id}-${item.id}`)}
+                      {#each activeVisibleChildren as item (item.id)}
                         <CoimSecondaryItem
                           {item}
                           {currentPath}
@@ -367,10 +365,10 @@
                       >
                         <IllustrationLaunch class="text-primary h-45 w-45 bg-cover bg-center" />
                         <p class="font-body text-text-primary m-0 px-4 text-center text-base font-normal">
-                          {translate("menu-cta-copy")}
+                          {resolveLabel(translate, "menu-cta-copy")}
                         </p>
                         <span class="group-hover:bg-primary/10 text-primary rounded-md px-5 py-2 font-medium transition-colors">
-                          {translate("menu-cta-button")}
+                          {resolveLabel(translate, "menu-cta-button")}
                         </span>
                       </a>
                     {/if}

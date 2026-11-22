@@ -15,10 +15,12 @@
   import CoimVersionSelect from "./CoimVersionSelect.svelte";
   import type {
     CoimLocaleOption,
+    CoimNotificationAction,
     CoimNotificationItem,
     CoimSearchItem,
     CoimShortcutItem,
     CoimUserAccount,
+    CoimUserMenuLink,
     CoimUserProfile,
     CoimVersionOption,
     NavigateFn,
@@ -33,9 +35,18 @@
     notifications?: CoimNotificationItem[];
     user?: CoimUserProfile;
     accounts?: CoimUserAccount[];
+    userMenuLinks?: CoimUserMenuLink[];
+    userSecondaryLinks?: CoimUserMenuLink[];
+    signOutHref?: string;
+    notificationSettingsHref?: string;
+    notificationViewAllHref?: string;
+    advancedSearchHref?: string;
     locales?: CoimLocaleOption[];
     locale?: string;
     onLocaleChange?: (code: string) => void;
+    onAccountSwitch?: (account: CoimUserAccount) => void;
+    onNotificationAction?: (item: CoimNotificationItem, action: CoimNotificationAction) => void;
+    onSelectVersion?: (version: CoimVersionOption) => void;
     onNavigate?: NavigateFn;
     translate?: TranslateFn;
     showSearch?: boolean;
@@ -53,9 +64,18 @@
     notifications,
     user,
     accounts,
+    userMenuLinks,
+    userSecondaryLinks,
+    signOutHref,
+    notificationSettingsHref,
+    notificationViewAllHref,
+    advancedSearchHref,
     locales,
     locale = "en",
     onLocaleChange,
+    onAccountSwitch,
+    onNotificationAction,
+    onSelectVersion,
     onNavigate,
     translate = (k) => k,
     showSearch = true,
@@ -78,6 +98,17 @@
     event.preventDefault();
     onNavigate(homeHref);
   }
+  function handleVersionSelect(label: string) {
+    const matched = versions?.find((v) => v.label === label);
+    if (matched) {
+      onSelectVersion?.(matched);
+      if (matched.href) {
+        onNavigate?.(matched.href);
+      }
+    } else {
+      onSelectVersion?.({ label });
+    }
+  }
 </script>
 
 <header class={cn("sticky top-0 h-16 w-full", theme.isTopNavContained ? "z-5" : "z-20")}>
@@ -85,7 +116,7 @@
     class={cn(
       "flex h-full w-full flex-none flex-row items-center",
       theme.isTopNavContained
-        ? "rounded-b-3xl bg-transparent shadow-[0_1px_0_0] shadow-gray-100 backdrop-blur-xl"
+        ? "shadow-grey-100 rounded-b-3xl bg-transparent shadow-[0_1px_0_0] backdrop-blur-xl"
         : "shadow-darker-xs bg-background-paper rounded-b-3xl",
     )}
     style:padding="0 var(--main-padding)"
@@ -133,7 +164,7 @@
 
       {#if showVersionSelect}
         <div class={cn(rightButtonsVisibleMobile ? "hidden sm:block" : "block")}>
-          <CoimVersionSelect {versions} />
+          <CoimVersionSelect {versions} onSelectVersion={handleVersionSelect} {onNavigate} />
         </div>
       {/if}
     </div>
@@ -142,13 +173,19 @@
     <div class="flex flex-row items-center sm:gap-1">
       <div class={cn("flex-row items-center sm:flex! sm:gap-1", rightButtonsVisibleMobile ? "flex" : "hidden")}>
         {#if showSearch}
-          <CoimSearchDialog items={searchItems} {onNavigate} />
+          <CoimSearchDialog items={searchItems} {advancedSearchHref} {onNavigate} />
         {/if}
         {#if showShortcuts}
           <CoimShortcutsMenu {shortcuts} {onNavigate} />
         {/if}
         {#if showNotifications}
-          <CoimNotificationsMenu {notifications} {onNavigate} />
+          <CoimNotificationsMenu
+            {notifications}
+            settingsHref={notificationSettingsHref}
+            viewAllHref={notificationViewAllHref}
+            onAction={onNotificationAction}
+            {onNavigate}
+          />
         {/if}
         <CoimModeToggle />
         {@render rightActionsExtra?.()}
@@ -171,9 +208,13 @@
     <CoimUserMenu
       {user}
       {accounts}
+      links={userMenuLinks}
+      secondaryLinks={userSecondaryLinks}
+      {signOutHref}
       {locales}
       {locale}
       {onLocaleChange}
+      {onAccountSwitch}
       {onNavigate}
       {translate}
     />

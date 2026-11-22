@@ -10,11 +10,15 @@
       @apply flex-row;
 
       > .coim-btn-base:not(:last-child) {
-        @apply rounded-e-none border-e border-r-0;
+        @apply rounded-e-none! border-e border-r-0;
       }
 
       > .coim-btn-base:not(:first-child) {
-        @apply rounded-s-none;
+        @apply rounded-s-none!;
+      }
+
+      > .coim-btn-base:not(:first-child):not(:last-child) {
+        @apply rounded-none!;
       }
     }
 
@@ -22,11 +26,15 @@
       @apply flex-col;
 
       > .coim-btn-base:not(:last-child) {
-        @apply rounded-b-none;
+        @apply rounded-b-none!;
       }
 
       > .coim-btn-base:not(:first-child) {
-        @apply rounded-t-none;
+        @apply rounded-t-none!;
+      }
+
+      > .coim-btn-base:not(:first-child):not(:last-child) {
+        @apply rounded-none!;
       }
 
       &.coim-btn-group-contained > .coim-btn-base:not(:last-child),

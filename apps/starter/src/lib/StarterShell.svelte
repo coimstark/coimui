@@ -6,6 +6,10 @@
     CoimAppShell,
     getThemeContext,
     type CoimNavItem,
+    type CoimNotificationItem,
+    type CoimSearchItem,
+    type CoimShortcutItem,
+    type CoimUserMenuLink,
   } from "@coimui/svelte";
   import { starterI18n, SUPPORTED_LOCALES } from "./i18n.svelte.ts";
 
@@ -75,6 +79,58 @@
     },
   ];
 
+  const searchItems: CoimSearchItem[] = [
+    { id: "st-1", title: "Starter Dashboard", subtitle: "KPIs and workspace activity", href: "/", category: "products", avatarSrc: "/images/products/product-1.jpg", status: "active" },
+    { id: "st-2", title: "Projects", subtitle: "Filterable project directory", href: "/projects", category: "products", avatarSrc: "/images/products/product-2.jpg", status: "active" },
+    { id: "st-3", title: "Validated Forms", subtitle: "Zod v4 + Superforms schema", href: "/forms", category: "categories", icon: "CiDocumentCheck", iconBgClass: "bg-primary-light/10", iconColorClass: "text-primary" },
+    { id: "st-4", title: "Workspace Settings", subtitle: "Theme, notifications & metadata", href: "/settings", category: "categories", icon: "CiSettings", iconBgClass: "bg-secondary-light/10", iconColorClass: "text-secondary" },
+    { id: "st-5", title: "Laura Ellis", subtitle: "laura.ellis@coimui.dev", href: "/settings", category: "users", avatarSrc: "/images/avatars/avatar-3.jpg" },
+  ];
+
+  const shortcuts: CoimShortcutItem[] = [
+    { id: "ssc-1", label: "Dashboard", description: "Workspace KPI overview", href: "/", icon: "CiHome", bgClass: "bg-primary-light/10", colorClass: "text-primary" },
+    { id: "ssc-2", label: "Projects", description: "Create & filter records", href: "/projects", icon: "CiFolder", bgClass: "bg-secondary-light/10", colorClass: "text-secondary" },
+    { id: "ssc-3", label: "Forms", description: "Zod 4 onboarding form", href: "/forms", icon: "CiPenSquare", bgClass: "bg-accent-1-light/10", colorClass: "text-accent-1" },
+    { id: "ssc-4", label: "Settings", description: "Palette, mode & alerts", href: "/settings", icon: "CiSettings", bgClass: "bg-accent-2-light/10", colorClass: "text-accent-2" },
+  ];
+
+  const notifications: CoimNotificationItem[] = [
+    {
+      id: "sn-1",
+      labelBold: "Daniel Miller",
+      labelRegular: "moved Partner Onboarding to 91% completion.",
+      type: "user",
+      time: "10 minutes ago",
+      href: "/projects",
+      avatarImage: "/images/avatars/avatar-2.jpg",
+      temporaryUnread: true,
+      markedUnread: false,
+    },
+    {
+      id: "sn-2",
+      labelBold: "System",
+      labelRegular: "Lean core bundle checks passed cleanly.",
+      type: "system",
+      time: "1 hour ago",
+      href: "/settings",
+      avatarIcon: "CiCheckSquare",
+      avatarColorBackground: "bg-success-light/10",
+      avatarColorMain: "text-success",
+      temporaryUnread: false,
+      markedUnread: false,
+    },
+  ];
+
+  const userMenuLinks: CoimUserMenuLink[] = [
+    { id: "overview", label: "user-overview", href: "/", icon: "CiHome" },
+    { id: "projects", label: "user-projects", href: "/projects", icon: "CiFolder" },
+    { id: "forms", label: "user-forms", href: "/forms", icon: "CiPenSquare" },
+  ];
+
+  const userSecondaryLinks: CoimUserMenuLink[] = [
+    { id: "settings", label: "user-settings", href: "/settings", icon: "CiSettings" },
+  ];
+
   function handleLocaleChange(code: string) {
     const dir = starterI18n.setLocale(code);
     theme.setDirection(dir);
@@ -87,12 +143,24 @@
   <CoimAppShell
     items={navItems}
     {currentPath}
-    locales={SUPPORTED_LOCALES.map((l) => ({ code: l.code, label: l.label, shortCode: l.shortCode }))}
+    {searchItems}
+    {shortcuts}
+    {notifications}
+    {userMenuLinks}
+    {userSecondaryLinks}
+    signOutHref="/auth/sign-in"
+    notificationSettingsHref="/settings"
+    showPurchaseLink={false}
+    locales={SUPPORTED_LOCALES.map((l) => ({
+      code: l.code,
+      label: l.label,
+      flagSrc: `/images/flags/${l.code}.jpg`,
+    }))}
     locale={starterI18n.locale}
     onLocaleChange={handleLocaleChange}
     translate={starterI18n.t}
     showVersionSelect={false}
-    ctaHref="/forms"
+    ctaHref="/settings"
     onNavigate={(href) => {
       void goto(href);
     }}

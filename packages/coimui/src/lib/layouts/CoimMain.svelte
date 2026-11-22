@@ -1,8 +1,9 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
   import { MenuShowState } from "../theme/types.js";
-  import { isPathMatch } from "../utilities/utils.js";
   import { getLayoutContext } from "./layout-state.svelte.js";
+  import { findPrimaryNavItem } from "./nav-utils.js";
+  import CoimContentWrapper from "./CoimContentWrapper.svelte";
   import CoimFooter from "./CoimFooter.svelte";
   import type { CoimFooterLink, CoimNavItem, NavigateFn, TranslateFn } from "./types.js";
 
@@ -11,6 +12,7 @@
     bottomItems?: CoimNavItem[];
     currentPath: string;
     footerLinks?: CoimFooterLink[];
+    disableContentWrapper?: boolean;
     onNavigate?: NavigateFn;
     translate?: TranslateFn;
     headerSlot?: Snippet;
@@ -22,6 +24,7 @@
     bottomItems = [],
     currentPath,
     footerLinks,
+    disableContentWrapper = false,
     onNavigate,
     translate,
     headerSlot,
@@ -30,12 +33,7 @@
 
   const layout = getLayoutContext();
 
-  const activeItem = $derived.by(() => {
-    return (
-      items.find((item) => item.href && isPathMatch(currentPath, item.href)) ??
-      bottomItems.find((item) => item.href && isPathMatch(currentPath, item.href))
-    );
-  });
+  const activeItem = $derived(findPrimaryNavItem(items, bottomItems, currentPath));
 
   const mainPadding = $derived.by(() => {
     if (!layout.mounted) return 0;
@@ -64,7 +62,13 @@
 >
   {@render headerSlot?.()}
   <div class="min-h-[calc(100vh-7rem)]">
-    {@render children?.()}
+    {#if disableContentWrapper}
+      {@render children?.()}
+    {:else}
+      <CoimContentWrapper>
+        {@render children?.()}
+      </CoimContentWrapper>
+    {/if}
   </div>
   <CoimFooter links={footerLinks} {onNavigate} {translate} />
 </main>

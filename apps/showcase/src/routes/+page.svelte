@@ -95,8 +95,8 @@
       { title: "CSAT Score", value: "96.4%", chip: "+1.8%", spark: [89, 91, 92, 93, 95, 95, 96] },
     ] as card (card.title)}
       <CoimGrid size={{ xs: 12, sm: 6, lg: 3 }}>
-        <CoimCard>
-          <CoimCardContent>
+        <CoimCard class="h-full">
+          <CoimCardContent class="flex h-full flex-col justify-between">
             <div class="flex items-center justify-between gap-3">
               <div>
                 <div class="text-text-secondary text-sm">{card.title}</div>

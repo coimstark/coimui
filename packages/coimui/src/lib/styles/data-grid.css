@@ -97,8 +97,17 @@
     background-color: hsl(var(--background-paper));
   }
 
+  .coim-data-grid-cell-pinned-left {
+    box-shadow: inset -1px 0 0 hsl(var(--grey-100));
+  }
+
+  .coim-data-grid-cell-pinned-right {
+    box-shadow: inset 1px 0 0 hsl(var(--grey-100));
+  }
+
   .coim-data-grid-head .coim-data-grid-cell-pinned-left,
   .coim-data-grid-head .coim-data-grid-cell-pinned-right {
+    position: sticky;
     z-index: 3;
     background-color: hsl(var(--grey-25));
   }

@@ -4,7 +4,7 @@
 
 @layer components {
   .coim-toggle-group {
-    @apply inline-flex gap-1!;
+    @apply border-grey-100 bg-grey-25/70 inline-flex gap-1! rounded-lg border p-1;
 
     &.coim-toggle-group-vertical {
       @apply flex-col gap-1!;

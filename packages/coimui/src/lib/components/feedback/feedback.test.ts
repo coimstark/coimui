@@ -524,4 +524,55 @@ describe("Phase D Feedback & Overlays", () => {
     await tick();
     expect(onSnackClose).toHaveBeenCalledWith("timeout");
   });
+
+  it("infers determinate vs indeterminate progress and fires CoimDialog onOpenChange only on transitions", async () => {
+    const detCirc = render(CoimCircularProgress, { props: { value: 65 } });
+    expect(detCirc.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "65");
+    expect(detCirc.container.querySelector(".coim-circular-progress-determinate")).toBeTruthy();
+    detCirc.unmount();
+
+    const indCirc = render(CoimCircularProgress, { props: {} });
+    expect(indCirc.getByRole("progressbar")).not.toHaveAttribute("aria-valuenow");
+    expect(indCirc.container.querySelector(".coim-circular-progress-indeterminate")).toBeTruthy();
+    indCirc.unmount();
+
+    const detLin = render(CoimLinearProgress, { props: { value: 65 } });
+    expect(detLin.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "65");
+    expect(detLin.getByRole("progressbar")).toHaveAttribute("data-variant", "determinate");
+    detLin.unmount();
+
+    const indLin = render(CoimLinearProgress, { props: {} });
+    expect(indLin.getByRole("progressbar")).not.toHaveAttribute("aria-valuenow");
+    expect(indLin.getByRole("progressbar")).toHaveAttribute("data-variant", "indeterminate");
+    indLin.unmount();
+
+    const onOpenChange = vi.fn();
+    const dlg = render(CoimDialog, {
+      props: {
+        open: false,
+        onOpenChange,
+        children: createRawSnippet(() => ({ render: () => `<span>Body</span>` })),
+      },
+    });
+    await tick();
+    expect(onOpenChange).not.toHaveBeenCalled();
+
+    await dlg.rerender({
+      open: true,
+      onOpenChange,
+      children: createRawSnippet(() => ({ render: () => `<span>Body</span>` })),
+    });
+    await tick();
+    expect(onOpenChange).toHaveBeenCalledTimes(1);
+    expect(onOpenChange).toHaveBeenCalledWith(true);
+
+    await dlg.rerender({
+      open: false,
+      onOpenChange,
+      children: createRawSnippet(() => ({ render: () => `<span>Body</span>` })),
+    });
+    await tick();
+    expect(onOpenChange).toHaveBeenCalledTimes(2);
+    expect(onOpenChange).toHaveBeenLastCalledWith(false);
+  });
 });

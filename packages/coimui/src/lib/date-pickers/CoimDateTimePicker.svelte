@@ -25,6 +25,7 @@
     required?: boolean;
     hourCycle?: 12 | 24;
     onValueChange?: (value: CalendarDateTime | undefined) => void;
+    onOpenChange?: (open: boolean) => void;
     class?: string;
   }
 
@@ -39,6 +40,7 @@
     required = false,
     hourCycle = 24,
     onValueChange,
+    onOpenChange,
     class: className = "",
   }: Props = $props();
 
@@ -84,7 +86,13 @@
 </script>
 
 <div class={cn("coim-date-field-wrap", className)}>
-  <Popover.Root bind:open>
+  <Popover.Root
+    {open}
+    onOpenChange={(next) => {
+      open = next;
+      onOpenChange?.(next);
+    }}
+  >
     <div class="flex items-end gap-1.5">
       <CoimDateField
         value={datePart}
@@ -129,6 +137,7 @@
             class="coim-btn coim-btn-contained coim-btn-size-small coim-btn-color-primary"
             onclick={() => {
               open = false;
+              onOpenChange?.(false);
             }}
           >
             Done

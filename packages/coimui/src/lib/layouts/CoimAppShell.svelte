@@ -14,10 +14,12 @@
     CoimFooterLink,
     CoimLocaleOption,
     CoimNavItem,
+    CoimNotificationAction,
     CoimNotificationItem,
     CoimSearchItem,
     CoimShortcutItem,
     CoimUserAccount,
+    CoimUserMenuLink,
     CoimUserProfile,
     CoimVersionOption,
     NavigateFn,
@@ -31,20 +33,31 @@
     homeHref?: string;
     ctaHref?: string;
     purchaseHref?: string;
+    showPurchaseLink?: boolean;
     versions?: CoimVersionOption[];
     searchItems?: CoimSearchItem[];
+    advancedSearchHref?: string;
     shortcuts?: CoimShortcutItem[];
     notifications?: CoimNotificationItem[];
+    notificationSettingsHref?: string;
+    notificationViewAllHref?: string;
     user?: CoimUserProfile;
     accounts?: CoimUserAccount[];
+    userMenuLinks?: CoimUserMenuLink[];
+    userSecondaryLinks?: CoimUserMenuLink[];
+    signOutHref?: string;
     locales?: CoimLocaleOption[];
     locale?: string;
     onLocaleChange?: (code: string) => void;
+    onAccountSwitch?: (account: CoimUserAccount) => void;
+    onNotificationAction?: (item: CoimNotificationItem, action: CoimNotificationAction) => void;
+    onSelectVersion?: (version: CoimVersionOption) => void;
     onNavigate?: NavigateFn;
     translate?: TranslateFn;
     menuStorageKey?: string;
     persistMenu?: boolean;
     footerLinks?: CoimFooterLink[];
+    disableContentWrapper?: boolean;
     showSearch?: boolean;
     showShortcuts?: boolean;
     showNotifications?: boolean;
@@ -59,22 +72,33 @@
     bottomItems = [],
     currentPath,
     homeHref = "/",
-    ctaHref = "/pages/miscellaneous/plans",
-    purchaseHref = "/pages/miscellaneous/plans",
+    ctaHref = "/docs",
+    purchaseHref = "/pages/pricing",
+    showPurchaseLink = true,
     versions,
     searchItems,
+    advancedSearchHref,
     shortcuts,
     notifications,
+    notificationSettingsHref,
+    notificationViewAllHref,
     user,
     accounts,
+    userMenuLinks,
+    userSecondaryLinks,
+    signOutHref,
     locales,
     locale = "en",
     onLocaleChange,
+    onAccountSwitch,
+    onNotificationAction,
+    onSelectVersion,
     onNavigate,
     translate = (k) => k,
     menuStorageKey,
     persistMenu,
     footerLinks,
+    disableContentWrapper = false,
     showSearch = true,
     showShortcuts = true,
     showNotifications = true,
@@ -173,13 +197,22 @@
     {homeHref}
     {versions}
     {searchItems}
+    {advancedSearchHref}
     {shortcuts}
     {notifications}
+    {notificationSettingsHref}
+    {notificationViewAllHref}
     {user}
     {accounts}
+    {userMenuLinks}
+    {userSecondaryLinks}
+    {signOutHref}
     {locales}
     {locale}
     {onLocaleChange}
+    {onAccountSwitch}
+    {onNotificationAction}
+    {onSelectVersion}
     {onNavigate}
     {translate}
     {showSearch}
@@ -215,7 +248,7 @@
     {ctaSlot}
   />
 
-  <CoimMain {items} {bottomItems} {currentPath} {footerLinks} {onNavigate} {translate}>
+  <CoimMain {items} {bottomItems} {currentPath} {footerLinks} {disableContentWrapper} {onNavigate} {translate}>
     {#snippet headerSlot()}
       {#if theme.isTopNavContained}
         {@render headerBar()}
@@ -224,6 +257,6 @@
     {@render children?.()}
   </CoimMain>
 
-  <CoimThemeConfiguration {translate} {purchaseHref} {onNavigate} />
+  <CoimThemeConfiguration {translate} {purchaseHref} {showPurchaseLink} {onNavigate} />
   <CoimMenuBackdrop />
 </Tooltip.Provider>

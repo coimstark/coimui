@@ -18,6 +18,14 @@
     min-height: 12rem;
   }
 
+  .coim-bar-chart svg rect {
+    stroke: none;
+  }
+
+  .coim-chart-container text {
+    fill: hsl(var(--text-secondary));
+  }
+
   .coim-chart-legend {
     display: flex;
     flex-wrap: wrap;

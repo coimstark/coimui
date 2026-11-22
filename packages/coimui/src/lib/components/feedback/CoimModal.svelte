@@ -11,6 +11,7 @@
   interface Props {
     open?: boolean;
     onClose?: (reason?: "backdropClick" | "escapeKeyDown") => void;
+    onOpenChange?: (open: boolean) => void;
     keepMounted?: boolean;
     hideBackdrop?: boolean;
     invisibleBackdrop?: boolean;
@@ -27,6 +28,7 @@
   let {
     open = $bindable(false),
     onClose,
+    onOpenChange,
     keepMounted = false,
     hideBackdrop = false,
     invisibleBackdrop = false,
@@ -73,6 +75,17 @@
     if (disableBackdropClick) return;
     closeModal("backdropClick");
   }
+
+  let lastReportedOpen: boolean | undefined = undefined;
+  $effect(() => {
+    const isOpen = open;
+    untrack(() => {
+      if (lastReportedOpen !== undefined && lastReportedOpen !== isOpen) {
+        onOpenChange?.(isOpen);
+      }
+      lastReportedOpen = isOpen;
+    });
+  });
 
   $effect(() => {
     if (typeof document === "undefined" || typeof window === "undefined") return;
