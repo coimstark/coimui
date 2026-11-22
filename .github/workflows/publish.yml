@@ -1,0 +1,134 @@
+name: Publish @coimui/svelte
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+permissions: {}
+
+jobs:
+  verify:
+    name: Verify Release Tag & Package Gates
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.4.4"
+
+      - name: Validate release tag, branch ancestry & registry uniqueness
+        run: |
+          set -euo pipefail
+          test "${GITHUB_REF_TYPE}" = "tag"
+          VERSION="$(node -p "require('./packages/coimui/package.json').version")"
+          test "${GITHUB_REF_NAME}" = "v${VERSION}"
+          node -e '
+            const lib = require("./packages/coimui/package.json");
+            const starter = require("./apps/starter/package.json");
+            const showcase = require("./apps/showcase/package.json");
+            if (lib.name !== "@coimui/svelte") throw new Error("Unexpected library name: " + lib.name);
+            if (lib.private === true) throw new Error("packages/coimui must not be private");
+            if (lib.publishConfig?.access !== "public") throw new Error("publishConfig.access must be public");
+            if (starter.private !== true) throw new Error("apps/starter must remain private");
+            if (showcase.private !== true) throw new Error("apps/showcase must remain private");
+          '
+          git fetch origin main
+          git merge-base --is-ancestor HEAD origin/main
+          if npm view "@coimui/svelte@${VERSION}" version >/dev/null 2>&1; then
+            echo "::error::@coimui/svelte@${VERSION} is already published on npm."
+            exit 1
+          fi
+
+      - name: Install frozen workspace dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Run Svelte & SvelteKit checks
+        run: bun run check
+
+      - name: Run TypeScript 7 typecheck
+        run: bun run typecheck:ts7
+
+      - name: Run unit & SSR tests
+        run: bun run test:unit
+
+      - name: Build library and workspace applications
+        run: bun run build
+
+      - name: Verify distributable package & tarball integrity
+        run: bun run verify:package
+
+  publish:
+    name: Publish via npm Trusted Publishing (OIDC)
+    needs: verify
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js 24 (no cached token placeholder)
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+
+      - name: Setup Bun (without caching)
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.4.4"
+
+      - name: Install latest compatible npm CLI (requires >= 11.5.1 for OIDC)
+        run: |
+          npm install -g npm@12.2.3
+          NPM_VER="$(npm --version)"
+          echo "npm CLI version: ${NPM_VER}"
+          node -e '
+            const [maj, min, pat] = process.argv[1].split(".").map(Number);
+            const ok = maj > 11 || (maj === 11 && (min > 5 || (min === 5 && pat >= 1)));
+            if (!ok) throw new Error("npm >= 11.5.1 required for OIDC Trusted Publishing, got " + process.argv[1]);
+          ' "${NPM_VER}"
+
+      - name: Install frozen workspace dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build @coimui/svelte distributable package
+        run: bun run package
+
+      - name: Verify package metadata, exports & tarball contents
+        run: bun run verify:package
+
+      - name: Inspect npm pack dry-run
+        working-directory: packages/coimui
+        run: npm pack --dry-run
+
+      - name: Publish @coimui/svelte using OIDC Trusted Publishing
+        working-directory: packages/coimui
+        run: npm publish --access public --provenance
+
+      - name: Verify published package & provenance on npm registry
+        run: |
+          VERSION="$(node -p "require('./packages/coimui/package.json').version")"
+          for i in $(seq 1 12); do
+            if npm view "@coimui/svelte@${VERSION}" version dist-tags repository.url --json; then
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "::error::Published package @coimui/svelte@${VERSION} did not become queryable within 60s."
+          exit 1
