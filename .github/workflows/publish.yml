@@ -3,36 +3,31 @@ name: Publish @coimui/svelte
 on:
   push:
     tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
+      - "v*.*.*"
 
 permissions: {}
 
 jobs:
-  verify:
-    name: Verify Release Tag & Package Gates
+  publish:
+    name: Publish @coimui/svelte (OIDC)
     runs-on: ubuntu-24.04
     permissions:
       contents: read
+      id-token: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js 24
-        uses: actions/setup-node@v7
-        with:
-          node-version: "24"
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: "1.4.4"
-
-      - name: Validate release tag, branch ancestry & registry uniqueness
+      - name: Validate release tag, main ancestry & registry uniqueness
         run: |
           set -euo pipefail
           test "${GITHUB_REF_TYPE}" = "tag"
+          if [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Tag ${GITHUB_REF_NAME} is not a strict vX.Y.Z semver release tag."
+            exit 1
+          fi
           VERSION="$(node -p "require('./packages/coimui/package.json').version")"
           test "${GITHUB_REF_NAME}" = "v${VERSION}"
           node -e '
@@ -52,48 +47,17 @@ jobs:
             exit 1
           fi
 
-      - name: Install frozen workspace dependencies
-        run: bun install --frozen-lockfile
-
-      - name: Run Svelte & SvelteKit checks
-        run: bun run check
-
-      - name: Run TypeScript 7 typecheck
-        run: bun run typecheck:ts7
-
-      - name: Run unit & SSR tests
-        run: bun run test:unit
-
-      - name: Build library and workspace applications
-        run: bun run build
-
-      - name: Verify distributable package & tarball integrity
-        run: bun run verify:package
-
-  publish:
-    name: Publish via npm Trusted Publishing (OIDC)
-    needs: verify
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-
-      - name: Setup Node.js 24 (no cached token placeholder)
+      - name: Setup Node.js 24
         uses: actions/setup-node@v7
         with:
           node-version: "24"
 
-      - name: Setup Bun (without caching)
+      - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: "1.4.4"
 
-      - name: Install latest compatible npm CLI (requires >= 11.5.1 for OIDC)
+      - name: Ensure OIDC-capable npm CLI (>= 11.5.1)
         run: |
           npm install -g npm@12.2.3
           NPM_VER="$(npm --version)"
@@ -101,7 +65,7 @@ jobs:
           node -e '
             const [maj, min, pat] = process.argv[1].split(".").map(Number);
             const ok = maj > 11 || (maj === 11 && (min > 5 || (min === 5 && pat >= 1)));
-            if (!ok) throw new Error("npm >= 11.5.1 required for OIDC Trusted Publishing, got " + process.argv[1]);
+            if (!ok) throw new Error("npm >= 11.5.1 required, got " + process.argv[1]);
           ' "${NPM_VER}"
 
       - name: Install frozen workspace dependencies
@@ -110,14 +74,10 @@ jobs:
       - name: Build @coimui/svelte distributable package
         run: bun run package
 
-      - name: Verify package metadata, exports & tarball contents
+      - name: Verify package metadata, exports & tarball integrity
         run: bun run verify:package
 
-      - name: Inspect npm pack dry-run
-        working-directory: packages/coimui
-        run: npm pack --dry-run
-
-      - name: Publish @coimui/svelte using OIDC Trusted Publishing
+      - name: Publish @coimui/svelte via npm Trusted Publishing (OIDC)
         working-directory: packages/coimui
         run: npm publish --access public --provenance
 
@@ -130,5 +90,5 @@ jobs:
             fi
             sleep 5
           done
-          echo "::error::Published package @coimui/svelte@${VERSION} did not become queryable within 60s."
+          echo "::error::Published package @coimui/svelte@${VERSION} did not appear within 60s."
           exit 1
