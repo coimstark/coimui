@@ -210,7 +210,7 @@
               {#if unreadCount > 0}
                 <span
                   aria-label="{unreadCount} unread notifications"
-                  class="bg-primary text-text-contrast font-body pointer-events-none absolute top-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-xs font-semibold ltr:right-1.5 rtl:left-1.5"
+                  class="bg-primary text-text-contrast font-body pointer-events-none absolute top-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-xs font-semibold ltr:right-2 rtl:left-2"
                 >
                   {unreadCount}
                 </span>
@@ -273,12 +273,12 @@
       </div>
 
       <Tabs.Root bind:value={tabValue}>
-        <Tabs.List class="mb-4 flex gap-1 px-4">
+        <Tabs.List class="mb-5 flex gap-1 px-4">
           <Tabs.Trigger
             value="all"
             class={cn(
-              "font-body text-text-secondary inline-flex cursor-pointer items-center gap-1 rounded-xs border-0 bg-transparent px-3 py-1.5 text-sm font-medium transition-colors",
-              tabValue === "all" && "bg-primary/10 text-primary",
+              "font-body text-text-primary border-grey-200 hover:text-primary inline-flex cursor-pointer items-center gap-1 rounded-xs border border-solid bg-transparent px-3.25 py-[calc(0.375rem-1px)] text-sm leading-4 font-medium transition-colors",
+              tabValue === "all" && "border-primary! text-primary!",
             )}
           >
             <CiStructure size="tiny" /> All
@@ -286,8 +286,8 @@
           <Tabs.Trigger
             value="system"
             class={cn(
-              "font-body text-text-secondary inline-flex cursor-pointer items-center gap-1 rounded-xs border-0 bg-transparent px-3 py-1.5 text-sm font-medium transition-colors",
-              tabValue === "system" && "bg-primary/10 text-primary",
+              "font-body text-text-primary border-grey-200 hover:text-primary inline-flex cursor-pointer items-center gap-1 rounded-xs border border-solid bg-transparent px-3.25 py-[calc(0.375rem-1px)] text-sm leading-4 font-medium transition-colors",
+              tabValue === "system" && "border-primary! text-primary!",
             )}
           >
             <CiScreen size="tiny" /> System
@@ -295,8 +295,8 @@
           <Tabs.Trigger
             value="user"
             class={cn(
-              "font-body text-text-secondary inline-flex cursor-pointer items-center gap-1 rounded-xs border-0 bg-transparent px-3 py-1.5 text-sm font-medium transition-colors",
-              tabValue === "user" && "bg-primary/10 text-primary",
+              "font-body text-text-primary border-grey-200 hover:text-primary inline-flex cursor-pointer items-center gap-1 rounded-xs border border-solid bg-transparent px-3.25 py-[calc(0.375rem-1px)] text-sm leading-4 font-medium transition-colors",
+              tabValue === "user" && "border-primary! text-primary!",
             )}
           >
             <CiUsers size="tiny" /> User

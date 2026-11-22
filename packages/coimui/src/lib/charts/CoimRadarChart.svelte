@@ -143,7 +143,7 @@
       <polygon
         points={poly.pointsAttr}
         fill={poly.color}
-        fill-opacity="0.2"
+        fill-opacity="0.14"
         stroke={poly.color}
         stroke-width="2"
       />

@@ -76,7 +76,11 @@
       series={layerSeries}
       seriesLayout={stacked ? "stack" : "overlap"}
       props={{
-        area: { curve: curve === "smooth" ? curveMonotoneX : curveLinear },
+        area: {
+          curve: curve === "smooth" ? curveMonotoneX : curveLinear,
+          fillOpacity: 0.14,
+          line: { strokeWidth: 2 },
+        },
       }}
       {grid}
       axis={true}

@@ -100,5 +100,16 @@ describe("Date & Time Pickers Subpath", () => {
       props: { label: "Launch window" },
     });
     expect(dtp.getByText("Launch window")).toBeInTheDocument();
+    expect(
+      dtp.container.querySelector(".coim-date-input .coim-date-trigger"),
+    ).toBeInTheDocument();
+    dtp.unmount();
+
+    const tpInline = render(CoimTimePicker, {
+      props: { label: "Deploy window" },
+    });
+    expect(
+      tpInline.container.querySelector(".coim-date-input .coim-date-trigger"),
+    ).toBeInTheDocument();
   });
 });

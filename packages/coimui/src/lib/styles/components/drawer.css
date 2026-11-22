@@ -26,8 +26,7 @@
   }
 
   .coim-drawer-temporary::backdrop {
-    background-color: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(2px);
+    background-color: rgba(0, 0, 0, 0.5);
     overscroll-behavior: contain;
   }
 

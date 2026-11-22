@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ScatterChart } from "layerchart";
+  import { Points, ScatterChart } from "layerchart";
   import { cn } from "../utilities/utils.js";
   import { getChartColor } from "./palette.js";
   import type { CoimScatterDatum } from "./types.js";
@@ -58,6 +58,17 @@
       {grid}
       axis={true}
       padding={{ top: 16, right: 16, bottom: 28, left: 40 }}
-    />
+    >
+      {#snippet marks({ context })}
+        {#each context.series.visibleSeries as s (s.key)}
+          <Points
+            seriesKey={s.key}
+            fillOpacity={0.16}
+            stroke={s.color}
+            strokeWidth={2}
+          />
+        {/each}
+      {/snippet}
+    </ScatterChart>
   </div>
 </div>

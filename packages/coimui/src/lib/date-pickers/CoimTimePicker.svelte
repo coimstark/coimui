@@ -74,29 +74,30 @@
       onOpenChange?.(next);
     }}
   >
-    <div class="flex items-end gap-1.5">
-      <CoimTimeField
-        bind:value
-        {label}
-        {helperText}
-        {error}
-        {disabled}
-        {readonly}
-        {required}
-        {hourCycle}
-        onValueChange={(next) => {
-          value = next;
-          onValueChange?.(next);
-        }}
-      />
-      <Popover.Trigger
-        aria-label="Open time selector"
-        {disabled}
-        class="border-grey-200 hover:bg-grey-25 inline-flex h-10 w-10 items-center justify-center rounded-md border"
-      >
-        <CiCalendarClock size="small" />
-      </Popover.Trigger>
-    </div>
+    <CoimTimeField
+      bind:value
+      {label}
+      {helperText}
+      {error}
+      {disabled}
+      {readonly}
+      {required}
+      {hourCycle}
+      onValueChange={(next) => {
+        value = next;
+        onValueChange?.(next);
+      }}
+    >
+      {#snippet endAdornment()}
+        <Popover.Trigger
+          aria-label="Open time selector"
+          {disabled}
+          class="coim-date-trigger"
+        >
+          <CiCalendarClock size="small" />
+        </Popover.Trigger>
+      {/snippet}
+    </CoimTimeField>
 
     <Popover.Portal>
       <Popover.Content sideOffset={6} class="coim-calendar-card z-50 w-auto min-w-56 outline-none">

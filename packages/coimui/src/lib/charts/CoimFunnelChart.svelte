@@ -63,7 +63,14 @@
 
   <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label={title ?? ariaLabel} class="w-full" style={`max-height: ${height}px;`}>
     {#each bars as item, idx (idx)}
-      <polygon points={item.points} fill={item.color} fill-opacity="0.92">
+      <polygon
+        points={item.points}
+        fill={item.color}
+        fill-opacity="0.14"
+        stroke={item.color}
+        stroke-width="2"
+        stroke-linejoin="round"
+      >
         <title>{item.label}: {item.value.toLocaleString()} ({item.conversion}%)</title>
       </polygon>
       <text
@@ -71,9 +78,8 @@
         y={item.cy}
         text-anchor="middle"
         dominant-baseline="middle"
-        fill="#ffffff"
+        fill="hsl(var(--text-primary))"
         class="font-body text-xs font-semibold"
-        style="text-shadow: 0 1px 2px rgba(0,0,0,0.45);"
       >
         {item.label} · {item.value.toLocaleString()} ({item.conversion}%)
       </text>

@@ -35,7 +35,7 @@
     {onclick}
     class={cn(
       "coim-backdrop fixed inset-0 z-40 flex items-center justify-center",
-      invisible ? "bg-transparent" : "bg-black/40 backdrop-blur-[2px]",
+      invisible ? "bg-transparent" : "bg-black/50",
       className,
     )}
     {...rest}

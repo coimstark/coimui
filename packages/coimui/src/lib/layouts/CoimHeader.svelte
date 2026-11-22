@@ -111,7 +111,7 @@
   }
 </script>
 
-<header class={cn("sticky top-0 h-16 w-full", theme.isTopNavContained ? "z-5" : "z-20")}>
+<header class={cn("sticky top-0 h-16 w-full", theme.isTopNavContained && !layout.showLeftMobileButton ? "z-5" : "z-20")}>
   <div
     class={cn(
       "flex h-full w-full flex-none flex-row items-center",

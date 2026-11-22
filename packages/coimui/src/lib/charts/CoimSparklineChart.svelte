@@ -97,9 +97,12 @@
           y={bar.y}
           width={bar.width}
           height={bar.height}
-          rx={2}
+          rx={3}
           fill={color}
-          opacity={hoverIndex === null || hoverIndex === idx ? 0.9 : 0.45}
+          fill-opacity={hoverIndex === null || hoverIndex === idx ? 0.14 : 0.08}
+          stroke={color}
+          stroke-width={1.5}
+          opacity={hoverIndex === null || hoverIndex === idx ? 1 : 0.6}
           onmouseenter={() => (hoverIndex = idx)}
           onmouseleave={() => (hoverIndex = null)}
         >

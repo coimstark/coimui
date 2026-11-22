@@ -121,11 +121,25 @@ export const BUTTON_SIZE_CLASSES: Record<CoimButtonSize, string> = {
   large: "coim-btn-size-large min-w-10 rounded-lg px-6 py-2 text-base leading-6",
 };
 
+export const BUTTON_OUTLINED_SIZE_CLASSES: Record<CoimButtonSize, string> = {
+  tiny: "coim-btn-size-tiny min-w-7 rounded-xs px-[calc(0.875rem-1px)] py-[calc(0.375rem-1px)] text-sm leading-4",
+  small: "coim-btn-size-small min-w-8 rounded-sm px-[calc(1rem-1px)] py-[calc(0.5rem-1px)] text-base leading-4",
+  medium: "coim-btn-size-medium min-w-9 rounded-md px-[calc(1.25rem-1px)] py-[calc(0.5rem-1px)] text-base leading-5",
+  large: "coim-btn-size-large min-w-10 rounded-lg px-[calc(1.5rem-1px)] py-[calc(0.5rem-1px)] text-base leading-6",
+};
+
 export const ICON_BUTTON_SIZE_CLASSES: Record<CoimButtonSize, string> = {
   tiny: "coim-btn-size-tiny rounded-xs px-1.5 py-1.5 text-sm leading-4",
   small: "coim-btn-size-small rounded-sm px-2 py-2 text-base leading-4",
   medium: "coim-btn-size-medium rounded-md px-2 py-2 text-base leading-5",
   large: "coim-btn-size-large rounded-lg px-2 py-2 text-base leading-6",
+};
+
+export const ICON_BUTTON_OUTLINED_SIZE_CLASSES: Record<CoimButtonSize, string> = {
+  tiny: "coim-btn-size-tiny rounded-xs px-[calc(0.375rem-1px)] py-[calc(0.375rem-1px)] text-sm leading-4",
+  small: "coim-btn-size-small rounded-sm px-[calc(0.5rem-1px)] py-[calc(0.5rem-1px)] text-base leading-4",
+  medium: "coim-btn-size-medium rounded-md px-[calc(0.5rem-1px)] py-[calc(0.5rem-1px)] text-base leading-5",
+  large: "coim-btn-size-large rounded-lg px-[calc(0.5rem-1px)] py-[calc(0.5rem-1px)] text-base leading-6",
 };
 
 export const FAB_SIZE_CLASSES: Record<CoimFabSize, { circular: string; extended: string }> = {

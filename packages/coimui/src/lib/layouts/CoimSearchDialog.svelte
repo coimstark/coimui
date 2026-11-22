@@ -232,7 +232,7 @@
   onclose={handleDialogClose}
   onpointerdown={handlePointerDown}
   onpointerup={handlePointerUp}
-  class="bg-background-paper text-text-primary shadow-darker-md mx-auto mt-16 mb-auto w-[min(92vw,48rem)] flex-col overflow-hidden rounded-3xl border-0 p-0 backdrop:bg-black/40 backdrop:backdrop-blur-[2px] open:flex"
+  class="bg-background-paper text-text-primary shadow-darker-md mx-auto my-8 max-h-[calc(100dvh-4rem)] w-[min(92vw,56.25rem)] flex-col overflow-hidden rounded-3xl border-0 p-0 backdrop:bg-black/50 open:flex"
 >
   <div class="border-grey-100 flex items-center gap-3 border-b px-7 py-5">
     <CiSearch size="medium" class="text-text-secondary shrink-0" />
@@ -254,14 +254,14 @@
     </button>
   </div>
 
-  <div class="flex max-h-[65vh] flex-col overflow-y-auto px-7 pt-5 pb-2">
+  <div class="flex max-h-[min(62vh,520px)] flex-1 flex-col overflow-y-auto px-7 pt-5 pb-2">
     <Tabs.Root bind:value={activeTab}>
-      <Tabs.List class="mb-4 flex flex-wrap gap-1">
+      <Tabs.List class="mb-4 flex flex-wrap gap-1.5">
         <Tabs.Trigger
           value="all"
           class={cn(
-            "font-body text-text-secondary inline-flex cursor-pointer items-center gap-1.5 rounded-md border-0 bg-transparent px-3 py-2 text-sm font-medium transition-colors",
-            activeTab === "all" && "bg-primary/10 text-primary",
+            "font-body text-text-primary border-grey-200 hover:text-primary inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-solid bg-transparent px-4.75 py-[calc(0.5rem-1px)] text-base leading-5 font-medium transition-colors",
+            activeTab === "all" && "border-primary! text-primary!",
           )}
         >
           <CiStructure size="medium" />
@@ -270,8 +270,8 @@
         <Tabs.Trigger
           value="products"
           class={cn(
-            "font-body text-text-secondary inline-flex cursor-pointer items-center gap-1.5 rounded-md border-0 bg-transparent px-3 py-2 text-sm font-medium transition-colors",
-            activeTab === "products" && "bg-primary/10 text-primary",
+            "font-body text-text-primary border-grey-200 hover:text-primary inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-solid bg-transparent px-4.75 py-[calc(0.5rem-1px)] text-base leading-5 font-medium transition-colors",
+            activeTab === "products" && "border-primary! text-primary!",
           )}
         >
           <CiDocumentImage size="medium" />
@@ -280,8 +280,8 @@
         <Tabs.Trigger
           value="categories"
           class={cn(
-            "font-body text-text-secondary inline-flex cursor-pointer items-center gap-1.5 rounded-md border-0 bg-transparent px-3 py-2 text-sm font-medium transition-colors",
-            activeTab === "categories" && "bg-primary/10 text-primary",
+            "font-body text-text-primary border-grey-200 hover:text-primary inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-solid bg-transparent px-4.75 py-[calc(0.5rem-1px)] text-base leading-5 font-medium transition-colors",
+            activeTab === "categories" && "border-primary! text-primary!",
           )}
         >
           <CiDirectory size="medium" />
@@ -290,8 +290,8 @@
         <Tabs.Trigger
           value="users"
           class={cn(
-            "font-body text-text-secondary inline-flex cursor-pointer items-center gap-1.5 rounded-md border-0 bg-transparent px-3 py-2 text-sm font-medium transition-colors",
-            activeTab === "users" && "bg-primary/10 text-primary",
+            "font-body text-text-primary border-grey-200 hover:text-primary inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-solid bg-transparent px-4.75 py-[calc(0.5rem-1px)] text-base leading-5 font-medium transition-colors",
+            activeTab === "users" && "border-primary! text-primary!",
           )}
         >
           <CiUsers size="medium" />
@@ -300,8 +300,8 @@
         <Tabs.Trigger
           value="result"
           class={cn(
-            "font-body text-text-secondary inline-flex cursor-pointer items-center gap-1.5 rounded-md border-0 bg-transparent px-3 py-2 text-sm font-medium transition-colors",
-            activeTab === "result" && "bg-primary/10 text-primary",
+            "font-body text-text-primary border-grey-200 hover:text-primary inline-flex cursor-pointer items-center gap-1.5 rounded-md border border-solid bg-transparent px-4.75 py-[calc(0.5rem-1px)] text-base leading-5 font-medium transition-colors",
+            activeTab === "result" && "border-primary! text-primary!",
           )}
         >
           <CiSlashHexagon size="medium" />

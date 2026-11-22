@@ -4,7 +4,13 @@
   import type { CoimColor } from "../../theme/types.js";
   import { cn } from "../../utilities/utils.js";
   import { tryGetButtonGroupContext } from "./context.svelte.js";
-  import { BUTTON_COLOR_CLASSES, BUTTON_SIZE_CLASSES } from "./styles.js";
+  import {
+    BUTTON_COLOR_CLASSES,
+    BUTTON_OUTLINED_SIZE_CLASSES,
+    BUTTON_SIZE_CLASSES,
+    ICON_BUTTON_OUTLINED_SIZE_CLASSES,
+    ICON_BUTTON_SIZE_CLASSES,
+  } from "./styles.js";
   import type { CoimButtonSize, CoimButtonVariant, CoimLoadingPosition } from "./types.js";
 
   interface BaseProps {
@@ -71,12 +77,21 @@
         : "h-4 w-4",
   );
 
+  const resolvedSizeClass = $derived.by(() => {
+    if (isIconOnly) {
+      return variant === "outlined"
+        ? ICON_BUTTON_OUTLINED_SIZE_CLASSES[size]
+        : ICON_BUTTON_SIZE_CLASSES[size];
+    }
+    return variant === "outlined" ? BUTTON_OUTLINED_SIZE_CLASSES[size] : BUTTON_SIZE_CLASSES[size];
+  });
+
   const computedClass = $derived(
     cn(
       "coim-btn-base relative",
       `coim-btn-${variant}`,
       `coim-btn-color-${color}`,
-      BUTTON_SIZE_CLASSES[size],
+      resolvedSizeClass,
       BUTTON_COLOR_CLASSES[variant][color],
       variant === "outlined" && "border border-solid bg-transparent",
       variant === "surface" &&

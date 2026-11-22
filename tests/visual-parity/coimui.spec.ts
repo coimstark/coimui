@@ -196,6 +196,13 @@ test.describe("CoimUI Runtime, Visual, Accessibility & Responsiveness Suite", ()
     await page.keyboard.press("Escape");
     await expect(dialog).toBeHidden();
 
+    // Button height parity (Contained === Outlined === 36px at medium) on /components/inputs
+    await page.goto(`${SHOWCASE_ORIGIN}/components/inputs`, { waitUntil: "networkidle" });
+    const containedBox = await page.getByRole("button", { name: "Contained", exact: true }).boundingBox();
+    const outlinedBox = await page.getByRole("button", { name: "Outlined", exact: true }).boundingBox();
+    expect(Math.round(containedBox!.height)).toBe(36);
+    expect(Math.round(outlinedBox!.height)).toBe(36);
+
     // Accordion keyboard toggle on /pages/faq
     await page.goto(`${SHOWCASE_ORIGIN}/pages/faq`, { waitUntil: "networkidle" });
     const secondTrigger = page.getByRole("button", { name: /Does CoimUI depend on external UI framework runtimes/i });
@@ -267,6 +274,9 @@ test.describe("CoimUI Runtime, Visual, Accessibility & Responsiveness Suite", ()
     const barChartBox = await page.locator(".coim-bar-chart svg").first().boundingBox();
     expect(barChartBox).toBeTruthy();
     expect(barChartBox!.width).toBeGreaterThan(260);
+    const firstBar = page.locator(".coim-bar-chart svg .lc-bar").first();
+    await expect(firstBar).toHaveAttribute("fill-opacity", "0.14");
+    await expect(firstBar).toHaveAttribute("stroke-width", "2");
 
     const legendBtn = page.getByRole("button", { name: "Cloud" });
     await expect(legendBtn).toHaveAttribute("aria-pressed", "true");

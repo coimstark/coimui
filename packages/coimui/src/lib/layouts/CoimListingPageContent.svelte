@@ -63,7 +63,7 @@
 
 <div class={cn("flex w-full flex-col gap-5", className)}>
   {#if showSearch && (activeParent?.children?.length ?? 0) > 0}
-    <div class="relative w-full max-w-sm">
+    <div class="relative w-full">
       <span
         class="text-text-secondary pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2"
       >
@@ -74,7 +74,7 @@
         bind:value={filterText}
         aria-label="Filter items"
         placeholder="Filter..."
-        class="bg-background-paper border-grey-100 text-text-primary placeholder:text-text-secondary focus:border-primary h-10 w-full rounded-lg border ps-10 pe-9 text-sm outline-none transition-colors"
+        class="bg-background-paper border-transparent focus:border-primary/40 text-text-primary placeholder:text-text-secondary h-11 w-full rounded-2xl border border-solid ps-10 pe-9 text-base shadow-xs outline-none transition-colors"
       />
       {#if filterText}
         <button
@@ -90,23 +90,28 @@
   {/if}
 
   <div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-    {#each visibleChildren as item (item.id)}
+    {#each visibleChildren as item, index (item.id)}
       <a
         href={item.href ?? "#"}
         target={item.isExternalLink ? "_blank" : undefined}
         rel={item.isExternalLink ? "noopener noreferrer" : undefined}
         onclick={(e) => handleCardClick(e, item)}
-        class="bg-background-paper hover:border-primary/40 flex h-full flex-row items-center gap-4 rounded-3xl border border-transparent p-6 shadow-xs transition-all hover:shadow-sm no-underline"
+        class="bg-background-paper flex h-full flex-row items-center rounded-3xl p-1 shadow-xs transition-transform hover:scale-[1.02] no-underline"
       >
         {#if item.icon}
           <div
-            class="bg-primary-light/10 text-primary flex h-12 w-12 flex-none items-center justify-center rounded-xl"
+            class={cn(
+              "flex h-24 w-16 flex-none items-center justify-center rounded-2xl",
+              index % 2 === 0
+                ? "bg-primary-light/10 text-primary"
+                : "bg-secondary-light/10 text-secondary",
+            )}
           >
             <CoimIcon icon={item.icon} size="large" />
           </div>
         {/if}
 
-        <div class="flex min-w-0 flex-1 flex-col gap-1">
+        <div class="flex min-w-0 flex-1 flex-col gap-1 px-4 py-4">
           <div class="font-heading text-text-primary text-base font-semibold">
             {translate(item.label)}
           </div>

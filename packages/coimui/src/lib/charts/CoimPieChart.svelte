@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { PieChart } from "layerchart";
+  import { Arc, PieChart } from "layerchart";
   import { cn } from "../utilities/utils.js";
   import CoimChartLegend from "./CoimChartLegend.svelte";
   import { getChartColor } from "./palette.js";
@@ -58,6 +58,15 @@
   const resolvedInnerRadius = $derived(innerRadius ?? (donut ? 0.62 : 0));
 </script>
 
+{#snippet customArc({ props: arcProps }: { props: Record<string, unknown> })}
+  <Arc
+    {...arcProps}
+    fillOpacity={0.14}
+    stroke={typeof arcProps.fill === "string" ? arcProps.fill : "currentColor"}
+    strokeWidth={2}
+  />
+{/snippet}
+
 <div class={cn("coim-chart-root", className)}>
   {#if title}
     <div class="font-heading text-text-primary text-base font-semibold">{title}</div>
@@ -92,6 +101,7 @@
       {cornerRadius}
       {padAngle}
       {labels}
+      arc={labels ? undefined : (customArc as never)}
     />
   </div>
 </div>

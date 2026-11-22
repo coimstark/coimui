@@ -3,7 +3,11 @@
   import type { HTMLAnchorAttributes, HTMLButtonAttributes } from "svelte/elements";
   import type { CoimColor } from "../../theme/types.js";
   import { cn } from "../../utilities/utils.js";
-  import { BUTTON_COLOR_CLASSES, ICON_BUTTON_SIZE_CLASSES } from "./styles.js";
+  import {
+    BUTTON_COLOR_CLASSES,
+    ICON_BUTTON_OUTLINED_SIZE_CLASSES,
+    ICON_BUTTON_SIZE_CLASSES,
+  } from "./styles.js";
   import type { CoimButtonSize, CoimButtonVariant } from "./types.js";
 
   interface BaseProps {
@@ -52,7 +56,7 @@
       "coim-btn-base coim-icon-btn coim-btn-icon-only icon-only min-w-0 shrink-0",
       `coim-btn-${variant}`,
       `coim-btn-color-${color}`,
-      ICON_BUTTON_SIZE_CLASSES[size],
+      variant === "outlined" ? ICON_BUTTON_OUTLINED_SIZE_CLASSES[size] : ICON_BUTTON_SIZE_CLASSES[size],
       BUTTON_COLOR_CLASSES[variant][color],
       variant === "outlined" && "border border-solid bg-transparent",
       variant === "surface" &&

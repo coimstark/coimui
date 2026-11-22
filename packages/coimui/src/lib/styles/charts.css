@@ -19,7 +19,16 @@
   }
 
   .coim-bar-chart svg rect {
-    stroke: none;
+    transition: fill-opacity 150ms ease, opacity 150ms ease;
+  }
+
+  .coim-chart-container .lc-grid-line {
+    stroke: hsl(var(--grey-50));
+  }
+
+  .coim-chart-container .lc-axis-line,
+  .coim-chart-container .lc-tick-line {
+    stroke: hsl(var(--grey-200));
   }
 
   .coim-chart-container text {

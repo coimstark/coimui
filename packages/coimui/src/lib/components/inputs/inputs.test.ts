@@ -204,5 +204,18 @@ describe("Inputs Component Library", () => {
     });
     const spinInput = num.getByLabelText("License Seats") as HTMLInputElement;
     expect(spinInput).toHaveValue(25);
+    num.unmount();
+
+    const outlined = render(CoimButton, {
+      props: {
+        variant: "outlined",
+        size: "medium",
+        color: "secondary",
+        children: createRawSnippet(() => ({ render: () => `<span>Outlined</span>` })),
+      },
+    });
+    const outlinedBtn = outlined.getByRole("button", { name: "Outlined" });
+    expect(outlinedBtn.className).toContain("py-[calc(0.5rem-1px)]");
+    expect(outlinedBtn.className).toContain("px-[calc(1.25rem-1px)]");
   });
 });

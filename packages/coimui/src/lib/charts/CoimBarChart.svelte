@@ -35,13 +35,17 @@
   );
 
   const layerSeries = $derived(
-    series.map((s, idx) => ({
-      key: s.key,
-      label: s.label ?? s.key,
-      value: (row: TData) => Number(s.valueAccessor ? s.valueAccessor(row) : row[s.valueKey ?? s.key] ?? 0),
-      color: getChartColor(idx, s.color),
-      selected: !hiddenKeys[s.key],
-    })),
+    series.map((s, idx) => {
+      const color = getChartColor(idx, s.color);
+      return {
+        key: s.key,
+        label: s.label ?? s.key,
+        value: (row: TData) => Number(s.valueAccessor ? s.valueAccessor(row) : row[s.valueKey ?? s.key] ?? 0),
+        color,
+        selected: !hiddenKeys[s.key],
+        props: { stroke: color, strokeWidth: 2, fillOpacity: 0.14 },
+      };
+    }),
   );
 </script>
 
@@ -76,7 +80,7 @@
       seriesLayout={layout}
       {orientation}
       props={{
-        bars: { stroke: "none", radius: 4 },
+        bars: { radius: 8, strokeWidth: 2, fillOpacity: 0.14 },
       }}
       grid={grid}
       axis={true}

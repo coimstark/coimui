@@ -8,7 +8,6 @@
     border-radius: var(--border-radius-3xl);
     padding: 0.75rem;
     box-shadow: var(--coim-shadow-xs);
-    overflow: hidden;
   }
 
   .coim-card.coim-paper-elevation-0 {

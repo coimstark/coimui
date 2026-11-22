@@ -93,25 +93,26 @@
       onOpenChange?.(next);
     }}
   >
-    <div class="flex items-end gap-1.5">
-      <CoimDateField
-        value={datePart}
-        {label}
-        {helperText}
-        {error}
-        {disabled}
-        {readonly}
-        {required}
-        onValueChange={updateDate}
-      />
-      <Popover.Trigger
-        aria-label="Open date and time picker"
-        {disabled}
-        class="border-grey-200 hover:bg-grey-25 inline-flex h-10 w-10 items-center justify-center rounded-md border"
-      >
-        <CiCalendarClock size="small" />
-      </Popover.Trigger>
-    </div>
+    <CoimDateField
+      value={datePart}
+      {label}
+      {helperText}
+      {error}
+      {disabled}
+      {readonly}
+      {required}
+      onValueChange={updateDate}
+    >
+      {#snippet endAdornment()}
+        <Popover.Trigger
+          aria-label="Open date and time picker"
+          {disabled}
+          class="coim-date-trigger"
+        >
+          <CiCalendarClock size="small" />
+        </Popover.Trigger>
+      {/snippet}
+    </CoimDateField>
 
     <Popover.Portal>
       <Popover.Content sideOffset={6} class="coim-calendar-card z-50 flex flex-col gap-3 outline-none">

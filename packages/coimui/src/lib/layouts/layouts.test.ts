@@ -244,7 +244,7 @@ describe("LayoutState & CoimAppShell", () => {
 
   it("renders CoimListingPageContent & filters nested menu items and renders CoimAuthLayout", async () => {
     const onNavigate = vi.fn();
-    const { getByPlaceholderText, queryByText } = render(CoimListingPageContent, {
+    const { container: listContainer, getByPlaceholderText, queryByText } = render(CoimListingPageContent, {
       props: {
         items: sampleItems,
         currentPath: "/dashboards",
@@ -252,6 +252,10 @@ describe("LayoutState & CoimAppShell", () => {
       },
     });
 
+    const cardLinks = listContainer.querySelectorAll("a");
+    expect(cardLinks.length).toBe(2);
+    expect(cardLinks[0]?.innerHTML).toContain("bg-primary-light/10");
+    expect(cardLinks[1]?.innerHTML).toContain("bg-secondary-light/10");
     expect(queryByText("Default Dashboard")).toBeTruthy();
     expect(queryByText("Analytics Dashboard")).toBeTruthy();
 

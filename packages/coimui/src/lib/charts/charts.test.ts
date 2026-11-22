@@ -129,5 +129,17 @@ describe("Charts Subpath", () => {
       },
     });
     expect(funnel.getByText(/Visits · 1,000/)).toBeInTheDocument();
+    const funnelPoly = funnel.container.querySelector("polygon");
+    expect(funnelPoly).toHaveAttribute("fill-opacity", "0.14");
+    expect(funnelPoly).toHaveAttribute("stroke-width", "2");
+    expect(funnel.container.querySelector("text")).toHaveAttribute("fill", "hsl(var(--text-primary))");
+    funnel.unmount();
+
+    const sparkBar = render(CoimSparklineChart, {
+      props: { data: [10, 20, 15], variant: "bar" },
+    });
+    const sparkRect = sparkBar.container.querySelector("rect");
+    expect(sparkRect).toHaveAttribute("fill-opacity", "0.14");
+    expect(sparkRect).toHaveAttribute("stroke-width", "1.5");
   });
 });

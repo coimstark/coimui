@@ -1,6 +1,7 @@
 <script lang="ts">
   import { DateField } from "bits-ui";
   import type { DateValue } from "@internationalized/date";
+  import type { Snippet } from "svelte";
   import { cn } from "../utilities/utils.js";
   import type { CoimDateGranularity } from "./types.js";
 
@@ -19,6 +20,7 @@
     hourCycle?: 12 | 24;
     locale?: string;
     onValueChange?: (value: DateValue | undefined) => void;
+    endAdornment?: Snippet;
     class?: string;
   }
 
@@ -37,6 +39,7 @@
     hourCycle,
     locale = "en",
     onValueChange,
+    endAdornment,
     class: className = "",
   }: Props = $props();
 </script>
@@ -75,6 +78,7 @@
             </DateField.Segment>
           {/if}
         {/each}
+        {@render endAdornment?.()}
       {/snippet}
     </DateField.Input>
 

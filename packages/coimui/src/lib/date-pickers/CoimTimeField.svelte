@@ -1,6 +1,7 @@
 <script lang="ts">
   import { TimeField } from "bits-ui";
   import type { Time } from "@internationalized/date";
+  import type { Snippet } from "svelte";
   import { cn } from "../utilities/utils.js";
 
   interface Props {
@@ -16,6 +17,7 @@
     granularity?: "hour" | "minute" | "second";
     locale?: string;
     onValueChange?: (value: Time | undefined) => void;
+    endAdornment?: Snippet;
     class?: string;
   }
 
@@ -32,6 +34,7 @@
     granularity = "minute",
     locale = "en",
     onValueChange,
+    endAdornment,
     class: className = "",
   }: Props = $props();
 </script>
@@ -68,6 +71,7 @@
             </TimeField.Segment>
           {/if}
         {/each}
+        {@render endAdornment?.()}
       {/snippet}
     </TimeField.Input>
 

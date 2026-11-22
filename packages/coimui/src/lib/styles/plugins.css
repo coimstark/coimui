@@ -4,9 +4,9 @@
 
 @layer components {
   .coim-rich-editor {
-    border: 1px solid hsl(var(--grey-200));
-    border-radius: var(--border-radius-md);
-    background-color: hsl(var(--background-paper));
+    border: 1px solid transparent;
+    border-radius: var(--border-radius-lg);
+    background-color: hsl(var(--grey-25));
     color: hsl(var(--text-primary));
     overflow: hidden;
     font-family: var(--coim-font-body);
@@ -15,7 +15,29 @@
   .coim-rich-editor .ql-toolbar.ql-snow {
     border: 0;
     border-bottom: 1px solid hsl(var(--grey-100));
-    background-color: hsl(var(--grey-25));
+    background-color: transparent;
+  }
+
+  .coim-rich-editor .ql-toolbar.ql-snow .ql-stroke {
+    stroke: hsl(var(--text-secondary));
+  }
+
+  .coim-rich-editor .ql-toolbar.ql-snow .ql-fill {
+    fill: hsl(var(--text-secondary));
+  }
+
+  .coim-rich-editor .ql-toolbar.ql-snow .ql-picker {
+    color: hsl(var(--text-primary));
+  }
+
+  .coim-rich-editor .ql-toolbar.ql-snow button:hover .ql-stroke,
+  .coim-rich-editor .ql-toolbar.ql-snow button.ql-active .ql-stroke {
+    stroke: hsl(var(--primary));
+  }
+
+  .coim-rich-editor .ql-toolbar.ql-snow button:hover .ql-fill,
+  .coim-rich-editor .ql-toolbar.ql-snow button.ql-active .ql-fill {
+    fill: hsl(var(--primary));
   }
 
   .coim-rich-editor .ql-container.ql-snow {
@@ -23,6 +45,11 @@
     font-family: var(--coim-font-body);
     font-size: var(--text-base);
     min-height: 10rem;
+    color: hsl(var(--text-primary));
+  }
+
+  .coim-rich-editor .ql-editor.ql-blank::before {
+    color: hsl(var(--text-secondary));
   }
 
   .coim-markdown {
@@ -203,4 +230,30 @@
 .coim-event-calendar .ec-day-head,
 .coim-event-calendar .ec-other-month {
   color: hsl(var(--text-secondary));
+}
+
+.coim-event-calendar .ec-button {
+  border-radius: var(--border-radius-md);
+  font-family: var(--coim-font-body);
+  font-weight: 500;
+}
+
+.coim-event-calendar .ec-event {
+  border-radius: 9999px;
+  padding-inline: 0.5rem;
+  font-size: var(--text-xs);
+  font-weight: 500;
+  border: 0;
+}
+
+.coim-event-calendar .ec-day-grid .ec-today .ec-day-head time {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  padding-inline: 0.25rem;
+  border-radius: 9999px;
+  background-color: hsl(var(--primary));
+  color: hsl(var(--text-contrast));
 }

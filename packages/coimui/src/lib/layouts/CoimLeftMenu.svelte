@@ -173,8 +173,7 @@
 <nav
   aria-label="Primary navigation"
   class={cn(
-    "bg-background fixed",
-    layout.leftShowBackdrop ? "z-30" : "z-10",
+    "bg-background fixed z-10",
     theme.isTopNavContained ? "h-full" : "h-[calc(100%-4rem)]",
   )}
 >

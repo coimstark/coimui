@@ -45,15 +45,15 @@
         {...props}
         type="button"
         class={cn(
-          "border-grey-200 text-text-primary hover:bg-grey-200/10 hover:text-text-primary-dark font-body inline-flex max-w-36 cursor-pointer items-center gap-1 rounded-full border border-solid bg-transparent px-3.5 py-1.5 text-xs leading-4 font-medium whitespace-nowrap transition-all sm:max-w-none sm:text-sm",
+          "border-grey-200 text-text-primary hover:bg-grey-200/10 hover:text-text-primary-dark font-body inline-flex max-w-30 cursor-pointer items-center gap-1 rounded-md border border-solid bg-transparent px-4 py-[calc(0.5rem-1px)] text-base leading-5 font-medium whitespace-nowrap transition-all sm:max-w-none",
           className,
         )}
       >
         <span class="truncate">{selectedVersion}</span>
         <CiChevronRightSmall
-          size="small"
+          size="medium"
           class={cn(
-            "shrink-0 transition-transform rtl:rotate-180",
+            "-me-1 ms-1 shrink-0 transition-transform rtl:rotate-180",
             open && "rotate-90 rtl:rotate-90",
           )}
         />

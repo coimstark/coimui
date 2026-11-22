@@ -211,7 +211,7 @@
   onclose={handleDialogClose}
   onpointerdown={handlePointerDown}
   onpointerup={handlePointerUp}
-  class="bg-background-paper text-text-primary shadow-darker-lg fixed inset-y-0 inset-s-auto inset-e-0 m-0 h-dvh max-h-dvh w-80 max-w-full flex-col overflow-y-auto rounded-s-2xl border-0 p-0 backdrop:bg-black/40 open:flex"
+  class="bg-background-paper text-text-primary shadow-darker-lg fixed inset-y-0 inset-s-auto inset-e-0 m-0 h-dvh max-h-dvh w-80 max-w-full flex-col overflow-y-auto rounded-s-2xl border-0 p-0 backdrop:bg-black/50 open:flex"
 >
   <div class="flex min-h-full min-w-80 flex-col p-5">
     <h2 id="coim-theme-config-title" class="card-title font-heading text-text-primary px-4 pt-4 text-lg font-bold">
@@ -228,7 +228,8 @@
               onclick={() => theme.setTheme(option)}
               class={cn(
                 optionBtnClass,
-                theme.theme === option && "active bg-grey-25! text-primary!",
+                "text-primary!",
+                theme.theme === option && "active bg-grey-25!",
               )}
             >
               <span class="flex items-center gap-2">
@@ -249,7 +250,7 @@
         {/each}
       </div>
 
-      <hr class="border-grey-100 my-2 border-0 border-t" />
+      <hr class="border-grey-100 my-0 border-0 border-t" />
       <div class="font-body text-sm font-semibold">{resolveLabel(translate, "mode")}</div>
       <div class="flex flex-col gap-2">
         {#each themeModeOptions as option (option.value)}
@@ -282,7 +283,7 @@
         {/each}
       </div>
 
-      <hr class="border-grey-100 my-2 border-0 border-t" />
+      <hr class="border-grey-100 my-0 border-0 border-t" />
       <div class="font-body text-sm font-semibold">{resolveLabel(translate, "left-menu")}</div>
       <div class="flex flex-col gap-2">
         {#each leftMenuOptions as option (option.value)}
@@ -320,7 +321,7 @@
         {/each}
       </div>
 
-      <hr class="border-grey-100 my-2 border-0 border-t" />
+      <hr class="border-grey-100 my-0 border-0 border-t" />
       <div class="font-body text-sm font-semibold">{resolveLabel(translate, "content")}</div>
       <div class="flex flex-col gap-2">
         {#each contentOptions as option (option.value)}
@@ -356,7 +357,7 @@
         {/each}
       </div>
 
-      <hr class="border-grey-100 my-2 border-0 border-t" />
+      <hr class="border-grey-100 my-0 border-0 border-t" />
       <div class="font-body text-sm font-semibold">{resolveLabel(translate, "top-nav")}</div>
       <div class="flex flex-col gap-2">
         {#each topNavOptions as option (option.value)}
@@ -392,7 +393,7 @@
         {/each}
       </div>
 
-      <hr class="border-grey-100 my-2 border-0 border-t" />
+      <hr class="border-grey-100 my-0 border-0 border-t" />
       <div class="font-body text-sm font-semibold">{resolveLabel(translate, "elevation")}</div>
       <div class="flex flex-col gap-2">
         {#each elevationOptions as option (option.value)}
