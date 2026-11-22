@@ -54,7 +54,13 @@ const packOutput = execFileSync("npm", ["pack", "--dry-run", "--json"], {
   encoding: "utf8",
   maxBuffer: 20 * 1024 * 1024,
 });
-const [packReport] = JSON.parse(packOutput);
+const parsedPack = JSON.parse(packOutput);
+const packReport = Array.isArray(parsedPack)
+  ? parsedPack[0]
+  : parsedPack && Array.isArray(parsedPack.files)
+    ? parsedPack
+    : parsedPack?.[pkg.name] ?? Object.values(parsedPack ?? {})[0];
+assert(packReport && Array.isArray(packReport.files), "Unexpected JSON shape from npm pack --dry-run --json");
 const packedFiles = packReport.files.map((entry) => entry.path);
 
 const requiredPacked = [
