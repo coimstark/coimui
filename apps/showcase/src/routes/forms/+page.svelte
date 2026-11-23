@@ -1,7 +1,4 @@
 <script lang="ts">
-  import { untrack } from "svelte";
-  import { superForm } from "sveltekit-superforms";
-  import { zod4Client } from "sveltekit-superforms/adapters";
   import {
     CoimAlert,
     CoimAlertTitle,
@@ -23,25 +20,76 @@
     toast,
   } from "@coimui/svelte";
   import { showcaseFormSchema } from "#lib/schemas/showcase-form.ts";
-  import type { PageData } from "./$types";
 
-  let { data }: { data: PageData } = $props();
+  interface ShowcaseFormValues {
+    fullName: string;
+    email: string;
+    organization: string;
+    seatCount: number;
+    deploymentModel: "cloud" | "dedicated" | "self-hosted";
+    releaseWindow: "immediate" | "next-sprint" | "quarterly";
+    notes: string;
+    agreeTerms: boolean;
+  }
 
-  const { form, errors, message, submitting, enhance } = superForm(
-    untrack(() => data.form),
-    {
-      validators: zod4Client(showcaseFormSchema),
-      onUpdated: ({ form: updated }) => {
-        if (updated.valid && updated.message) {
-          toast.success(String(updated.message));
-        }
-      },
-    },
-  );
+  type FieldErrors = Partial<Record<keyof ShowcaseFormValues, string>>;
+
+  let form = $state<ShowcaseFormValues>({
+    fullName: "Laura Ellis",
+    email: "laura.ellis@coimui.dev",
+    organization: "Northstar Engineering",
+    seatCount: 45,
+    deploymentModel: "cloud",
+    releaseWindow: "next-sprint",
+    notes: "",
+    agreeTerms: true,
+  });
+
+  let errors = $state<FieldErrors>({});
+  let message = $state<string | null>(null);
+  let submitting = $state(false);
+
+  function mapIssuesToErrors(issues: readonly { path: PropertyKey[]; message: string }[]): FieldErrors {
+    const next: FieldErrors = {};
+    for (const issue of issues) {
+      const key = issue.path[0];
+      if (typeof key === "string" && !(key in next)) {
+        next[key as keyof ShowcaseFormValues] = issue.message;
+      }
+    }
+    return next;
+  }
+
+  function clearError(field: keyof ShowcaseFormValues) {
+    if (!errors[field]) return;
+    const { [field]: _, ...rest } = errors;
+    errors = rest;
+  }
+
+  function handleSubmit(event: SubmitEvent) {
+    event.preventDefault();
+    submitting = true;
+    try {
+      const parsed = showcaseFormSchema.safeParse(form);
+      if (!parsed.success) {
+        errors = mapIssuesToErrors(parsed.error.issues);
+        message = null;
+        return;
+      }
+
+      errors = {};
+      form = { ...form, ...parsed.data };
+      const acceptedMessage = `Provisioning request queued for ${parsed.data.organization} (${parsed.data.seatCount} seats).`;
+      message = acceptedMessage;
+      toast.success(acceptedMessage);
+    } finally {
+      submitting = false;
+    }
+  }
 </script>
 
 <svelte:head>
-  <title>CoimUI Showcase — Forms & Validation</title>
+  <title>CoimUI Showcase — Forms &amp; Validation</title>
 </svelte:head>
 
 <CoimStack spacing={6} class="max-w-3xl">
@@ -49,14 +97,14 @@
     <CoimBreadcrumbs items={[{ label: "Home", href: "/" }, { label: "Forms & Validation" }]} />
     <CoimTypography variant="h1" class="mt-2">Forms &amp; Schema Validation</CoimTypography>
     <p class="text-text-secondary mt-1">
-      Server actions + progressive client enhancement wired through Zod 4, SvelteKit Superforms, and accessible error announcements.
+      Client-side Zod 4 schema validation with interactive error recovery and accessible live status announcements.
     </p>
   </div>
 
-  {#if $message}
+  {#if message}
     <CoimAlert severity="success" role="status" aria-live="polite">
       <CoimAlertTitle>Provisioning Request Accepted</CoimAlertTitle>
-      {$message}
+      {message}
     </CoimAlert>
   {/if}
 
@@ -66,16 +114,17 @@
       subheader="Demonstrates native autocomplete hints, aria-invalid synchronization, and custom constraints"
     />
     <CoimCardContent>
-      <form method="POST" use:enhance class="flex flex-col gap-5">
+      <form onsubmit={handleSubmit} novalidate class="flex flex-col gap-5">
         <CoimGrid container spacing={4}>
           <CoimGrid size={{ xs: 12, sm: 6 }}>
             <CoimTextField
               name="fullName"
               label="Full Name"
               autocomplete="name"
-              bind:value={$form.fullName}
-              error={Boolean($errors.fullName?.length)}
-              helperText={$errors.fullName?.[0] ?? "Primary administrative contact"}
+              bind:value={form.fullName}
+              oninput={() => clearError("fullName")}
+              error={Boolean(errors.fullName)}
+              helperText={errors.fullName ?? "Primary administrative contact"}
               required
               fullWidth
             />
@@ -87,9 +136,10 @@
               type="email"
               label="Work Email"
               autocomplete="email"
-              bind:value={$form.email}
-              error={Boolean($errors.email?.length)}
-              helperText={$errors.email?.[0] ?? "Used for release announcements"}
+              bind:value={form.email}
+              oninput={() => clearError("email")}
+              error={Boolean(errors.email)}
+              helperText={errors.email ?? "Used for release announcements"}
               required
               fullWidth
             />
@@ -100,37 +150,36 @@
               name="organization"
               label="Organization"
               autocomplete="organization"
-              bind:value={$form.organization}
-              error={Boolean($errors.organization?.length)}
-              helperText={$errors.organization?.[0]}
+              bind:value={form.organization}
+              oninput={() => clearError("organization")}
+              error={Boolean(errors.organization)}
+              helperText={errors.organization}
               required
               fullWidth
             />
           </CoimGrid>
 
           <CoimGrid size={{ xs: 12, sm: 4 }}>
-            <input type="hidden" name="seatCount" value={$form.seatCount} />
             <CoimNumberField
               label="Seat Allocation"
-              bind:value={$form.seatCount}
+              bind:value={form.seatCount}
               min={1}
               max={5000}
-              error={Boolean($errors.seatCount?.length)}
+              error={Boolean(errors.seatCount)}
               fullWidth
             />
-            {#if $errors.seatCount?.[0]}
-              <p class="text-error mt-1 text-xs">{$errors.seatCount[0]}</p>
+            {#if errors.seatCount}
+              <p class="text-error mt-1 text-xs">{errors.seatCount}</p>
             {/if}
           </CoimGrid>
         </CoimGrid>
 
-        <input type="hidden" name="deploymentModel" value={$form.deploymentModel} />
         <CoimRadioGroup
           label="Deployment Topology"
           row
-          value={$form.deploymentModel}
+          value={form.deploymentModel}
           onValueChange={(next) => {
-            $form.deploymentModel = next as "cloud" | "dedicated" | "self-hosted";
+            form.deploymentModel = next as ShowcaseFormValues["deploymentModel"];
           }}
         >
           <CoimRadio value="cloud" label="Managed Cloud" />
@@ -138,12 +187,11 @@
           <CoimRadio value="self-hosted" label="Self-Hosted Cluster" />
         </CoimRadioGroup>
 
-        <input type="hidden" name="releaseWindow" value={$form.releaseWindow} />
         <CoimSelect
           label="Rollout Cadence"
-          value={$form.releaseWindow}
+          value={form.releaseWindow}
           onValueChange={(next) => {
-            $form.releaseWindow = next as "immediate" | "next-sprint" | "quarterly";
+            form.releaseWindow = next as ShowcaseFormValues["releaseWindow"];
           }}
           options={[
             { value: "immediate", label: "Immediate Rollout" },
@@ -158,31 +206,35 @@
           label="Compliance / Network Notes"
           multiline
           rows={3}
-          bind:value={$form.notes}
-          error={Boolean($errors.notes?.length)}
-          helperText={$errors.notes?.[0] ?? "Optional security or region constraints"}
+          bind:value={form.notes}
+          oninput={() => clearError("notes")}
+          error={Boolean(errors.notes)}
+          helperText={errors.notes ?? "Optional security or region constraints"}
           fullWidth
         />
 
         <div>
-          <input type="hidden" name="agreeTerms" value={$form.agreeTerms ? "on" : ""} />
           <CoimFormControlLabel label="I confirm organization billing authorization">
-            <CoimCheckbox bind:checked={$form.agreeTerms} />
+            <CoimCheckbox
+              bind:checked={form.agreeTerms}
+              onCheckedChange={() => clearError("agreeTerms")}
+            />
           </CoimFormControlLabel>
-          {#if $errors.agreeTerms?.[0]}
-            <p class="text-error mt-1 text-xs">{$errors.agreeTerms[0]}</p>
+          {#if errors.agreeTerms}
+            <p class="text-error mt-1 text-xs">{errors.agreeTerms}</p>
           {/if}
         </div>
 
         <div class="flex flex-wrap items-center gap-3 pt-2">
-          <CoimButton type="submit" variant="contained" loading={$submitting}>
+          <CoimButton type="submit" variant="contained" loading={submitting}>
             Submit Provisioning Request
           </CoimButton>
           <CoimButton
             type="button"
             variant="outlined"
             onclick={() => {
-              $form.notes = "";
+              form.notes = "";
+              clearError("notes");
               toast.info("Cleared optional notes");
             }}
           >
