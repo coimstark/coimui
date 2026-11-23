@@ -112,13 +112,13 @@
   .coim-tab[aria-selected="true"],
   .coim-tab[data-state="active"] {
     border-color: hsl(var(--primary));
-    color: hsl(var(--primary));
+    color: hsl(var(--primary-fg));
   }
 
   .coim-tabs-color-secondary .coim-tab[aria-selected="true"],
   .coim-tabs-color-secondary .coim-tab[data-state="active"] {
     border-color: hsl(var(--secondary));
-    color: hsl(var(--secondary));
+    color: hsl(var(--secondary-fg));
   }
 
   .coim-tabs-color-accent-1 .coim-tab[aria-selected="true"],
@@ -148,7 +148,7 @@
   }
 
   .coim-tabs-scroll-button:hover:not(:disabled) {
-    color: hsl(var(--primary));
+    color: hsl(var(--primary-fg));
   }
 
   .coim-tabs-scroll-button:disabled {
@@ -175,7 +175,7 @@
 
   .coim-tabs-hairline .coim-tab:hover,
   .full-page-tabs .coim-tab:hover {
-    color: hsl(var(--primary));
+    color: hsl(var(--primary-fg));
     background-color: transparent;
   }
 

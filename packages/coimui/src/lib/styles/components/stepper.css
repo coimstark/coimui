@@ -138,19 +138,19 @@
 
   .coim-step-icon-badge.is-completed {
     border-color: hsl(var(--primary));
-    color: hsl(var(--primary));
+    color: hsl(var(--primary-fg));
     background-color: transparent;
   }
 
   .coim-step-icon-badge.is-active {
     border-color: hsl(var(--primary));
     background-color: hsl(var(--primary));
-    color: hsl(var(--text-contrast));
+    color: hsl(var(--primary-contrast));
   }
 
   .coim-step-icon-badge.is-error {
     border-color: hsl(var(--error));
-    color: hsl(var(--error));
+    color: hsl(var(--error-fg));
   }
 
   .coim-step-label-text {
@@ -165,7 +165,7 @@
   }
 
   .coim-step-label.is-error .coim-step-label-text {
-    color: hsl(var(--error));
+    color: hsl(var(--error-fg));
   }
 
   .coim-step-label-alternative .coim-step-label-container {

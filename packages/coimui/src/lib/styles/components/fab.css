@@ -56,12 +56,12 @@
 
   /* Colors */
   .coim-fab-color-primary {
-    @apply bg-primary text-text-contrast;
+    @apply bg-primary text-primary-contrast;
     &:hover { @apply bg-primary-light; }
     &:active { @apply bg-primary-dark; }
   }
   .coim-fab-color-secondary {
-    @apply bg-secondary text-text-contrast;
+    @apply bg-secondary text-secondary-contrast;
     &:hover { @apply bg-secondary-light; }
     &:active { @apply bg-secondary-dark; }
   }
@@ -111,22 +111,22 @@
     &:active { @apply bg-text-disabled-dark; }
   }
   .coim-fab-color-success {
-    @apply bg-success text-text-contrast;
+    @apply bg-success text-success-contrast;
     &:hover { @apply bg-success-light; }
     &:active { @apply bg-success-dark; }
   }
   .coim-fab-color-error {
-    @apply bg-error text-text-contrast;
+    @apply bg-error text-error-contrast;
     &:hover { @apply bg-error-light; }
     &:active { @apply bg-error-dark; }
   }
   .coim-fab-color-warning {
-    @apply bg-warning text-text-contrast;
+    @apply bg-warning text-warning-contrast;
     &:hover { @apply bg-warning-light; }
     &:active { @apply bg-warning-dark; }
   }
   .coim-fab-color-info {
-    @apply bg-info text-text-contrast;
+    @apply bg-info text-info-contrast;
     &:hover { @apply bg-info-light; }
     &:active { @apply bg-info-dark; }
   }

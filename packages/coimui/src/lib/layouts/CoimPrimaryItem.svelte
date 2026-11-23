@@ -38,7 +38,7 @@
   });
 
   const activeColorClass = $derived(
-    item.color ? `text-${item.color.replace("text-", "")}!` : "text-primary!",
+    item.color ? `text-${item.color.replace("text-", "")}!` : "text-primary-fg!",
   );
 
   function handleSelect() {
@@ -67,14 +67,14 @@
           strokeWidth={0.75}
           class={cn(
             "transition-transform group-hover:scale-[0.85]",
-            (selected || isActive) && "text-primary scale-[0.85]",
+            (selected || isActive) && "text-primary-fg scale-[0.85]",
           )}
         />
       {/if}
       <span
         class={cn(
           "font-body text-text-primary line-clamp-2 w-full text-center text-sm font-semibold transition-all",
-          (selected || isActive) && "text-primary mt-0 mb-0",
+          (selected || isActive) && "text-primary-fg mt-0 mb-0",
         )}
       >
         {resolveLabel(translate, item.label)}
@@ -99,14 +99,14 @@
           strokeWidth={0.75}
           class={cn(
             "transition-transform group-hover:scale-[0.85]",
-            (selected || isActive) && "text-primary scale-[0.85]",
+            (selected || isActive) && "text-primary-fg scale-[0.85]",
           )}
         />
       {/if}
       <span
         class={cn(
           "font-body text-text-primary line-clamp-2 w-full text-center text-sm font-semibold transition-all",
-          (selected || isActive) && "text-primary mt-0 mb-0",
+          (selected || isActive) && "text-primary-fg mt-0 mb-0",
         )}
       >
         {resolveLabel(translate, item.label)}
@@ -179,7 +179,7 @@
           sideOffset={8}
           class={cn(
             "border-grey-200 bg-background-paper font-body text-text-primary shadow-darker-sm z-100 rounded-sm border border-solid px-4.75 py-[calc(0.5rem-1px)] text-base leading-4 font-semibold",
-            selected && "text-primary",
+            selected && "text-primary-fg",
           )}
         >
           <Tooltip.Arrow class="text-background-paper fill-current" />

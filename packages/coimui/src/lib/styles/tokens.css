@@ -65,6 +65,28 @@
     --warning-light: 25 84% 52%;
     --warning-dark: 25 88% 31%;
 
+    /* --------- Accessible Foreground & Fill Contrast Defaults --------- */
+    --primary-fg: var(--primary);
+    --secondary-fg: var(--secondary);
+    --error-fg: var(--error);
+    --info-fg: var(--info);
+    --success-fg: var(--success);
+    --warning-fg: var(--warning);
+
+    --primary-pastel-fg: var(--primary-dark);
+    --secondary-pastel-fg: var(--secondary-dark);
+    --error-pastel-fg: var(--error-dark);
+    --info-pastel-fg: var(--info-dark);
+    --success-pastel-fg: var(--success-dark);
+    --warning-pastel-fg: var(--warning-dark);
+
+    --primary-contrast: var(--text-contrast);
+    --secondary-contrast: var(--text-contrast);
+    --error-contrast: var(--text-contrast);
+    --info-contrast: var(--text-contrast);
+    --success-contrast: var(--text-contrast);
+    --warning-contrast: var(--text-contrast);
+
     --rating: 35 99% 54%;
     --rating-light: 35 99% 64%;
     --rating-dark: 35 99% 44%;
@@ -168,6 +190,28 @@
     --warning: 25 84% 62%;
     --warning-light: 25 86% 74%;
     --warning-dark: 25 82% 50%;
+
+    /* --------- Dark-Mode WCAG AA Foreground & Solid-Fill Contrast --------- */
+    --primary-fg: 306 74% 70%;
+    --secondary-fg: 267 84% 76%;
+    --error-fg: 347 82% 72%;
+    --info-fg: 193 78% 66%;
+    --success-fg: 115 56% 62%;
+    --warning-fg: 25 88% 68%;
+
+    --primary-pastel-fg: var(--primary-fg);
+    --secondary-pastel-fg: var(--secondary-fg);
+    --error-pastel-fg: var(--error-fg);
+    --info-pastel-fg: var(--info-fg);
+    --success-pastel-fg: var(--success-fg);
+    --warning-pastel-fg: var(--warning-fg);
+
+    --primary-contrast: 0 0% 100%;
+    --secondary-contrast: 0 0% 100%;
+    --error-contrast: 0 0% 7%;
+    --info-contrast: 0 0% 7%;
+    --success-contrast: 0 0% 7%;
+    --warning-contrast: 0 0% 7%;
 
     --rating: 35 99% 54%;
     --rating-light: 35 99% 64%;

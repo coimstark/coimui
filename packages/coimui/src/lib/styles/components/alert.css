@@ -22,36 +22,48 @@
     --coim-alert-main: var(--success);
     --coim-alert-light: var(--success-light);
     --coim-alert-dark: var(--success-dark);
+    --coim-alert-fg: var(--success-fg);
+    --coim-alert-contrast: var(--success-contrast);
   }
 
   .coim-alert-color-info {
     --coim-alert-main: var(--info);
     --coim-alert-light: var(--info-light);
     --coim-alert-dark: var(--info-dark);
+    --coim-alert-fg: var(--info-fg);
+    --coim-alert-contrast: var(--info-contrast);
   }
 
   .coim-alert-color-warning {
     --coim-alert-main: var(--warning);
     --coim-alert-light: var(--warning-light);
     --coim-alert-dark: var(--warning-dark);
+    --coim-alert-fg: var(--warning-fg);
+    --coim-alert-contrast: var(--warning-contrast);
   }
 
   .coim-alert-color-error {
     --coim-alert-main: var(--error);
     --coim-alert-light: var(--error-light);
     --coim-alert-dark: var(--error-dark);
+    --coim-alert-fg: var(--error-fg);
+    --coim-alert-contrast: var(--error-contrast);
   }
 
   .coim-alert-color-primary {
     --coim-alert-main: var(--primary);
     --coim-alert-light: var(--primary-light);
     --coim-alert-dark: var(--primary-dark);
+    --coim-alert-fg: var(--primary-fg);
+    --coim-alert-contrast: var(--primary-contrast);
   }
 
   .coim-alert-color-secondary {
     --coim-alert-main: var(--secondary);
     --coim-alert-light: var(--secondary-light);
     --coim-alert-dark: var(--secondary-dark);
+    --coim-alert-fg: var(--secondary-fg);
+    --coim-alert-contrast: var(--secondary-contrast);
   }
 
   .coim-alert-color-accent-1 {
@@ -120,22 +132,22 @@
   }
 
   .dark .coim-alert-standard {
-    color: hsl(var(--coim-alert-light));
+    color: hsl(var(--coim-alert-fg, var(--coim-alert-light)));
   }
 
   .coim-alert-standard .coim-alert-icon {
-    color: hsl(var(--coim-alert-main));
+    color: hsl(var(--coim-alert-fg, var(--coim-alert-main)));
   }
 
   .coim-alert-outlined {
     background-color: transparent;
-    color: hsl(var(--coim-alert-main));
+    color: hsl(var(--coim-alert-fg, var(--coim-alert-main)));
     border: 1px solid hsl(var(--coim-alert-main) / 0.5);
   }
 
   .coim-alert-filled {
     background-color: hsl(var(--coim-alert-main));
-    color: hsl(var(--text-contrast));
+    color: hsl(var(--coim-alert-contrast, var(--text-contrast)));
     font-weight: 500;
   }
 

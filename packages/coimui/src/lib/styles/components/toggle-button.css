@@ -55,18 +55,18 @@
     &.coim-toggle-btn-surface[aria-pressed="true"] {
       @apply text-text-contrast;
 
-      &.coim-toggle-btn-color-primary { @apply bg-primary; }
-      &.coim-toggle-btn-color-secondary { @apply bg-secondary; }
+      &.coim-toggle-btn-color-primary { @apply bg-primary text-primary-contrast; }
+      &.coim-toggle-btn-color-secondary { @apply bg-secondary text-secondary-contrast; }
       &.coim-toggle-btn-color-accent-1 { @apply bg-accent-1; }
       &.coim-toggle-btn-color-accent-2 { @apply bg-accent-2; }
       &.coim-toggle-btn-color-accent-3 { @apply bg-accent-3; }
       &.coim-toggle-btn-color-accent-4 { @apply bg-accent-4; }
       &.coim-toggle-btn-color-accent-5 { @apply bg-accent-5; }
       &.coim-toggle-btn-color-accent-6 { @apply bg-accent-6; }
-      &.coim-toggle-btn-color-success { @apply bg-success; }
-      &.coim-toggle-btn-color-warning { @apply bg-warning; }
-      &.coim-toggle-btn-color-info { @apply bg-info; }
-      &.coim-toggle-btn-color-error { @apply bg-error; }
+      &.coim-toggle-btn-color-success { @apply bg-success text-success-contrast; }
+      &.coim-toggle-btn-color-warning { @apply bg-warning text-warning-contrast; }
+      &.coim-toggle-btn-color-info { @apply bg-info text-info-contrast; }
+      &.coim-toggle-btn-color-error { @apply bg-error text-error-contrast; }
       &.coim-toggle-btn-color-text-primary { @apply bg-text-primary text-text-contrast-alternative; }
       &.coim-toggle-btn-color-text-secondary { @apply bg-text-secondary text-text-contrast-alternative; }
       &.coim-toggle-btn-color-text-disabled { @apply bg-text-disabled text-text-contrast-alternative; }
@@ -78,18 +78,18 @@
     &.coim-toggle-btn-outlined[aria-pressed="true"] {
       @apply bg-transparent;
 
-      &.coim-toggle-btn-color-primary { @apply border-primary! text-primary; }
-      &.coim-toggle-btn-color-secondary { @apply border-secondary! text-secondary; }
+      &.coim-toggle-btn-color-primary { @apply border-primary! text-primary-fg; }
+      &.coim-toggle-btn-color-secondary { @apply border-secondary! text-secondary-fg; }
       &.coim-toggle-btn-color-accent-1 { @apply border-accent-1! text-accent-1; }
       &.coim-toggle-btn-color-accent-2 { @apply border-accent-2! text-accent-2; }
       &.coim-toggle-btn-color-accent-3 { @apply border-accent-3! text-accent-3; }
       &.coim-toggle-btn-color-accent-4 { @apply border-accent-4! text-accent-4; }
       &.coim-toggle-btn-color-accent-5 { @apply border-accent-5! text-accent-5; }
       &.coim-toggle-btn-color-accent-6 { @apply border-accent-6! text-accent-6; }
-      &.coim-toggle-btn-color-success { @apply border-success! text-success; }
-      &.coim-toggle-btn-color-warning { @apply border-warning! text-warning; }
-      &.coim-toggle-btn-color-info { @apply border-info! text-info; }
-      &.coim-toggle-btn-color-error { @apply border-error! text-error; }
+      &.coim-toggle-btn-color-success { @apply border-success! text-success-fg; }
+      &.coim-toggle-btn-color-warning { @apply border-warning! text-warning-fg; }
+      &.coim-toggle-btn-color-info { @apply border-info! text-info-fg; }
+      &.coim-toggle-btn-color-error { @apply border-error! text-error-fg; }
       &.coim-toggle-btn-color-text-primary { @apply border-text-primary! text-text-primary; }
       &.coim-toggle-btn-color-text-secondary { @apply border-text-secondary! text-text-secondary; }
       &.coim-toggle-btn-color-text-disabled { @apply border-text-disabled! text-text-disabled; }
@@ -99,18 +99,18 @@
     /* Selected Pastel */
     &.coim-toggle-btn-pastel[data-state="on"],
     &.coim-toggle-btn-pastel[aria-pressed="true"] {
-      &.coim-toggle-btn-color-primary { @apply bg-primary-light/15 text-primary-dark; }
-      &.coim-toggle-btn-color-secondary { @apply bg-secondary-light/15 text-secondary-dark; }
+      &.coim-toggle-btn-color-primary { @apply bg-primary-light/15 text-primary-pastel-fg; }
+      &.coim-toggle-btn-color-secondary { @apply bg-secondary-light/15 text-secondary-pastel-fg; }
       &.coim-toggle-btn-color-accent-1 { @apply bg-accent-1-light/15 text-accent-1-dark; }
       &.coim-toggle-btn-color-accent-2 { @apply bg-accent-2-light/15 text-accent-2-dark; }
       &.coim-toggle-btn-color-accent-3 { @apply bg-accent-3-light/15 text-accent-3-dark; }
       &.coim-toggle-btn-color-accent-4 { @apply bg-accent-4-light/15 text-accent-4-dark; }
       &.coim-toggle-btn-color-accent-5 { @apply bg-accent-5-light/15 text-accent-5-dark; }
       &.coim-toggle-btn-color-accent-6 { @apply bg-accent-6-light/15 text-accent-6-dark; }
-      &.coim-toggle-btn-color-success { @apply bg-success-light/15 text-success-dark; }
-      &.coim-toggle-btn-color-warning { @apply bg-warning-light/15 text-warning-dark; }
-      &.coim-toggle-btn-color-info { @apply bg-info-light/15 text-info-dark; }
-      &.coim-toggle-btn-color-error { @apply bg-error-light/15 text-error-dark; }
+      &.coim-toggle-btn-color-success { @apply bg-success-light/15 text-success-pastel-fg; }
+      &.coim-toggle-btn-color-warning { @apply bg-warning-light/15 text-warning-pastel-fg; }
+      &.coim-toggle-btn-color-info { @apply bg-info-light/15 text-info-pastel-fg; }
+      &.coim-toggle-btn-color-error { @apply bg-error-light/15 text-error-pastel-fg; }
       &.coim-toggle-btn-color-text-primary { @apply bg-grey-500/15 text-text-primary; }
       &.coim-toggle-btn-color-text-secondary { @apply bg-grey-500/15 text-text-secondary; }
       &.coim-toggle-btn-color-text-disabled { @apply bg-grey-500/15 text-text-disabled; }

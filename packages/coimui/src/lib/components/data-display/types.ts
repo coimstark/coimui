@@ -43,3 +43,11 @@ export interface CoimTreeItemData {
   icon?: Snippet;
   children?: CoimTreeItemData[];
 }
+
+export type CoimTreeReorderPosition = "before" | "after" | "inside";
+
+export interface CoimTreeReorderDetail {
+  itemId: string;
+  targetId: string;
+  position: CoimTreeReorderPosition;
+}

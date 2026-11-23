@@ -8,6 +8,8 @@ export const SUPPORTED_LOCALES = [
   { code: "ar", label: "العربية", shortCode: "AR", dir: "rtl" as const },
 ];
 
+const STARTER_LOCALE_KEY = "coimui-starter-locale";
+
 const resources = {
   en: {
     translation: {
@@ -20,6 +22,8 @@ const resources = {
       "nav-sign-in": "Sign In",
       "nav-sign-up": "Sign Up",
       "nav-forgot-password": "Forgot Password",
+      "nav-home-sub": "Sub Overview",
+      "nav-single-menu": "Single Menu",
       "hero-title": "CoimUI Starter Workspace",
       "hero-subtitle": "Production-ready Svelte 5 & SvelteKit 3 administrative foundation with lean core bundle isolation.",
       "kpi-revenue": "Monthly Recurring Revenue",
@@ -82,6 +86,8 @@ const resources = {
       "nav-sign-in": "Anmelden",
       "nav-sign-up": "Registrieren",
       "nav-forgot-password": "Passwort vergessen",
+      "nav-home-sub": "Unterübersicht",
+      "nav-single-menu": "Einzelmenü",
       "hero-title": "CoimUI Starter-Arbeitsbereich",
       "hero-subtitle": "Produktionsreife Svelte 5 & SvelteKit 3 Verwaltungsgrundlage mit schlankem Kernpaket.",
       "kpi-revenue": "Monatlicher Umsatz",
@@ -93,6 +99,10 @@ const resources = {
       "menu-help": "Dokumentation",
       "menu-documentation": "Leitfaden",
       "palette": "Farbpalette",
+      "theme-purple": "Violett",
+      "theme-blue": "Blau",
+      "theme-green": "Grün",
+      "theme-orange": "Orange",
       "mode": "Erscheinungsbild",
       "mode-system": "System",
       "mode-light": "Hell",
@@ -117,11 +127,16 @@ const resources = {
       "user-overview": "Übersicht",
       "user-projects": "Projekte",
       "user-forms": "Formulare",
-      "user-settings": "Einstellungen",
       "user-mode": "Modus",
       "user-theme": "Design",
       "user-language": "Sprache",
+      "user-settings": "Einstellungen",
       "user-sign-out": "Abmelden",
+      "en": "English",
+      "de": "Deutsch",
+      "fr": "Français",
+      "es": "Español",
+      "ar": "العربية",
     },
   },
   fr: {
@@ -135,6 +150,8 @@ const resources = {
       "nav-sign-in": "Connexion",
       "nav-sign-up": "Inscription",
       "nav-forgot-password": "Mot de passe oublié",
+      "nav-home-sub": "Sous-aperçu",
+      "nav-single-menu": "Menu unique",
       "hero-title": "Espace de démarrage CoimUI",
       "hero-subtitle": "Base d'administration Svelte 5 et SvelteKit 3 prête pour la production.",
       "kpi-revenue": "Revenu mensuel",
@@ -146,7 +163,27 @@ const resources = {
       "menu-help": "Documentation",
       "menu-documentation": "Guide",
       "palette": "Palette",
+      "theme-purple": "Violet",
+      "theme-blue": "Bleu",
+      "theme-green": "Vert",
+      "theme-orange": "Orange",
       "mode": "Apparence",
+      "mode-system": "Système",
+      "mode-light": "Clair",
+      "mode-dark": "Sombre",
+      "left-menu": "Disposition du menu",
+      "menu-minimal": "Minimal",
+      "menu-comfort": "Confort",
+      "menu-single-layer": "Couche unique",
+      "content": "Largeur du contenu",
+      "content-boxed": "Encadré",
+      "content-fluid": "Fluide",
+      "top-nav": "En-tête",
+      "top-nav-contained": "Contenu",
+      "top-nav-full": "Pleine largeur",
+      "elevation": "Élévation",
+      "elevation-elevated": "Élevée",
+      "elevation-flat": "Plate",
       "reset-theme": "Réinitialiser",
       "menu-cta-copy": "Configurer le thème et l'espace.",
       "menu-cta-button": "Paramètres",
@@ -154,11 +191,16 @@ const resources = {
       "user-overview": "Aperçu",
       "user-projects": "Projets",
       "user-forms": "Formulaires",
-      "user-settings": "Paramètres",
       "user-mode": "Mode",
       "user-theme": "Thème",
       "user-language": "Langue",
+      "user-settings": "Paramètres",
       "user-sign-out": "Déconnexion",
+      "en": "English",
+      "de": "Deutsch",
+      "fr": "Français",
+      "es": "Español",
+      "ar": "العربية",
     },
   },
   es: {
@@ -172,6 +214,8 @@ const resources = {
       "nav-sign-in": "Iniciar sesión",
       "nav-sign-up": "Registrarse",
       "nav-forgot-password": "Olvidé mi contraseña",
+      "nav-home-sub": "Subresumen",
+      "nav-single-menu": "Menú único",
       "hero-title": "Espacio inicial CoimUI",
       "hero-subtitle": "Base administrativa Svelte 5 y SvelteKit 3 lista para producción.",
       "kpi-revenue": "Ingresos mensuales",
@@ -183,7 +227,27 @@ const resources = {
       "menu-help": "Documentación",
       "menu-documentation": "Guía inicial",
       "palette": "Paleta",
+      "theme-purple": "Púrpura",
+      "theme-blue": "Azul",
+      "theme-green": "Verde",
+      "theme-orange": "Naranja",
       "mode": "Apariencia",
+      "mode-system": "Sistema",
+      "mode-light": "Claro",
+      "mode-dark": "Oscuro",
+      "left-menu": "Navegación",
+      "menu-minimal": "Minimal",
+      "menu-comfort": "Confort",
+      "menu-single-layer": "Capa única",
+      "content": "Ancho de contenido",
+      "content-boxed": "Encuadrado",
+      "content-fluid": "Fluido",
+      "top-nav": "Cabecera",
+      "top-nav-contained": "Contenido",
+      "top-nav-full": "Ancho completo",
+      "elevation": "Elevación",
+      "elevation-elevated": "Elevada",
+      "elevation-flat": "Plana",
       "reset-theme": "Restablecer",
       "menu-cta-copy": "Configurar apariencia y proyectos.",
       "menu-cta-button": "Configuración",
@@ -191,11 +255,16 @@ const resources = {
       "user-overview": "Resumen",
       "user-projects": "Proyectos",
       "user-forms": "Formularios",
-      "user-settings": "Configuración",
       "user-mode": "Modo",
       "user-theme": "Tema",
       "user-language": "Idioma",
+      "user-settings": "Configuración",
       "user-sign-out": "Cerrar sesión",
+      "en": "English",
+      "de": "Deutsch",
+      "fr": "Français",
+      "es": "Español",
+      "ar": "العربية",
     },
   },
   ar: {
@@ -209,6 +278,8 @@ const resources = {
       "nav-sign-in": "تسجيل الدخول",
       "nav-sign-up": "إنشاء حساب",
       "nav-forgot-password": "استعادة كلمة المرور",
+      "nav-home-sub": "نظرة فرعية",
+      "nav-single-menu": "قائمة منفردة",
       "hero-title": "بيئة العمل الأساسية CoimUI",
       "hero-subtitle": "أساس إداري جاهز للإنتاج مبني بتقنية Svelte 5 و SvelteKit 3.",
       "kpi-revenue": "الإيراد الشهري المتكرر",
@@ -220,10 +291,27 @@ const resources = {
       "menu-help": "التوثيق",
       "menu-documentation": "دليل البداية",
       "palette": "لوحة الألوان",
+      "theme-purple": "بنفسجي",
+      "theme-blue": "أزرق",
+      "theme-green": "أخضر",
+      "theme-orange": "برتقالي",
       "mode": "المظهر",
       "mode-system": "النظام",
       "mode-light": "فاتح",
       "mode-dark": "داكن",
+      "left-menu": "تخطيط القائمة",
+      "menu-minimal": "مصغر",
+      "menu-comfort": "مريح",
+      "menu-single-layer": "طبقة واحدة",
+      "content": "عرض المحتوى",
+      "content-boxed": "محدود",
+      "content-fluid": "كامل",
+      "top-nav": "شريط الرأس",
+      "top-nav-contained": "مدمج",
+      "top-nav-full": "عرض كامل",
+      "elevation": "الظل والارتفاع",
+      "elevation-elevated": "مرتفع",
+      "elevation-flat": "مسطح",
       "reset-theme": "إعادة التعيين",
       "menu-cta-copy": "تخصيص السمات وإعدادات المساحة.",
       "menu-cta-button": "الإعدادات",
@@ -231,11 +319,16 @@ const resources = {
       "user-overview": "نظرة عامة",
       "user-projects": "المشاريع",
       "user-forms": "النماذج",
-      "user-settings": "الإعدادات",
       "user-mode": "الوضع",
       "user-theme": "السمة",
       "user-language": "اللغة",
+      "user-settings": "الإعدادات",
       "user-sign-out": "تسجيل الخروج",
+      "en": "English",
+      "de": "Deutsch",
+      "fr": "Français",
+      "es": "Español",
+      "ar": "العربية",
     },
   },
 };
@@ -259,13 +352,31 @@ export class I18nState {
     return this.instance.t(key);
   };
 
+  hydrateFromStorage = (): "ltr" | "rtl" => {
+    if (typeof window === "undefined") return "ltr";
+    try {
+      const saved = window.localStorage.getItem(STARTER_LOCALE_KEY);
+      if (saved) {
+        const match = SUPPORTED_LOCALES.find((l) => l.code === saved);
+        if (match) {
+          this.locale = match.code;
+          void this.instance.changeLanguage(match.code);
+          return match.dir;
+        }
+      }
+    } catch {
+      // Ignore storage restrictions
+    }
+    return SUPPORTED_LOCALES.find((l) => l.code === this.locale)?.dir ?? "ltr";
+  };
+
   setLocale = (code: string): "ltr" | "rtl" => {
     const valid = SUPPORTED_LOCALES.find((l) => l.code === code) ?? SUPPORTED_LOCALES[0];
     this.locale = valid.code;
     void this.instance.changeLanguage(valid.code);
     if (typeof window !== "undefined") {
       try {
-        window.localStorage.setItem("coimui-starter-locale", valid.code);
+        window.localStorage.setItem(STARTER_LOCALE_KEY, valid.code);
       } catch {
         // Ignore storage restrictions
       }

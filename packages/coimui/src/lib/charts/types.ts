@@ -3,6 +3,8 @@ export interface CoimChartSeries<TData = Record<string, unknown>> {
   label?: string;
   valueKey?: keyof TData & string;
   valueAccessor?: (row: TData) => number;
+  minKey?: keyof TData & string;
+  maxKey?: keyof TData & string;
   color?: string;
   visible?: boolean;
 }
@@ -20,6 +22,7 @@ export interface CoimScatterDatum {
   r?: number;
   label?: string;
   series?: string;
+  yAxis?: "left" | "right";
 }
 
 export interface CoimRadarSeries {

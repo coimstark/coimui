@@ -39,6 +39,9 @@
   const listCtx = tryGetListContext();
   const isDense = $derived(dense ?? listCtx?.dense ?? false);
   const wrapInListItem = $derived(Boolean(listCtx) && !disableListItemWrapper);
+  const supportsAriaSelected = $derived(
+    role === "option" || role === "tab" || role === "treeitem" || role === "gridcell" || role === "row",
+  );
 
   const itemClasses = $derived(
     cn(
@@ -60,7 +63,8 @@
       {...(rest as HTMLAnchorAttributes)}
       href={disabled ? undefined : href}
       {role}
-      aria-selected={selected ? "true" : undefined}
+      aria-selected={supportsAriaSelected && selected ? "true" : undefined}
+      aria-current={!supportsAriaSelected && selected ? "true" : undefined}
       aria-disabled={disabled ? "true" : undefined}
       class={itemClasses}
       onclick={(e) => {
@@ -79,7 +83,8 @@
       type="button"
       {disabled}
       {role}
-      aria-selected={selected ? "true" : undefined}
+      aria-selected={supportsAriaSelected && selected ? "true" : undefined}
+      aria-current={!supportsAriaSelected && selected ? "true" : undefined}
       class={itemClasses}
       {onclick}
     >

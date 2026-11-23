@@ -27,7 +27,7 @@
     white-space: nowrap;
     border-radius: 9999px;
     background-color: hsl(var(--primary));
-    color: hsl(var(--text-contrast));
+    color: hsl(var(--primary-contrast));
     transition: transform 225ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
@@ -147,12 +147,12 @@
   /* Colors */
   .coim-badge-color-primary {
     background-color: hsl(var(--primary));
-    color: hsl(var(--text-contrast));
+    color: hsl(var(--primary-contrast));
   }
 
   .coim-badge-color-secondary {
     background-color: hsl(var(--secondary));
-    color: hsl(var(--text-contrast));
+    color: hsl(var(--secondary-contrast));
   }
 
   .coim-badge-color-accent-1 {
@@ -187,22 +187,22 @@
 
   .coim-badge-color-info {
     background-color: hsl(var(--info));
-    color: hsl(var(--text-contrast));
+    color: hsl(var(--info-contrast));
   }
 
   .coim-badge-color-success {
     background-color: hsl(var(--success));
-    color: hsl(var(--text-contrast));
+    color: hsl(var(--success-contrast));
   }
 
   .coim-badge-color-warning {
     background-color: hsl(var(--warning));
-    color: hsl(var(--text-contrast));
+    color: hsl(var(--warning-contrast));
   }
 
   .coim-badge-color-error {
     background-color: hsl(var(--error));
-    color: hsl(var(--text-contrast));
+    color: hsl(var(--error-contrast));
   }
 
   .coim-badge-color-text-primary {

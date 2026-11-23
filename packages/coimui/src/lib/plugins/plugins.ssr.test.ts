@@ -25,8 +25,10 @@ describe("Plugins SSR Safety", () => {
     expect(render(CoimCarousel, { props: { items: [{ id: "1", title: "S1" }] } }).body).toContain("S1");
     expect(render(CoimLightbox, { props: { images: [{ src: "/a.jpg", width: 100, height: 100, alt: "Alt" }] } }).body).toContain("coim-lightbox-grid");
     expect(render(CoimEmojiPicker).body).toContain("coim-emoji-picker");
-    expect(render(CoimRichTextEditor, { props: { value: "<p>SSR</p>" } }).body).toContain("coim-rich-editor");
+    expect(render(CoimRichTextEditor, { props: { value: "<p>SSR</p>", theme: "bubble", variant: "outlined" } }).body).toContain("coim-rich-editor");
     expect(render(CoimVideoPlayer, { props: { src: "/v.mp4" } }).body).toContain("<video");
+    expect(render(CoimVideoPlayer, { props: { src: "https://vimeo.com/76979871", ariaLabel: "Vimeo" } }).body).toContain("player.vimeo.com/video/76979871");
+    expect(render(CoimLightbox, { props: { showDownload: true, showCaptions: true, images: [{ src: "/a.jpg", width: 100, height: 100, alt: "Alt", caption: "Cap" }] } }).body).toContain("data-pswp-caption");
     expect(render(CoimEventCalendar, { props: { events: [{ id: "1", title: "Event", start: "2026-04-15", end: "2026-04-16" }] } }).body).toContain("Event");
     expect(render(CoimSortableList, { props: { items: [{ id: "1", label: "Item 1" }] } }).body).toContain("Item 1");
   });

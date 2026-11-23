@@ -4,6 +4,7 @@
   import CiCalendar from "../icons/ui/CiCalendar.svelte";
   import CiChevronLeftSmall from "../icons/ui/CiChevronLeftSmall.svelte";
   import CiChevronRightSmall from "../icons/ui/CiChevronRightSmall.svelte";
+  import CiCross from "../icons/ui/CiCross.svelte";
   import { cn } from "../utilities/utils.js";
   import type { CoimDateRangePreset } from "./types.js";
   import { getPresetDateRanges } from "./utils.js";
@@ -18,6 +19,7 @@
     disabled?: boolean;
     readonly?: boolean;
     required?: boolean;
+    clearable?: boolean;
     minValue?: DateValue;
     maxValue?: DateValue;
     numberOfMonths?: number;
@@ -39,6 +41,7 @@
     disabled = false,
     readonly = false,
     required = false,
+    clearable = false,
     minValue,
     maxValue,
     numberOfMonths = 2,
@@ -111,9 +114,26 @@
         {/snippet}
       </DateRangePicker.Input>
 
-      <DateRangePicker.Trigger aria-label="Open date range calendar" class="coim-date-trigger">
-        <CiCalendar size="small" />
-      </DateRangePicker.Trigger>
+      <span class="ms-auto inline-flex shrink-0 items-center gap-0.5">
+        {#if clearable && (value.start || value.end) && !disabled && !readonly}
+          <button
+            type="button"
+            aria-label={`Clear ${label ?? "date range"}`}
+            class="text-text-secondary hover:text-error inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-sm bg-transparent transition-colors"
+            onclick={(e) => {
+              e.stopPropagation();
+              const cleared: DateRange = { start: undefined, end: undefined };
+              value = cleared;
+              onValueChange?.(cleared);
+            }}
+          >
+            <CiCross size="small" />
+          </button>
+        {/if}
+        <DateRangePicker.Trigger aria-label="Open date range calendar" class="coim-date-trigger ms-0!">
+          <CiCalendar size="small" />
+        </DateRangePicker.Trigger>
+      </span>
     </div>
 
     {#if helperText}

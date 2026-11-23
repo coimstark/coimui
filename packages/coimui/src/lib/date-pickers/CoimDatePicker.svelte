@@ -4,6 +4,7 @@
   import CiCalendar from "../icons/ui/CiCalendar.svelte";
   import CiChevronLeftSmall from "../icons/ui/CiChevronLeftSmall.svelte";
   import CiChevronRightSmall from "../icons/ui/CiChevronRightSmall.svelte";
+  import CiCross from "../icons/ui/CiCross.svelte";
   import { cn } from "../utilities/utils.js";
 
   interface Props {
@@ -16,6 +17,7 @@
     disabled?: boolean;
     readonly?: boolean;
     required?: boolean;
+    clearable?: boolean;
     minValue?: DateValue;
     maxValue?: DateValue;
     locale?: string;
@@ -34,6 +36,7 @@
     disabled = false,
     readonly = false,
     required = false,
+    clearable = false,
     minValue,
     maxValue,
     locale = "en",
@@ -80,9 +83,25 @@
             </DatePicker.Segment>
           {/if}
         {/each}
-        <DatePicker.Trigger aria-label="Open calendar" class="coim-date-trigger">
-          <CiCalendar size="small" />
-        </DatePicker.Trigger>
+        <span class="ms-auto inline-flex shrink-0 items-center gap-0.5">
+          {#if clearable && value && !disabled && !readonly}
+            <button
+              type="button"
+              aria-label={`Clear ${label ?? "date"}`}
+              class="text-text-secondary hover:text-error inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-sm bg-transparent transition-colors"
+              onclick={(e) => {
+                e.stopPropagation();
+                value = undefined;
+                onValueChange?.(undefined);
+              }}
+            >
+              <CiCross size="small" />
+            </button>
+          {/if}
+          <DatePicker.Trigger aria-label="Open calendar" class="coim-date-trigger ms-0!">
+            <CiCalendar size="small" />
+          </DatePicker.Trigger>
+        </span>
       {/snippet}
     </DatePicker.Input>
 

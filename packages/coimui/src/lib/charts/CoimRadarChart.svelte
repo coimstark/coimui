@@ -10,6 +10,7 @@
     series: CoimRadarSeries[];
     maxValue?: number;
     levels?: number;
+    gridShape?: "polygon" | "circular";
     size?: number;
     showLegend?: boolean;
     title?: string;
@@ -22,6 +23,7 @@
     series,
     maxValue,
     levels = 4,
+    gridShape = "polygon",
     size = 280,
     showLegend = true,
     title,
@@ -53,15 +55,16 @@
     const rScale = scaleLinear().domain([0, maxVal]).range([0, radius]);
     const angleStep = axes.length > 0 ? (Math.PI * 2) / axes.length : Math.PI / 2;
 
-    const ringPolygons = Array.from({ length: levels }, (_, lvlIdx) => {
-      const r = ((lvlIdx + 1) / levels) * radius;
-      return axes
+    const ringRadii = Array.from({ length: levels }, (_, lvlIdx) => ((lvlIdx + 1) / levels) * radius);
+
+    const ringPolygons = ringRadii.map((r) =>
+      axes
         .map((_, i) => {
           const angle = i * angleStep - Math.PI / 2;
           return `${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`;
         })
-        .join(" ");
-    });
+        .join(" "),
+    );
 
     const axisLines = axes.map((axisLabel, i) => {
       const angle = i * angleStep - Math.PI / 2;
@@ -96,7 +99,7 @@
         };
       });
 
-    return { cx, cy, ringPolygons, axisLines, polygons };
+    return { cx, cy, ringRadii, ringPolygons, axisLines, polygons };
   });
 </script>
 
@@ -115,9 +118,15 @@
   {/if}
 
   <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size} role="img" aria-label={title ?? ariaLabel} class="overflow-visible">
-    {#each geometry.ringPolygons as ring, i (i)}
-      <polygon points={ring} fill="none" stroke="hsl(var(--grey-100))" stroke-width="1" />
-    {/each}
+    {#if gridShape === "circular"}
+      {#each geometry.ringRadii as r, i (i)}
+        <circle cx={geometry.cx} cy={geometry.cy} {r} fill="none" stroke="hsl(var(--grey-100))" stroke-width="1" />
+      {/each}
+    {:else}
+      {#each geometry.ringPolygons as ring, i (i)}
+        <polygon points={ring} fill="none" stroke="hsl(var(--grey-100))" stroke-width="1" />
+      {/each}
+    {/if}
 
     {#each geometry.axisLines as axis (axis.label)}
       <line

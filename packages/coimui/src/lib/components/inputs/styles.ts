@@ -13,8 +13,8 @@ import type {
 
 export const BUTTON_COLOR_CLASSES: Record<CoimButtonVariant, Record<CoimColor, string>> = {
   contained: {
-    primary: "bg-primary text-text-contrast hover:bg-primary-light active:bg-primary-dark",
-    secondary: "bg-secondary text-text-contrast hover:bg-secondary-light active:bg-secondary-dark",
+    primary: "bg-primary text-primary-contrast hover:bg-primary-light active:bg-primary-dark",
+    secondary: "bg-secondary text-secondary-contrast hover:bg-secondary-light active:bg-secondary-dark",
     "accent-1": "bg-accent-1 text-text-contrast hover:bg-accent-1-light active:bg-accent-1-dark",
     "accent-2": "bg-accent-2 text-text-contrast hover:bg-accent-2-light active:bg-accent-2-dark",
     "accent-3": "bg-accent-3 text-text-contrast hover:bg-accent-3-light active:bg-accent-3-dark",
@@ -27,16 +27,17 @@ export const BUTTON_COLOR_CLASSES: Record<CoimButtonVariant, Record<CoimColor, s
       "bg-text-secondary text-text-contrast-alternative hover:bg-text-secondary-light active:bg-text-secondary-dark",
     "text-disabled":
       "bg-text-disabled text-text-contrast-alternative hover:bg-text-disabled-light active:bg-text-disabled-dark",
-    success: "bg-success text-text-contrast hover:bg-success-light active:bg-success-dark",
-    error: "bg-error text-text-contrast hover:bg-error-light active:bg-error-dark",
-    warning: "bg-warning text-text-contrast hover:bg-warning-light active:bg-warning-dark",
-    info: "bg-info text-text-contrast hover:bg-info-light active:bg-info-dark",
+    success: "bg-success text-success-contrast hover:bg-success-light active:bg-success-dark",
+    error: "bg-error text-error-contrast hover:bg-error-light active:bg-error-dark",
+    warning: "bg-warning text-warning-contrast hover:bg-warning-light active:bg-warning-dark",
+    info: "bg-info text-info-contrast hover:bg-info-light active:bg-info-dark",
     grey: "bg-grey-25 text-text-primary hover:bg-grey-50 active:bg-grey-100",
   },
   outlined: {
-    primary: "border-primary text-primary hover:bg-primary-light/10 hover:text-primary-dark active:bg-primary-light/15",
+    primary:
+      "border-primary text-primary-fg hover:bg-primary-light/10 hover:text-primary-pastel-fg active:bg-primary-light/15 active:text-primary-pastel-fg",
     secondary:
-      "border-secondary text-secondary hover:bg-secondary-light/10 hover:text-secondary-dark active:bg-secondary-light/15",
+      "border-secondary text-secondary-fg hover:bg-secondary-light/10 hover:text-secondary-pastel-fg active:bg-secondary-light/15 active:text-secondary-pastel-fg",
     "accent-1":
       "border-accent-1 text-accent-1 hover:bg-accent-1-light/10 hover:text-accent-1-dark active:bg-accent-1-light/15",
     "accent-2":
@@ -52,15 +53,21 @@ export const BUTTON_COLOR_CLASSES: Record<CoimButtonVariant, Record<CoimColor, s
     "text-primary": "border-text-primary text-text-primary hover:bg-grey-500/10 active:bg-grey-500/15",
     "text-secondary": "border-text-secondary text-text-secondary hover:bg-grey-500/10 active:bg-grey-500/15",
     "text-disabled": "border-text-disabled text-text-disabled hover:bg-grey-500/10 active:bg-grey-500/15",
-    success: "border-success text-success hover:bg-success-light/10 hover:text-success-dark active:bg-success-light/15",
-    error: "border-error text-error hover:bg-error-light/10 hover:text-error-dark active:bg-error-light/15",
-    warning: "border-warning text-warning hover:bg-warning-light/10 hover:text-warning-dark active:bg-warning-light/15",
-    info: "border-info text-info hover:bg-info-light/10 hover:text-info-dark active:bg-info-light/15",
+    success:
+      "border-success text-success-fg hover:bg-success-light/10 hover:text-success-pastel-fg active:bg-success-light/15 active:text-success-pastel-fg",
+    error:
+      "border-error text-error-fg hover:bg-error-light/10 hover:text-error-pastel-fg active:bg-error-light/15 active:text-error-pastel-fg",
+    warning:
+      "border-warning text-warning-fg hover:bg-warning-light/10 hover:text-warning-pastel-fg active:bg-warning-light/15 active:text-warning-pastel-fg",
+    info:
+      "border-info text-info-fg hover:bg-info-light/10 hover:text-info-pastel-fg active:bg-info-light/15 active:text-info-pastel-fg",
     grey: "border-grey-200 text-text-primary hover:bg-grey-200/10 hover:text-text-primary-dark active:bg-grey-200/15",
   },
   text: {
-    primary: "text-primary hover:bg-primary-light/10 hover:text-primary-dark active:bg-primary-light/15",
-    secondary: "text-secondary hover:bg-secondary-light/10 hover:text-secondary-dark active:bg-secondary-light/15",
+    primary:
+      "text-primary-fg hover:bg-primary-light/10 hover:text-primary-pastel-fg active:bg-primary-light/15 active:text-primary-pastel-fg",
+    secondary:
+      "text-secondary-fg hover:bg-secondary-light/10 hover:text-secondary-pastel-fg active:bg-secondary-light/15 active:text-secondary-pastel-fg",
     "accent-1": "text-accent-1 hover:bg-accent-1-light/10 hover:text-accent-1-dark active:bg-accent-1-light/15",
     "accent-2": "text-accent-2 hover:bg-accent-2-light/10 hover:text-accent-2-dark active:bg-accent-2-light/15",
     "accent-3": "text-accent-3 hover:bg-accent-3-light/10 hover:text-accent-3-dark active:bg-accent-3-light/15",
@@ -70,15 +77,19 @@ export const BUTTON_COLOR_CLASSES: Record<CoimButtonVariant, Record<CoimColor, s
     "text-primary": "text-text-primary hover:bg-grey-500/10 active:bg-grey-500/15",
     "text-secondary": "text-text-secondary hover:bg-grey-500/10 active:bg-grey-500/15",
     "text-disabled": "text-text-disabled hover:bg-grey-500/10 active:bg-grey-500/15",
-    success: "text-success hover:bg-success-light/10 hover:text-success-dark active:bg-success-light/15",
-    error: "text-error hover:bg-error-light/10 hover:text-error-dark active:bg-error-light/15",
-    warning: "text-warning hover:bg-warning-light/10 hover:text-warning-dark active:bg-warning-light/15",
-    info: "text-info hover:bg-info-light/10 hover:text-info-dark active:bg-info-light/15",
+    success:
+      "text-success-fg hover:bg-success-light/10 hover:text-success-pastel-fg active:bg-success-light/15 active:text-success-pastel-fg",
+    error:
+      "text-error-fg hover:bg-error-light/10 hover:text-error-pastel-fg active:bg-error-light/15 active:text-error-pastel-fg",
+    warning:
+      "text-warning-fg hover:bg-warning-light/10 hover:text-warning-pastel-fg active:bg-warning-light/15 active:text-warning-pastel-fg",
+    info:
+      "text-info-fg hover:bg-info-light/10 hover:text-info-pastel-fg active:bg-info-light/15 active:text-info-pastel-fg",
     grey: "text-text-primary hover:bg-grey-25 active:bg-grey-50",
   },
   pastel: {
-    primary: "bg-primary-light/10 text-primary-dark hover:bg-primary-light/20 active:bg-primary-light/25",
-    secondary: "bg-secondary-light/10 text-secondary-dark hover:bg-secondary-light/20 active:bg-secondary-light/25",
+    primary: "bg-primary-light/10 text-primary-pastel-fg hover:bg-primary-light/20 active:bg-primary-light/25",
+    secondary: "bg-secondary-light/10 text-secondary-pastel-fg hover:bg-secondary-light/20 active:bg-secondary-light/25",
     "accent-1": "bg-accent-1-light/10 text-accent-1-dark hover:bg-accent-1-light/20 active:bg-accent-1-light/25",
     "accent-2": "bg-accent-2-light/10 text-accent-2-dark hover:bg-accent-2-light/20 active:bg-accent-2-light/25",
     "accent-3": "bg-accent-3-light/10 text-accent-3-dark hover:bg-accent-3-light/20 active:bg-accent-3-light/25",
@@ -88,15 +99,15 @@ export const BUTTON_COLOR_CLASSES: Record<CoimButtonVariant, Record<CoimColor, s
     "text-primary": "bg-grey-500/10 text-text-primary hover:bg-grey-500/20 active:bg-grey-500/25",
     "text-secondary": "bg-grey-500/10 text-text-secondary hover:bg-grey-500/20 active:bg-grey-500/25",
     "text-disabled": "bg-grey-500/10 text-text-disabled hover:bg-grey-500/20 active:bg-grey-500/25",
-    success: "bg-success-light/10 text-success-dark hover:bg-success-light/20 active:bg-success-light/25",
-    error: "bg-error-light/10 text-error-dark hover:bg-error-light/20 active:bg-error-light/25",
-    warning: "bg-warning-light/10 text-warning-dark hover:bg-warning-light/20 active:bg-warning-light/25",
-    info: "bg-info-light/10 text-info-dark hover:bg-info-light/20 active:bg-info-light/25",
+    success: "bg-success-light/10 text-success-pastel-fg hover:bg-success-light/20 active:bg-success-light/25",
+    error: "bg-error-light/10 text-error-pastel-fg hover:bg-error-light/20 active:bg-error-light/25",
+    warning: "bg-warning-light/10 text-warning-pastel-fg hover:bg-warning-light/20 active:bg-warning-light/25",
+    info: "bg-info-light/10 text-info-pastel-fg hover:bg-info-light/20 active:bg-info-light/25",
     grey: "bg-grey-25 text-text-primary hover:bg-grey-50 active:bg-grey-50",
   },
   surface: {
-    primary: "text-primary",
-    secondary: "text-secondary",
+    primary: "text-primary-fg",
+    secondary: "text-secondary-fg",
     "accent-1": "text-accent-1",
     "accent-2": "text-accent-2",
     "accent-3": "text-accent-3",
@@ -106,10 +117,10 @@ export const BUTTON_COLOR_CLASSES: Record<CoimButtonVariant, Record<CoimColor, s
     "text-primary": "text-text-primary",
     "text-secondary": "text-text-secondary",
     "text-disabled": "text-text-disabled",
-    success: "text-success",
-    error: "text-error",
-    warning: "text-warning",
-    info: "text-info",
+    success: "text-success-fg",
+    error: "text-error-fg",
+    warning: "text-warning-fg",
+    info: "text-info-fg",
     grey: "text-text-primary",
   },
 };
@@ -162,8 +173,8 @@ export const FAB_SIZE_CLASSES: Record<CoimFabSize, { circular: string; extended:
 };
 
 export const FAB_COLOR_CLASSES: Record<CoimColor, string> = {
-  primary: "bg-primary text-text-contrast hover:bg-primary-light active:bg-primary-dark",
-  secondary: "bg-secondary text-text-contrast hover:bg-secondary-light active:bg-secondary-dark",
+  primary: "bg-primary text-primary-contrast hover:bg-primary-light active:bg-primary-dark",
+  secondary: "bg-secondary text-secondary-contrast hover:bg-secondary-light active:bg-secondary-dark",
   "accent-1": "bg-accent-1 text-text-contrast hover:bg-accent-1-light active:bg-accent-1-dark",
   "accent-2": "bg-accent-2 text-text-contrast hover:bg-accent-2-light active:bg-accent-2-dark",
   "accent-3": "bg-accent-3 text-text-contrast hover:bg-accent-3-light active:bg-accent-3-dark",
@@ -176,17 +187,17 @@ export const FAB_COLOR_CLASSES: Record<CoimColor, string> = {
     "bg-text-secondary text-text-contrast-alternative hover:bg-text-secondary-light active:bg-text-secondary-dark",
   "text-disabled":
     "bg-text-disabled text-text-contrast-alternative hover:bg-text-disabled-light active:bg-text-disabled-dark",
-  success: "bg-success text-text-contrast hover:bg-success-light active:bg-success-dark",
-  error: "bg-error text-text-contrast hover:bg-error-light active:bg-error-dark",
-  warning: "bg-warning text-text-contrast hover:bg-warning-light active:bg-warning-dark",
-  info: "bg-info text-text-contrast hover:bg-info-light active:bg-info-dark",
-  grey: "bg-background-paper text-text-primary hover:text-primary hover:bg-grey-25",
+  success: "bg-success text-success-contrast hover:bg-success-light active:bg-success-dark",
+  error: "bg-error text-error-contrast hover:bg-error-light active:bg-error-dark",
+  warning: "bg-warning text-warning-contrast hover:bg-warning-light active:bg-warning-dark",
+  info: "bg-info text-info-contrast hover:bg-info-light active:bg-info-dark",
+  grey: "bg-background-paper text-text-primary hover:text-primary-fg hover:bg-grey-25",
 };
 
 export const TOGGLE_VARIANT_CLASSES: Record<CoimToggleButtonVariant, Record<CoimColor, string>> = {
   surface: {
-    primary: "data-[state=on]:bg-primary data-[state=on]:text-text-contrast",
-    secondary: "data-[state=on]:bg-secondary data-[state=on]:text-text-contrast",
+    primary: "data-[state=on]:bg-primary data-[state=on]:text-primary-contrast",
+    secondary: "data-[state=on]:bg-secondary data-[state=on]:text-secondary-contrast",
     "accent-1": "data-[state=on]:bg-accent-1 data-[state=on]:text-text-contrast",
     "accent-2": "data-[state=on]:bg-accent-2 data-[state=on]:text-text-contrast",
     "accent-3": "data-[state=on]:bg-accent-3 data-[state=on]:text-text-contrast",
@@ -196,15 +207,15 @@ export const TOGGLE_VARIANT_CLASSES: Record<CoimToggleButtonVariant, Record<Coim
     "text-primary": "data-[state=on]:bg-text-primary data-[state=on]:text-text-contrast-alternative",
     "text-secondary": "data-[state=on]:bg-text-secondary data-[state=on]:text-text-contrast-alternative",
     "text-disabled": "data-[state=on]:bg-text-disabled data-[state=on]:text-text-contrast-alternative",
-    success: "data-[state=on]:bg-success data-[state=on]:text-text-contrast",
-    error: "data-[state=on]:bg-error data-[state=on]:text-text-contrast",
-    warning: "data-[state=on]:bg-warning data-[state=on]:text-text-contrast",
-    info: "data-[state=on]:bg-info data-[state=on]:text-text-contrast",
+    success: "data-[state=on]:bg-success data-[state=on]:text-success-contrast",
+    error: "data-[state=on]:bg-error data-[state=on]:text-error-contrast",
+    warning: "data-[state=on]:bg-warning data-[state=on]:text-warning-contrast",
+    info: "data-[state=on]:bg-info data-[state=on]:text-info-contrast",
     grey: "data-[state=on]:bg-grey-100 data-[state=on]:text-text-primary",
   },
   outlined: {
-    primary: "data-[state=on]:border-primary data-[state=on]:text-primary data-[state=on]:bg-transparent",
-    secondary: "data-[state=on]:border-secondary data-[state=on]:text-secondary data-[state=on]:bg-transparent",
+    primary: "data-[state=on]:border-primary data-[state=on]:text-primary-fg data-[state=on]:bg-transparent",
+    secondary: "data-[state=on]:border-secondary data-[state=on]:text-secondary-fg data-[state=on]:bg-transparent",
     "accent-1": "data-[state=on]:border-accent-1 data-[state=on]:text-accent-1 data-[state=on]:bg-transparent",
     "accent-2": "data-[state=on]:border-accent-2 data-[state=on]:text-accent-2 data-[state=on]:bg-transparent",
     "accent-3": "data-[state=on]:border-accent-3 data-[state=on]:text-accent-3 data-[state=on]:bg-transparent",
@@ -217,15 +228,15 @@ export const TOGGLE_VARIANT_CLASSES: Record<CoimToggleButtonVariant, Record<Coim
       "data-[state=on]:border-text-secondary data-[state=on]:text-text-secondary data-[state=on]:bg-transparent",
     "text-disabled":
       "data-[state=on]:border-text-disabled data-[state=on]:text-text-disabled data-[state=on]:bg-transparent",
-    success: "data-[state=on]:border-success data-[state=on]:text-success data-[state=on]:bg-transparent",
-    error: "data-[state=on]:border-error data-[state=on]:text-error data-[state=on]:bg-transparent",
-    warning: "data-[state=on]:border-warning data-[state=on]:text-warning data-[state=on]:bg-transparent",
-    info: "data-[state=on]:border-info data-[state=on]:text-info data-[state=on]:bg-transparent",
+    success: "data-[state=on]:border-success data-[state=on]:text-success-fg data-[state=on]:bg-transparent",
+    error: "data-[state=on]:border-error data-[state=on]:text-error-fg data-[state=on]:bg-transparent",
+    warning: "data-[state=on]:border-warning data-[state=on]:text-warning-fg data-[state=on]:bg-transparent",
+    info: "data-[state=on]:border-info data-[state=on]:text-info-fg data-[state=on]:bg-transparent",
     grey: "data-[state=on]:border-grey-300 data-[state=on]:text-text-primary data-[state=on]:bg-transparent",
   },
   pastel: {
-    primary: "data-[state=on]:bg-primary-light/15 data-[state=on]:text-primary-dark",
-    secondary: "data-[state=on]:bg-secondary-light/15 data-[state=on]:text-secondary-dark",
+    primary: "data-[state=on]:bg-primary-light/15 data-[state=on]:text-primary-pastel-fg",
+    secondary: "data-[state=on]:bg-secondary-light/15 data-[state=on]:text-secondary-pastel-fg",
     "accent-1": "data-[state=on]:bg-accent-1-light/15 data-[state=on]:text-accent-1-dark",
     "accent-2": "data-[state=on]:bg-accent-2-light/15 data-[state=on]:text-accent-2-dark",
     "accent-3": "data-[state=on]:bg-accent-3-light/15 data-[state=on]:text-accent-3-dark",
@@ -235,17 +246,17 @@ export const TOGGLE_VARIANT_CLASSES: Record<CoimToggleButtonVariant, Record<Coim
     "text-primary": "data-[state=on]:bg-grey-500/15 data-[state=on]:text-text-primary",
     "text-secondary": "data-[state=on]:bg-grey-500/15 data-[state=on]:text-text-secondary",
     "text-disabled": "data-[state=on]:bg-grey-500/15 data-[state=on]:text-text-disabled",
-    success: "data-[state=on]:bg-success-light/15 data-[state=on]:text-success-dark",
-    error: "data-[state=on]:bg-error-light/15 data-[state=on]:text-error-dark",
-    warning: "data-[state=on]:bg-warning-light/15 data-[state=on]:text-warning-dark",
-    info: "data-[state=on]:bg-info-light/15 data-[state=on]:text-info-dark",
+    success: "data-[state=on]:bg-success-light/15 data-[state=on]:text-success-pastel-fg",
+    error: "data-[state=on]:bg-error-light/15 data-[state=on]:text-error-pastel-fg",
+    warning: "data-[state=on]:bg-warning-light/15 data-[state=on]:text-warning-pastel-fg",
+    info: "data-[state=on]:bg-info-light/15 data-[state=on]:text-info-pastel-fg",
     grey: "data-[state=on]:bg-grey-50 data-[state=on]:text-text-primary",
   },
 };
 
 export const SELECTION_TEXT_COLOR_CLASSES: Record<CoimColor, string> = {
-  primary: "text-primary",
-  secondary: "text-secondary",
+  primary: "text-primary-fg",
+  secondary: "text-secondary-fg",
   "accent-1": "text-accent-1",
   "accent-2": "text-accent-2",
   "accent-3": "text-accent-3",
@@ -255,10 +266,10 @@ export const SELECTION_TEXT_COLOR_CLASSES: Record<CoimColor, string> = {
   "text-primary": "text-text-primary",
   "text-secondary": "text-text-secondary",
   "text-disabled": "text-text-disabled",
-  success: "text-success",
-  error: "text-error",
-  warning: "text-warning",
-  info: "text-info",
+  success: "text-success-fg",
+  error: "text-error-fg",
+  warning: "text-warning-fg",
+  info: "text-info-fg",
   grey: "text-grey-500",
 };
 

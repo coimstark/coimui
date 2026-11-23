@@ -5,31 +5,96 @@
   interface Props {
     images: CoimLightboxImage[];
     galleryId?: string;
+    showCounter?: boolean;
+    showDownload?: boolean;
+    showCaptions?: boolean;
     class?: string;
   }
 
   const uid = $props.id();
 
-  let { images, galleryId, class: className = "" }: Props = $props();
+  let {
+    images,
+    galleryId,
+    showCounter = true,
+    showDownload = false,
+    showCaptions = true,
+    class: className = "",
+  }: Props = $props();
 
   let galleryEl = $state<HTMLDivElement | null>(null);
   const resolvedId = $derived(galleryId ?? `coim-lightbox-${uid}`);
 
   $effect(() => {
     if (typeof window === "undefined" || !galleryEl) return;
-    let lightbox: { init: () => void; destroy: () => void } | null = null;
+    let lightbox: {
+      on?: (event: string, fn: () => void) => void;
+      pswp?: {
+        on?: (event: string, fn: () => void) => void;
+        ui?: {
+          registerElement: (spec: Record<string, unknown>) => void;
+        };
+        currSlide?: { data?: { element?: Element; src?: string } };
+      };
+      init: () => void;
+      destroy: () => void;
+    } | null = null;
     let cancelled = false;
 
     void (async () => {
       await import("photoswipe/style.css");
       const { default: PhotoSwipeLightbox } = await import("photoswipe/lightbox");
       if (cancelled || !galleryEl) return;
-      lightbox = new PhotoSwipeLightbox({
+      const instance = new PhotoSwipeLightbox({
         gallery: `#${resolvedId}`,
         children: "a[data-pswp-width]",
+        counter: showCounter,
         pswpModule: () => import("photoswipe"),
       });
-      lightbox.init();
+
+      instance.on("uiRegister", () => {
+        if (showDownload) {
+          instance.pswp?.ui?.registerElement({
+            name: "download-button",
+            order: 8,
+            isButton: true,
+            tagName: "a",
+            html: '<span aria-hidden="true">⬇</span>',
+            onInit: (el: HTMLElement) => {
+              el.setAttribute("download", "");
+              el.setAttribute("target", "_blank");
+              el.setAttribute("rel", "noopener");
+              el.setAttribute("aria-label", "Download image");
+              instance.pswp?.on?.("change", () => {
+                const src = instance.pswp?.currSlide?.data?.src;
+                if (src) el.setAttribute("href", src);
+              });
+            },
+          });
+        }
+
+        if (showCaptions) {
+          instance.pswp?.ui?.registerElement({
+            name: "custom-caption",
+            order: 9,
+            isButton: false,
+            appendTo: "root",
+            html: "",
+            onInit: (el: HTMLElement) => {
+              el.className = "pswp__custom-caption text-center text-white text-sm px-4 py-2 bg-black/50";
+              instance.pswp?.on?.("change", () => {
+                const slideEl = instance.pswp?.currSlide?.data?.element;
+                const cap = slideEl?.getAttribute("data-pswp-caption") ?? "";
+                el.textContent = cap;
+                el.style.display = cap ? "block" : "none";
+              });
+            },
+          });
+        }
+      });
+
+      instance.init();
+      lightbox = instance as unknown as typeof lightbox;
     })();
 
     return () => {
@@ -46,7 +111,8 @@
       href={img.src}
       data-pswp-width={img.width}
       data-pswp-height={img.height}
-      aria-label={img.alt}
+      data-pswp-caption={img.caption ?? img.alt}
+      aria-label={img.caption ? undefined : img.alt}
       class="border-grey-100 hover:border-primary block overflow-hidden rounded-lg border transition-colors"
     >
       <img

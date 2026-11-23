@@ -215,49 +215,50 @@ test.describe("CoimUI Runtime, Visual, Accessibility & Responsiveness Suite", ()
     const { errors, failedResponses } = attachErrorCollectors(page);
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(`${SHOWCASE_ORIGIN}/data-grid`, { waitUntil: "networkidle" });
+    const firstGrid = page.locator(".coim-data-grid").first();
 
     // Pinned Status header and first body cell align horizontally
-    const statusHeaderBox = await page.locator('th[data-col-id="status"]').boundingBox();
-    const firstRowBox = await page.locator("tbody tr").first().boundingBox();
+    const statusHeaderBox = await firstGrid.locator('th[data-col-id="status"]').boundingBox();
+    const firstRowBox = await firstGrid.locator("tbody tr").first().boundingBox();
     expect(statusHeaderBox).toBeTruthy();
     expect(firstRowBox).toBeTruthy();
     expect(statusHeaderBox!.x + statusHeaderBox!.width).toBeLessThanOrEqual(firstRowBox!.x + firstRowBox!.width + 2);
     expect(
-      await page.locator('th[data-col-id="status"]').evaluate((el) => getComputedStyle(el).position),
+      await firstGrid.locator('th[data-col-id="status"]').evaluate((el) => getComputedStyle(el).position),
     ).toBe("sticky");
 
     // Sort by Seats
-    const seatsSortBtn = page.getByRole("button", { name: "Seats", exact: true });
+    const seatsSortBtn = firstGrid.getByRole("button", { name: "Seats", exact: true });
     await seatsSortBtn.click();
-    await expect(page.locator('th[data-col-id="seats"]')).toHaveAttribute("aria-sort", "ascending");
+    await expect(firstGrid.locator('th[data-col-id="seats"]')).toHaveAttribute("aria-sort", "ascending");
 
     // Pagination Next -> shows remaining rows
-    await page.getByRole("button", { name: "Next page" }).click();
-    await expect(page.getByText(/Page 2 of 2/i)).toBeVisible();
+    await firstGrid.getByRole("button", { name: "Next page" }).click();
+    await expect(firstGrid.getByText(/Page 2 of 2/i)).toBeVisible();
 
     // Global search filter and restore
-    const searchInput = page.getByRole("searchbox", { name: "Search rows" });
+    const searchInput = firstGrid.getByRole("searchbox", { name: "Search rows" });
     await searchInput.fill("Northstar");
-    await expect(page.getByText("1 total row(s)")).toBeVisible();
+    await expect(firstGrid.getByText("1 total row(s)")).toBeVisible();
     await searchInput.fill("");
-    await expect(page.getByText("8 total row(s)")).toBeVisible();
+    await expect(firstGrid.getByText("8 total row(s)")).toBeVisible();
 
     // Row selection on first sorted row (ACC-105 has fewest seats: 14)
-    await page.getByRole("checkbox", { name: "Select row ACC-105" }).click();
-    await expect(page.getByText(/1 selected/i)).toBeVisible();
+    await firstGrid.getByRole("checkbox", { name: "Select row ACC-105" }).click();
+    await expect(firstGrid.getByText(/1 selected/i)).toBeVisible();
 
     // Inline cell edit
-    const orgCell = page.locator("tbody tr").first().locator("td[role='gridcell']").nth(1);
+    const orgCell = firstGrid.locator("tbody tr").first().locator("td[role='gridcell']").nth(1);
     await orgCell.dblclick();
     const editInput = orgCell.locator("input");
     await editInput.fill("Helios Cloud");
     await editInput.press("Enter");
-    await expect(page.getByText("Helios Cloud")).toBeVisible();
+    await expect(firstGrid.getByText("Helios Cloud")).toBeVisible();
 
     // CSV Export download event
     const [download] = await Promise.all([
       page.waitForEvent("download"),
-      page.getByRole("button", { name: "CSV" }).click(),
+      firstGrid.getByRole("button", { name: "CSV" }).click(),
     ]);
     expect(download.suggestedFilename()).toContain(".csv");
 

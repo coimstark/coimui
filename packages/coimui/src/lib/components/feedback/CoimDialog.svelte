@@ -12,6 +12,7 @@
     fullWidth?: boolean;
     fullScreen?: boolean;
     scroll?: DialogScroll;
+    draggable?: boolean;
     disableBackdropClick?: boolean;
     disableEscapeKeyDown?: boolean;
     modal?: boolean;
@@ -31,6 +32,7 @@
     fullWidth = false,
     fullScreen = false,
     scroll = "paper",
+    draggable = false,
     disableBackdropClick = false,
     disableEscapeKeyDown = false,
     modal = true,
@@ -75,6 +77,10 @@
   let pendingCloseReason: DialogCloseReason = "close";
   let pointerDownOutside = false;
   let pointerDownInside = false;
+  let dragOffset = $state({ x: 0, y: 0 });
+  let dragState = $state<{ startX: number; startY: number; originX: number; originY: number } | null>(
+    null,
+  );
 
   const closedByAttr = $derived.by(() => {
     if (disableBackdropClick && disableEscapeKeyDown) return "none";
@@ -173,6 +179,38 @@
     return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
   }
 
+  $effect(() => {
+    if (!open) {
+      dragOffset = { x: 0, y: 0 };
+      dragState = null;
+    }
+  });
+
+  $effect(() => {
+    if (!dragState || typeof window === "undefined") return;
+
+    function handleMove(event: PointerEvent) {
+      if (!dragState) return;
+      dragOffset = {
+        x: dragState.originX + (event.clientX - dragState.startX),
+        y: dragState.originY + (event.clientY - dragState.startY),
+      };
+    }
+
+    function handleUp() {
+      dragState = null;
+    }
+
+    window.addEventListener("pointermove", handleMove);
+    window.addEventListener("pointerup", handleUp);
+    window.addEventListener("pointercancel", handleUp);
+    return () => {
+      window.removeEventListener("pointermove", handleMove);
+      window.removeEventListener("pointerup", handleUp);
+      window.removeEventListener("pointercancel", handleUp);
+    };
+  });
+
   function handlePointerDown(e: PointerEvent) {
     if (!dialogEl) return;
     if (e.target === dialogEl && isPointerOutsideDialog(e, dialogEl)) {
@@ -181,6 +219,17 @@
     } else {
       pointerDownOutside = false;
       pointerDownInside = true;
+      if (draggable && !fullScreen && e.button === 0) {
+        const target = e.target as HTMLElement | null;
+        if (target?.closest('[data-coim-dialog-drag-handle], .coim-dialog-title')) {
+          dragState = {
+            startX: e.clientX,
+            startY: e.clientY,
+            originX: dragOffset.x,
+            originY: dragOffset.y,
+          };
+        }
+      }
     }
   }
 
@@ -254,6 +303,10 @@
   aria-describedby={ariaDescribedBy ?? registeredDescriptionId}
   data-scroll={scroll}
   data-max-width={maxWidth === false ? "false" : maxWidth}
+  data-draggable={draggable && !fullScreen ? "true" : undefined}
+  style={draggable && !fullScreen && (dragOffset.x !== 0 || dragOffset.y !== 0)
+    ? `transform: translate3d(${dragOffset.x}px, ${dragOffset.y}px, 0);`
+    : undefined}
   onclose={handleDialogClose}
   oncancel={handleCancel}
   onkeydown={handleKeyDown}

@@ -78,13 +78,13 @@
   .coim-list-item-button:active,
   .coim-list-item-button.active {
     background-color: hsl(var(--grey-500) / 0.15);
-    color: hsl(var(--primary));
+    color: hsl(var(--primary-fg));
   }
 
   .coim-list-item-button.is-selected,
   .coim-list-item-button[aria-selected="true"] {
     background-color: hsl(var(--grey-500) / 0.1);
-    color: hsl(var(--primary));
+    color: hsl(var(--primary-fg));
   }
 
   .coim-list-item-button:focus-visible {

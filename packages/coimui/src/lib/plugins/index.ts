@@ -9,6 +9,7 @@ export { default as CoimSortableList } from "./CoimSortableList.svelte";
 export { default as CoimVideoPlayer } from "./CoimVideoPlayer.svelte";
 
 export { printElement } from "./print.js";
+export { resolveVideoEmbed, type CoimResolvedVideoEmbed, type CoimVideoProvider } from "./video-utils.js";
 export type {
   CoimCalendarEvent,
   CoimCarouselItem,

@@ -5,6 +5,7 @@
 @layer theme, base, coim, components, style, utilities;
 
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 @source "../";
 
 @import "./tailwind-theme.css";

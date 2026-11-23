@@ -23,6 +23,7 @@
 
 <h2
   id={resolvedId}
+  data-coim-dialog-drag-handle="true"
   class={cn(
     "coim-dialog-title font-heading text-text-primary m-0 shrink-0 p-7 pb-4 text-lg leading-6 font-bold",
     className,

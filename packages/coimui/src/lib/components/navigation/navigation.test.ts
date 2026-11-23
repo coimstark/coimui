@@ -1,7 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render } from "@testing-library/svelte";
-import { tick } from "svelte";
+import { createRawSnippet, tick } from "svelte";
 import NavigationTestHost from "../../../tests/NavigationTestHost.svelte";
+import { CoimMenu } from "./index.js";
 
 describe("Navigation Component Library", () => {
   beforeEach(() => {
@@ -107,5 +108,22 @@ describe("Navigation Component Library", () => {
     await tick();
     expect(menuTrigger).toHaveAttribute("aria-expanded", "true");
     expect(view.getByRole("menuitem", { name: "Rename" })).toBeInTheDocument();
+    view.unmount();
+
+    // Context-positioned CoimMenu via anchorPosition
+    const ctxMenu = render(CoimMenu, {
+      props: {
+        open: true,
+        anchorPosition: { x: 180, y: 240 },
+        children: createRawSnippet(() => ({
+          render: () => `<div role="menuitem">Copy Link</div>`,
+        })),
+      },
+    });
+    await tick();
+    const anchorDiv = ctxMenu.container.querySelector('[aria-hidden="true"]') as HTMLElement;
+    expect(anchorDiv.style.left).toBe("180px");
+    expect(anchorDiv.style.top).toBe("240px");
+    expect(ctxMenu.getByRole("menuitem", { name: "Copy Link" })).toBeInTheDocument();
   });
 });

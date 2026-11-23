@@ -40,7 +40,7 @@
   }
 
   .coim-bottom-navigation-action.is-selected {
-    color: hsl(var(--primary));
+    color: hsl(var(--primary-fg));
   }
 
   .coim-bottom-navigation-action.is-disabled {

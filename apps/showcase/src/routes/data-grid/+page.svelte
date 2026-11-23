@@ -8,8 +8,11 @@
   } from "@coimui/svelte";
   import {
     CoimDataGrid,
+    type CoimDataGridCellCoord,
     type CoimDataGridCellEditEvent,
     type CoimDataGridColumn,
+    type CoimDataGridColumnGroup,
+    type CoimDataGridRowEditEvent,
   } from "@coimui/svelte/data-grid";
   import ComponentDocCard from "#lib/components/ComponentDocCard.svelte";
   import { COMPONENT_CODE_EXAMPLES } from "#lib/examples/component-docs.ts";
@@ -83,6 +86,62 @@
       renderCell: statusBadge,
     },
   ];
+
+  interface OpsLedgerRow extends Record<string, unknown> {
+    id: string;
+    service: string;
+    owner: string;
+    renewal: string;
+    slaVerified: boolean;
+    budget: number;
+  }
+
+  let opsRows = $state<OpsLedgerRow[]>([
+    { id: "OPS-1", service: "API Gateway", owner: "Elena", renewal: "2026-12-01", slaVerified: true, budget: 18500 },
+    { id: "OPS-2", service: "Search Index", owner: "Mateo", renewal: "2026-12-15", slaVerified: true, budget: 12400 },
+    { id: "OPS-3", service: "Billing Sync", owner: "Sora", renewal: "2027-01-10", slaVerified: false, budget: 9600 },
+    { id: "OPS-4", service: "Audit Archive", owner: "Liam", renewal: "2027-02-01", slaVerified: true, budget: 6400 },
+  ]);
+  let selectedOpsCells = $state<CoimDataGridCellCoord[]>([]);
+
+  const opsColumnGroups: CoimDataGridColumnGroup[] = [
+    {
+      id: "grp-identity",
+      headerName: "Service Identity",
+      children: ["service", "owner"],
+      collapsible: true,
+      collapsibleColumns: ["owner"],
+    },
+    { id: "grp-governance", headerName: "Governance & Spend", children: ["renewal", "slaVerified", "budget"] },
+  ];
+
+  function handleOpsRowEditCommit(ev: CoimDataGridRowEditEvent<OpsLedgerRow>) {
+    opsRows = opsRows.map((row) => (row.id === ev.rowId ? ev.row : row));
+    toast.success(`Saved changes to ${ev.row.service}`);
+  }
+
+  function handleOpsRowDelete(row: OpsLedgerRow) {
+    opsRows = opsRows.filter((item) => item.id !== row.id);
+    toast.info(`Removed ${row.service}`);
+  }
+
+  const opsColumns: CoimDataGridColumn<OpsLedgerRow>[] = [
+    { id: "service", field: "service", headerName: "Service", width: 170, editable: true },
+    { id: "owner", field: "owner", headerName: "Owner", width: 130, editable: true },
+    { id: "renewal", field: "renewal", headerName: "Renewal Date", type: "date", width: 150, editable: true },
+    { id: "slaVerified", field: "slaVerified", headerName: "SLA Verified", type: "boolean", width: 130, editable: true },
+    {
+      id: "budget",
+      field: "budget",
+      headerName: "Annual Budget",
+      type: "number",
+      align: "right",
+      width: 150,
+      editable: true,
+      aggregationFn: "sum",
+      valueFormatter: (v) => `$${Number(v ?? 0).toLocaleString()}`,
+    },
+  ];
 </script>
 
 {#snippet statusBadge({ row }: { value: unknown; row: AccountRow; rowId: string; column: CoimDataGridColumn<AccountRow> })}
@@ -133,6 +192,49 @@
         pageSize={5}
         exportFilename="coimui-accounts"
         onCellEditCommit={handleCellEdit}
+      />
+    </CoimStack>
+  </ComponentDocCard>
+
+  <ComponentDocCard
+    title="Collapsible Column Groups, Full-Row Editing, Pivoting & Summary Footer"
+    description="Supports collapsible column group headers, full-row Edit/Save/Cancel/Delete actions, toolbar Pivot mode, summary aggregates, top/bottom pinned rows, drag or Alt+Arrow row reordering, cell range selection, and TSV clipboard paste."
+    packageEntry="@coimui/svelte/data-grid"
+    code={COMPONENT_CODE_EXAMPLES.dataGrid}
+  >
+    <CoimStack spacing={3}>
+      {#if selectedOpsCells.length > 0}
+        <p class="text-primary text-sm font-medium">
+          Selected cell(s): {selectedOpsCells.map((c) => `${c.rowId}:${c.columnId}`).join(", ")}
+        </p>
+      {/if}
+
+      <CoimDataGrid
+        rows={opsRows}
+        columns={opsColumns}
+        columnGroups={opsColumnGroups}
+        groupHeaderHeight={40}
+        editMode="row"
+        enableAiAssistant
+        pivotConfig={{
+          rowFields: ["owner"],
+          columnField: "slaVerified",
+          valueField: "budget",
+          aggregationFn: "sum",
+          showRowTotals: true,
+        }}
+        pinnedRows={{ top: ["OPS-1"] }}
+        rowReordering
+        showSummaryRow
+        cellSelection
+        enableClipboardPaste
+        bind:selectedCells={selectedOpsCells}
+        onRowEditCommit={handleOpsRowEditCommit}
+        onRowDelete={handleOpsRowDelete}
+        onRowOrderChange={(_ids, reordered) => {
+          opsRows = reordered;
+          toast.info("Updated service priority order");
+        }}
       />
     </CoimStack>
   </ComponentDocCard>

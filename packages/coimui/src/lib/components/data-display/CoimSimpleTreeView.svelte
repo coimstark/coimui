@@ -3,6 +3,7 @@
   import type { HTMLAttributes } from "svelte/elements";
   import { cn } from "../../utilities/utils.js";
   import { setTreeDepthContext, setTreeViewContext } from "./tree-context.svelte.js";
+  import type { CoimTreeReorderPosition } from "./types.js";
 
   interface Props extends Omit<HTMLAttributes<HTMLUListElement>, "class" | "children"> {
     expandedItems?: string[];
@@ -11,6 +12,7 @@
     defaultSelectedItems?: string[];
     multiSelect?: boolean;
     checkboxSelection?: boolean;
+    reorderable?: boolean;
     size?: "medium" | "small";
     bordered?: boolean;
     expansionTrigger?: "content" | "iconContainer";
@@ -19,6 +21,8 @@
     onItemExpansionToggle?: (event: Event | null, itemId: string, isExpanded: boolean) => void;
     onItemClick?: (event: Event, itemId: string) => void;
     onItemLabelChange?: (itemId: string, newLabel: string) => void;
+    onMoveItem?: (sourceId: string, targetId: string, position: CoimTreeReorderPosition) => void;
+    onReorderByOffset?: (itemId: string, offset: -1 | 1) => void;
     class?: string;
     children?: Snippet;
   }
@@ -30,6 +34,7 @@
     defaultSelectedItems,
     multiSelect = false,
     checkboxSelection = false,
+    reorderable = false,
     size = "medium",
     bordered = false,
     expansionTrigger = "content",
@@ -38,6 +43,8 @@
     onItemExpansionToggle,
     onItemClick,
     onItemLabelChange,
+    onMoveItem,
+    onReorderByOffset,
     class: className = "",
     children,
     ...rest
@@ -59,6 +66,7 @@
 
   let rootEl = $state<HTMLUListElement | null>(null);
   let focusedId = $state<string | null>(null);
+  let draggingId = $state<string | null>(null);
 
   function setExpandedState(id: string, nextExpanded: boolean, event: Event | null = null) {
     const exists = expandedItems.includes(id);
@@ -76,6 +84,9 @@
     },
     get checkboxSelection() {
       return checkboxSelection;
+    },
+    get reorderable() {
+      return reorderable;
     },
     get expansionTrigger() {
       return expansionTrigger;
@@ -122,6 +133,16 @@
     },
     notifyLabelChange: (id, label) => {
       onItemLabelChange?.(id, label);
+    },
+    getDraggingId: () => draggingId,
+    setDraggingId: (id) => {
+      draggingId = id;
+    },
+    moveItem: (sourceId, targetId, position) => {
+      onMoveItem?.(sourceId, targetId, position);
+    },
+    reorderByOffset: (itemId, offset) => {
+      onReorderByOffset?.(itemId, offset);
     },
   });
 </script>

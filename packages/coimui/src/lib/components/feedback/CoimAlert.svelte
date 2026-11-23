@@ -48,17 +48,17 @@
     if (variant === "filled") {
       switch (resolvedColor) {
         case "success":
-          return "bg-success text-text-contrast font-medium";
+          return "bg-success text-success-contrast font-medium";
         case "info":
-          return "bg-info text-text-contrast font-medium";
+          return "bg-info text-info-contrast font-medium";
         case "warning":
-          return "bg-warning text-text-contrast font-medium";
+          return "bg-warning text-warning-contrast font-medium";
         case "error":
-          return "bg-error text-text-contrast font-medium";
+          return "bg-error text-error-contrast font-medium";
         case "primary":
-          return "bg-primary text-text-contrast font-medium";
+          return "bg-primary text-primary-contrast font-medium";
         case "secondary":
-          return "bg-secondary text-text-contrast font-medium";
+          return "bg-secondary text-secondary-contrast font-medium";
         default:
           return "text-text-contrast font-medium";
       }
@@ -66,34 +66,34 @@
     if (variant === "outlined") {
       switch (resolvedColor) {
         case "success":
-          return "border border-solid border-success/50 text-success bg-transparent";
+          return "border border-solid border-success/50 text-success-fg bg-transparent";
         case "info":
-          return "border border-solid border-info/50 text-info bg-transparent";
+          return "border border-solid border-info/50 text-info-fg bg-transparent";
         case "warning":
-          return "border border-solid border-warning/50 text-warning bg-transparent";
+          return "border border-solid border-warning/50 text-warning-fg bg-transparent";
         case "error":
-          return "border border-solid border-error/50 text-error bg-transparent";
+          return "border border-solid border-error/50 text-error-fg bg-transparent";
         case "primary":
-          return "border border-solid border-primary/50 text-primary bg-transparent";
+          return "border border-solid border-primary/50 text-primary-fg bg-transparent";
         case "secondary":
-          return "border border-solid border-secondary/50 text-secondary bg-transparent";
+          return "border border-solid border-secondary/50 text-secondary-fg bg-transparent";
         default:
           return "border border-solid bg-transparent";
       }
     }
     switch (resolvedColor) {
       case "success":
-        return "bg-success-light/10 text-success-dark";
+        return "bg-success-light/10 text-success-pastel-fg";
       case "info":
-        return "bg-info-light/10 text-info-dark";
+        return "bg-info-light/10 text-info-pastel-fg";
       case "warning":
-        return "bg-warning-light/10 text-warning-dark";
+        return "bg-warning-light/10 text-warning-pastel-fg";
       case "error":
-        return "bg-error-light/10 text-error-dark";
+        return "bg-error-light/10 text-error-pastel-fg";
       case "primary":
-        return "bg-primary-light/10 text-primary-dark";
+        return "bg-primary-light/10 text-primary-pastel-fg";
       case "secondary":
-        return "bg-secondary-light/10 text-secondary-dark";
+        return "bg-secondary-light/10 text-secondary-pastel-fg";
       default:
         return "";
     }
@@ -103,17 +103,17 @@
     if (variant === "filled" && !neutral) return "text-current";
     switch (resolvedColor) {
       case "success":
-        return "text-success";
+        return "text-success-fg";
       case "info":
-        return "text-info";
+        return "text-info-fg";
       case "warning":
-        return "text-warning";
+        return "text-warning-fg";
       case "error":
-        return "text-error";
+        return "text-error-fg";
       case "primary":
-        return "text-primary";
+        return "text-primary-fg";
       case "secondary":
-        return "text-secondary";
+        return "text-secondary-fg";
       default:
         return "text-current";
     }

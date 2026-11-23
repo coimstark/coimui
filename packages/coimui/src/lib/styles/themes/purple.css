@@ -44,10 +44,14 @@
     --primary: 306 58% 47%;
     --primary-light: 306 58% 57%;
     --primary-dark: 306 58% 37%;
+    --primary-fg: 306 74% 70%;
+    --primary-contrast: 0 0% 100%;
 
     --secondary: 267 66% 60%;
     --secondary-light: 267 66% 70%;
     --secondary-dark: 267 66% 50%;
+    --secondary-fg: 267 84% 76%;
+    --secondary-contrast: 0 0% 100%;
 
     --accent-1: 214 66% 60%;
     --accent-1-light: 214 66% 70%;

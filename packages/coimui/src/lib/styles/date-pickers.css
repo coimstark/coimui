@@ -56,7 +56,7 @@
 
   .coim-date-segment:focus {
     background-color: hsl(var(--primary));
-    color: hsl(var(--text-contrast));
+    color: hsl(var(--primary-contrast));
   }
 
   .coim-date-segment[data-placeholder] {
@@ -80,7 +80,7 @@
 
   .coim-date-trigger:hover {
     background-color: hsl(var(--grey-50));
-    color: hsl(var(--primary));
+    color: hsl(var(--primary-fg));
   }
 
   .coim-calendar-card {
@@ -129,7 +129,7 @@
 
   .coim-calendar-nav-btn:hover:not(:disabled) {
     background-color: hsl(var(--grey-25));
-    color: hsl(var(--primary));
+    color: hsl(var(--primary-fg));
   }
 
   .coim-calendar-grid {
@@ -172,7 +172,7 @@
 
   .coim-calendar-day[data-today]:not([data-selected]) {
     border-color: hsl(var(--primary));
-    color: hsl(var(--primary));
+    color: hsl(var(--primary-fg));
     font-weight: 600;
   }
 
@@ -180,13 +180,13 @@
   .coim-calendar-day[data-selection-start],
   .coim-calendar-day[data-selection-end] {
     background-color: hsl(var(--primary));
-    color: hsl(var(--text-contrast));
+    color: hsl(var(--primary-contrast));
     font-weight: 600;
   }
 
   .coim-calendar-day[data-highlighted]:not([data-selection-start]):not([data-selection-end]) {
     background-color: hsl(var(--primary) / 0.14);
-    color: hsl(var(--primary-dark));
+    color: hsl(var(--primary-pastel-fg));
   }
 
   .coim-calendar-day[data-outside-month] {

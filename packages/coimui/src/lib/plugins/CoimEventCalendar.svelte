@@ -125,7 +125,7 @@
           class={cn(
             "rounded px-2.5 py-1 text-xs font-medium",
             view === opt.id
-              ? "bg-primary text-text-contrast"
+              ? "bg-primary text-primary-contrast"
               : "bg-grey-25 hover:bg-grey-50 text-text-primary",
           )}
           onclick={() => {

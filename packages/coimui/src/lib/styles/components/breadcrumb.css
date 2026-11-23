@@ -43,7 +43,7 @@
   }
 
   .coim-breadcrumbs-li a:hover {
-    color: hsl(var(--primary));
+    color: hsl(var(--primary-fg));
   }
 
   .coim-breadcrumbs-expand {

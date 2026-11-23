@@ -141,5 +141,67 @@ describe("Charts Subpath", () => {
     const sparkRect = sparkBar.container.querySelector("rect");
     expect(sparkRect).toHaveAttribute("fill-opacity", "0.14");
     expect(sparkRect).toHaveAttribute("stroke-width", "1.5");
+    sparkBar.unmount();
+
+    // Range bar chart
+    const rangeBar = render(CoimBarChart, {
+      props: {
+        title: "Temperature Spread",
+        data: [
+          { month: "Jan", low: 12, high: 28 },
+          { month: "Feb", low: 15, high: 34 },
+        ],
+        xKey: "month",
+        series: [{ key: "temp", label: "Range", minKey: "low", maxKey: "high" }],
+      },
+    });
+    expect(rangeBar.container.querySelectorAll("rect")).toHaveLength(2);
+    rangeBar.unmount();
+
+    // Pointer gauge chart
+    const pointerGauge = render(CoimGaugeChart, {
+      props: { value: 65, label: "Load", showPointer: true },
+    });
+    expect(pointerGauge.getByTestId("gauge-pointer")).toBeInTheDocument();
+    pointerGauge.unmount();
+
+    // Smooth funnel & circular radar
+    const smoothFunnel = render(CoimFunnelChart, {
+      props: {
+        stages: [
+          { label: "Top", value: 1000 },
+          { label: "Mid", value: 500 },
+        ],
+        curve: "smooth",
+      },
+    });
+    expect(smoothFunnel.container.querySelector("path")).toBeInTheDocument();
+    smoothFunnel.unmount();
+
+    const circularRadar = render(CoimRadarChart, {
+      props: {
+        axes: ["A", "B", "C", "D"],
+        series: [{ key: "s", label: "Series", values: [70, 80, 60, 90] }],
+        gridShape: "circular",
+        levels: 3,
+      },
+    });
+    expect(circularRadar.container.querySelectorAll('circle[fill="none"]')).toHaveLength(3);
+    circularRadar.unmount();
+
+    // Dual Y-axis scatter plot
+    const dualScatter = render(CoimScatterChart, {
+      props: {
+        title: "Dual Axis Correlation",
+        secondaryYAxis: true,
+        data: [
+          { x: 1, y: 20, series: "Latency", yAxis: "left" },
+          { x: 2, y: 40, series: "Latency", yAxis: "left" },
+          { x: 1, y: 300, series: "Throughput", yAxis: "right" },
+          { x: 2, y: 650, series: "Throughput", yAxis: "right" },
+        ],
+      },
+    });
+    expect(dualScatter.container.querySelectorAll('[data-axis="right"]').length).toBeGreaterThan(0);
   });
 });

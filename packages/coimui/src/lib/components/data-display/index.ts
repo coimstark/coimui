@@ -31,12 +31,16 @@ export { default as CoimTooltip } from "./CoimTooltip.svelte";
 export { default as CoimTooltipProvider } from "./CoimTooltipProvider.svelte";
 export { default as CoimTreeItem } from "./CoimTreeItem.svelte";
 
+export { reorderTreeItems, moveTreeItemSibling } from "./tree-context.svelte.js";
+
 export type {
   AvatarSize,
   AvatarVariant,
   BadgeAnchorOrigin,
   CoimAvatarItem,
   CoimTreeItemData,
+  CoimTreeReorderDetail,
+  CoimTreeReorderPosition,
   TimelineDotColor,
   TimelineDotVariant,
   TimelinePosition,

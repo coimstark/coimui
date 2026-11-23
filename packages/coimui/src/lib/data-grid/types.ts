@@ -4,6 +4,87 @@ export type CoimDataGridDensity = "compact" | "standard" | "comfortable";
 export type CoimDataGridColumnType = "string" | "number" | "date" | "boolean" | "actions";
 export type CoimDataGridPinSide = "left" | "right" | false;
 export type CoimDataGridAggregationFn = "count" | "sum" | "min" | "max" | "mean";
+export type CoimDataGridEditMode = "cell" | "row";
+
+export interface CoimDataGridColumnGroup {
+  id: string;
+  headerName: string;
+  children: string[];
+  collapsible?: boolean;
+  collapsibleColumns?: string[];
+  defaultCollapsed?: boolean;
+}
+
+export interface CoimDataGridPivotConfig {
+  rowFields: string[];
+  columnField: string;
+  valueField: string;
+  aggregationFn?: CoimDataGridAggregationFn;
+  showRowTotals?: boolean;
+}
+
+export interface CoimDataGridAiQueryRequest {
+  prompt: string;
+  columns: {
+    id: string;
+    headerName: string;
+    type?: CoimDataGridColumnType;
+    options?: string[];
+  }[];
+}
+
+export interface CoimDataGridAiQueryResult {
+  summary?: string;
+  globalFilter?: string;
+  columnFilters?: { id: string; value: unknown }[];
+  sorting?: CoimDataGridSortItem[];
+  grouping?: string[];
+  pivotConfig?: CoimDataGridPivotConfig;
+}
+
+export interface CoimDataGridAiProvider {
+  id: string;
+  label: string;
+  executeQuery: (request: CoimDataGridAiQueryRequest) => Promise<CoimDataGridAiQueryResult>;
+}
+
+export interface CoimDataGridPivotPanelProps<
+  TData extends Record<string, unknown> = Record<string, unknown>,
+> {
+  columns: CoimDataGridColumn<TData>[];
+  config: CoimDataGridPivotConfig;
+  onChange: (next: CoimDataGridPivotConfig) => void;
+  onClose?: () => void;
+}
+
+export interface CoimDataGridAiBarProps<
+  TData extends Record<string, unknown> = Record<string, unknown>,
+> {
+  columns: CoimDataGridColumn<TData>[];
+  aiProvider?: CoimDataGridAiProvider;
+  onApplyResult: (result: CoimDataGridAiQueryResult) => void;
+  onReset?: () => void;
+  onClose?: () => void;
+}
+
+export interface CoimDataGridRowEditEvent<
+  TData extends Record<string, unknown> = Record<string, unknown>,
+> {
+  rowId: string;
+  row: TData;
+  previousRow: TData;
+  changedFields: string[];
+}
+
+export interface CoimDataGridPinnedRows {
+  top?: string[];
+  bottom?: string[];
+}
+
+export interface CoimDataGridCellCoord {
+  rowId: string;
+  columnId: string;
+}
 
 export interface CoimDataGridColumn<TData extends Record<string, unknown> = Record<string, unknown>> {
   id: string;
@@ -99,6 +180,32 @@ export interface CoimDataGridProps<TData extends Record<string, unknown> = Recor
   enableExport?: boolean;
   exportFilename?: string;
   ariaLabel?: string;
+  columnGroups?: CoimDataGridColumnGroup[];
+  groupHeaderHeight?: number;
+  editMode?: CoimDataGridEditMode;
+  onRowEditCommit?: (event: CoimDataGridRowEditEvent<TData>) => void;
+  onRowEditCancel?: (rowId: string) => void;
+  onRowDelete?: (row: TData, rowId: string) => void;
+  pivotMode?: boolean;
+  pivotConfig?: CoimDataGridPivotConfig;
+  onPivotModeChange?: (enabled: boolean) => void;
+  onPivotConfigChange?: (config: CoimDataGridPivotConfig) => void;
+  enableAiAssistant?: boolean;
+  aiProvider?: CoimDataGridAiProvider;
+  onAiQueryApplied?: (result: CoimDataGridAiQueryResult) => void;
+  showSummaryRow?: boolean;
+  pinnedRows?: CoimDataGridPinnedRows;
+  rowReordering?: boolean;
+  onRowOrderChange?: (orderedIds: string[], reorderedRows: TData[]) => void;
+  cellSelection?: boolean;
+  selectedCells?: CoimDataGridCellCoord[];
+  onCellSelectionChange?: (cells: CoimDataGridCellCoord[]) => void;
+  enableClipboardPaste?: boolean;
+  onClipboardPaste?: (updates: CoimDataGridCellEditEvent<TData>[]) => void;
+  hasMore?: boolean;
+  onLoadMore?: () => void;
+  virtualizeColumns?: boolean;
+  columnOverscan?: number;
   detailPanel?: Snippet<[{ row: TData; rowId: string }]>;
   toolbarActions?: Snippet;
   onPaginationChange?: (page: number, pageSize: number) => void;

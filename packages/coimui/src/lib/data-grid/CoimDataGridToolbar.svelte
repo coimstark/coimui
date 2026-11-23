@@ -2,8 +2,11 @@
   import type { Snippet } from "svelte";
   import CiDownloadCloud from "../icons/ui/CiDownloadCloud.svelte";
   import CiEyeOpen from "../icons/ui/CiEyeOpen.svelte";
+  import CiPivot from "../icons/ui/CiPivot.svelte";
   import CiPrinter from "../icons/ui/CiPrinter.svelte";
   import CiSearch from "../icons/ui/CiSearch.svelte";
+  import CiSettings from "../icons/ui/CiSettings.svelte";
+  import CiSparkle from "../icons/ui/CiSparkle.svelte";
   import type { CoimDataGridColumn, CoimDataGridDensity } from "./types.js";
 
   interface Props {
@@ -13,11 +16,19 @@
     columnVisibility?: Record<string, boolean>;
     groupable?: boolean;
     grouping?: string[];
+    pivotable?: boolean;
+    pivotMode?: boolean;
+    pivotPanelOpen?: boolean;
+    aiAssistantEnabled?: boolean;
+    aiAssistantOpen?: boolean;
     enableExport?: boolean;
     onGlobalFilterChange?: (value: string) => void;
     onDensityChange?: (density: CoimDataGridDensity) => void;
     onColumnVisibilityToggle?: (columnId: string) => void;
     onGroupingChange?: (grouping: string[]) => void;
+    onPivotToggle?: () => void;
+    onPivotPanelToggle?: () => void;
+    onAiAssistantToggle?: () => void;
     onExportCsv?: () => void;
     onExportExcel?: () => void;
     onPrint?: () => void;
@@ -31,11 +42,19 @@
     columnVisibility = {},
     groupable = false,
     grouping = [],
+    pivotable = false,
+    pivotMode = false,
+    pivotPanelOpen = false,
+    aiAssistantEnabled = false,
+    aiAssistantOpen = false,
     enableExport = true,
     onGlobalFilterChange,
     onDensityChange,
     onColumnVisibilityToggle,
     onGroupingChange,
+    onPivotToggle,
+    onPivotPanelToggle,
+    onAiAssistantToggle,
     onExportCsv,
     onExportExcel,
     onPrint,
@@ -43,6 +62,30 @@
   }: Props = $props();
 
   let columnsOpen = $state(false);
+  let columnsMenuEl = $state<HTMLDivElement | null>(null);
+
+  $effect(() => {
+    if (!columnsOpen || typeof window === "undefined") return;
+
+    function handlePointerDown(event: PointerEvent) {
+      if (columnsMenuEl && !columnsMenuEl.contains(event.target as Node)) {
+        columnsOpen = false;
+      }
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        columnsOpen = false;
+      }
+    }
+
+    window.addEventListener("pointerdown", handlePointerDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("pointerdown", handlePointerDown);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  });
 </script>
 
 <div class="coim-data-grid-toolbar">
@@ -89,7 +132,43 @@
       {@render actions()}
     {/if}
 
-    <div class="relative">
+    {#if aiAssistantEnabled}
+      <button
+        type="button"
+        aria-pressed={aiAssistantOpen}
+        class="border-grey-200 hover:bg-grey-25 aria-pressed:border-primary aria-pressed:bg-primary/10 aria-pressed:text-primary inline-flex items-center gap-1 rounded-md border px-2.5 py-1.5 text-sm font-medium"
+        onclick={onAiAssistantToggle}
+      >
+        <CiSparkle size="small" />
+        <span>AI Assistant</span>
+      </button>
+    {/if}
+
+    {#if pivotable}
+      <button
+        type="button"
+        aria-pressed={pivotMode}
+        class="border-grey-200 hover:bg-grey-25 aria-pressed:border-primary aria-pressed:bg-primary/10 aria-pressed:text-primary inline-flex items-center gap-1 rounded-md border px-2.5 py-1.5 text-sm font-medium"
+        onclick={onPivotToggle}
+      >
+        <CiPivot size="small" />
+        <span>Pivot</span>
+      </button>
+
+      {#if pivotMode}
+        <button
+          type="button"
+          aria-pressed={pivotPanelOpen}
+          class="border-grey-200 hover:bg-grey-25 aria-pressed:border-primary aria-pressed:bg-primary/10 aria-pressed:text-primary inline-flex items-center gap-1 rounded-md border px-2.5 py-1.5 text-sm font-medium"
+          onclick={onPivotPanelToggle}
+        >
+          <CiSettings size="small" />
+          <span>Pivot Fields</span>
+        </button>
+      {/if}
+    {/if}
+
+    <div bind:this={columnsMenuEl} class="relative">
       <button
         type="button"
         aria-expanded={columnsOpen}

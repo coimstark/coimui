@@ -1,7 +1,7 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
-  import type { Snippet } from "svelte";
+  import { untrack, type Snippet } from "svelte";
   import {
     CoimAppShell,
     getThemeContext,
@@ -39,6 +39,10 @@
     { id: "sh-6", title: "Kanban & Apps", subtitle: "Kanban, Calendar, Chat, Invoices & Inbox", href: "/apps/kanban", category: "categories", icon: "CiInbox", iconBgClass: "bg-accent-1/10", iconColorClass: "text-accent-1" },
     { id: "sh-7", title: "Laura Ellis", subtitle: "laura.ellis@coimui.dev", href: "/pages/profile", category: "users", avatarSrc: "/images/avatars/avatar-3.jpg" },
     { id: "sh-8", title: "Travis Howard", subtitle: "travis.howard@coimui.dev", href: "/pages/profile", category: "users", avatarSrc: "/images/avatars/avatar-2.jpg" },
+    { id: "sh-9", title: "Cloud Drive", subtitle: "Folders, uploads, shared files & recovery", href: "/apps/drive/home", category: "products", status: "active" },
+    { id: "sh-10", title: "AI Content Studio", subtitle: "Image, video, upscale pipelines & library", href: "/apps/ai-content/home", category: "products", status: "active" },
+    { id: "sh-11", title: "Ecommerce & Orders", subtitle: "Catalog filters, invoices & SKU management", href: "/pages/ecommerce/products-filters", category: "categories" },
+    { id: "sh-12", title: "Support Desk", subtitle: "Ticket queue, triage & discussion", href: "/pages/support/overview", category: "categories" },
   ];
 
   const shortcuts: CoimShortcutItem[] = [
@@ -101,6 +105,16 @@
     { id: "docs", label: "user-documentation", href: "/docs", icon: "CiDocumentFull" },
     { id: "faq", label: "user-help", href: "/pages/faq", icon: "CiQuestionHexagon" },
   ];
+
+  let hydratedLocale = false;
+  $effect(() => {
+    if (hydratedLocale) return;
+    hydratedLocale = true;
+    untrack(() => {
+      const dir = showcaseI18n.hydrateFromStorage();
+      theme.setDirection(dir);
+    });
+  });
 
   function handleLocaleChange(code: string) {
     const dir = showcaseI18n.setLocale(code);

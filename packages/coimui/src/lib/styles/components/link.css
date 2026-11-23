@@ -55,10 +55,10 @@
   }
 
   .coim-link-color-primary {
-    color: hsl(var(--primary));
+    color: hsl(var(--primary-fg));
   }
   .coim-link-color-secondary {
-    color: hsl(var(--secondary));
+    color: hsl(var(--secondary-fg));
   }
   .coim-link-color-accent-1 {
     color: hsl(var(--accent-1));
@@ -88,16 +88,16 @@
     color: hsl(var(--text-disabled));
   }
   .coim-link-color-info {
-    color: hsl(var(--info));
+    color: hsl(var(--info-fg));
   }
   .coim-link-color-success {
-    color: hsl(var(--success));
+    color: hsl(var(--success-fg));
   }
   .coim-link-color-warning {
-    color: hsl(var(--warning));
+    color: hsl(var(--warning-fg));
   }
   .coim-link-color-error {
-    color: hsl(var(--error));
+    color: hsl(var(--error-fg));
   }
   .coim-link-color-grey {
     color: hsl(var(--grey-600));

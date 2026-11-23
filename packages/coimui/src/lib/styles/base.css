@@ -63,6 +63,27 @@
   }
 }
 
+@layer utilities {
+  .dark .text-primary {
+    color: hsl(var(--primary-fg));
+  }
+  .dark .text-secondary {
+    color: hsl(var(--secondary-fg));
+  }
+  .dark .text-error {
+    color: hsl(var(--error-fg));
+  }
+  .dark .text-info {
+    color: hsl(var(--info-fg));
+  }
+  .dark .text-success {
+    color: hsl(var(--success-fg));
+  }
+  .dark .text-warning {
+    color: hsl(var(--warning-fg));
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   :root {
     --layout-duration: 0ms !important;

@@ -98,27 +98,27 @@
 
   .coim-pagination-variant-text .coim-pagination-item.is-selected {
     background-color: hsl(var(--grey-25));
-    color: hsl(var(--primary));
+    color: hsl(var(--primary-fg));
   }
 
   .coim-pagination-variant-text.coim-pagination-color-primary .coim-pagination-item:hover:not(:disabled) {
     background-color: hsl(var(--primary) / 0.1);
-    color: hsl(var(--primary));
+    color: hsl(var(--primary-fg));
   }
 
   .coim-pagination-variant-text.coim-pagination-color-primary .coim-pagination-item.is-selected {
     background-color: hsl(var(--primary));
-    color: hsl(var(--text-contrast));
+    color: hsl(var(--primary-contrast));
   }
 
   .coim-pagination-variant-text.coim-pagination-color-secondary .coim-pagination-item:hover:not(:disabled) {
     background-color: hsl(var(--secondary) / 0.1);
-    color: hsl(var(--secondary));
+    color: hsl(var(--secondary-fg));
   }
 
   .coim-pagination-variant-text.coim-pagination-color-secondary .coim-pagination-item.is-selected {
     background-color: hsl(var(--secondary));
-    color: hsl(var(--text-contrast));
+    color: hsl(var(--secondary-contrast));
   }
 
   /* Surface variant */
@@ -134,7 +134,7 @@
 
   .coim-pagination-variant-surface .coim-pagination-item.is-selected {
     background-color: hsl(var(--background-paper));
-    color: hsl(var(--primary));
+    color: hsl(var(--primary-fg));
     outline-color: var(--line);
     box-shadow: var(--coim-shadow-darker-xs);
   }
@@ -159,6 +159,10 @@
     color: hsl(var(--text-primary-dark));
   }
 
+  .dark .coim-pagination-variant-outlined .coim-pagination-item.is-selected {
+    color: hsl(var(--text-primary));
+  }
+
   .coim-pagination-variant-outlined.coim-pagination-color-primary .coim-pagination-item:hover:not(:disabled) {
     border-color: hsl(var(--primary));
     background-color: hsl(var(--primary) / 0.1);
@@ -170,6 +174,10 @@
     color: hsl(var(--primary-dark));
   }
 
+  .dark .coim-pagination-variant-outlined.coim-pagination-color-primary .coim-pagination-item.is-selected {
+    color: hsl(var(--primary-fg));
+  }
+
   .coim-pagination-variant-outlined.coim-pagination-color-secondary .coim-pagination-item:hover:not(:disabled) {
     border-color: hsl(var(--secondary));
     background-color: hsl(var(--secondary) / 0.1);
@@ -179,6 +187,10 @@
     border-color: hsl(var(--secondary));
     background-color: hsl(var(--secondary) / 0.15);
     color: hsl(var(--secondary-dark));
+  }
+
+  .dark .coim-pagination-variant-outlined.coim-pagination-color-secondary .coim-pagination-item.is-selected {
+    color: hsl(var(--secondary-fg));
   }
 
   .coim-pagination-item:disabled,

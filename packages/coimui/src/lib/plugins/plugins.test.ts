@@ -12,6 +12,7 @@ import {
   CoimSortableList,
   CoimVideoPlayer,
   printElement,
+  resolveVideoEmbed,
   type CoimSortableItem,
 } from "./index.js";
 
@@ -116,5 +117,29 @@ describe("Plugins Subpath", () => {
     const div = document.createElement("div");
     div.textContent = "Printable";
     expect(printElement(div, { title: "Invoice" })).toBe(true);
+    ec.unmount();
+
+    // YouTube & Vimeo embed resolution and Bubble rich text editor theme
+    expect(resolveVideoEmbed("https://youtu.be/dQw4w9WgXcQ")).toEqual({
+      kind: "youtube",
+      embedUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    });
+    expect(resolveVideoEmbed("https://vimeo.com/76979871")).toEqual({
+      kind: "vimeo",
+      embedUrl: "https://player.vimeo.com/video/76979871",
+    });
+
+    const yt = render(CoimVideoPlayer, {
+      props: { src: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", ariaLabel: "YouTube demo" },
+    });
+    const ytFrame = yt.getByTitle("YouTube demo");
+    expect(ytFrame.tagName).toBe("IFRAME");
+    expect(ytFrame).toHaveAttribute("src", "https://www.youtube.com/embed/dQw4w9WgXcQ");
+    yt.unmount();
+
+    const bubbleRte = render(CoimRichTextEditor, {
+      props: { theme: "bubble", variant: "outlined", value: "<p>Bubble</p>", ariaLabel: "Bubble editor" },
+    });
+    expect(bubbleRte.getByRole("region", { name: "Bubble editor" })).toHaveAttribute("data-theme", "bubble");
   });
 });

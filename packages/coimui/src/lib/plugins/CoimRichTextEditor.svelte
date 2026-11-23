@@ -6,6 +6,8 @@
     placeholder?: string;
     readOnly?: boolean;
     toolbar?: "minimal" | "standard" | "full";
+    theme?: "snow" | "bubble";
+    variant?: "standard" | "outlined";
     ariaLabel?: string;
     onValueChange?: (html: string, text: string) => void;
     class?: string;
@@ -16,6 +18,8 @@
     placeholder = "Write something...",
     readOnly = false,
     toolbar = "standard",
+    theme = "snow",
+    variant = "standard",
     ariaLabel = "Rich text editor",
     onValueChange,
     class: className = "",
@@ -52,9 +56,14 @@
     if (typeof window === "undefined" || !editorEl) return;
     let cancelled = false;
     let container: HTMLDivElement | null = null;
+    const activeTheme = theme;
 
     void (async () => {
-      await import("quill/dist/quill.snow.css");
+      if (activeTheme === "bubble") {
+        await import("quill/dist/quill.bubble.css");
+      } else {
+        await import("quill/dist/quill.snow.css");
+      }
       const { default: Quill } = await import("quill");
       if (cancelled || !editorEl) return;
 
@@ -63,7 +72,7 @@
       editorEl.appendChild(container);
 
       const instance = new Quill(container, {
-        theme: "snow",
+        theme: activeTheme,
         placeholder,
         readOnly,
         modules: {
@@ -104,7 +113,16 @@
   });
 </script>
 
-<div class={cn("coim-rich-editor", className)} role="region" aria-label={ariaLabel}>
+<div
+  class={cn(
+    "coim-rich-editor",
+    variant === "outlined" && "border-grey-200 bg-background-paper overflow-hidden rounded-xl border",
+    className,
+  )}
+  data-theme={theme}
+  role="region"
+  aria-label={ariaLabel}
+>
   <div bind:this={editorEl}>
     <noscript>
       <div class="p-3 text-sm">{value}</div>

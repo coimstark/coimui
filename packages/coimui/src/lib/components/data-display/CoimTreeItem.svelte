@@ -5,12 +5,14 @@
   import CiCheckSquare from "../../icons/ui/CiCheckSquare.svelte";
   import CiChevronDownSmall from "../../icons/ui/CiChevronDownSmall.svelte";
   import CiChevronRightSmall from "../../icons/ui/CiChevronRightSmall.svelte";
+  import CiDragVertical from "../../icons/ui/CiDragVertical.svelte";
   import { cn } from "../../utilities/utils.js";
   import {
     getTreeDepthContext,
     getTreeViewContext,
     setTreeDepthContext,
   } from "./tree-context.svelte.js";
+  import type { CoimTreeReorderPosition } from "./types.js";
 
   interface Props extends Omit<HTMLAttributes<HTMLLIElement>, "class" | "children"> {
     itemId: string;
@@ -138,6 +140,10 @@
       case "ArrowDown": {
         event.preventDefault();
         event.stopPropagation();
+        if (event.altKey && treeCtx.reorderable) {
+          treeCtx.reorderByOffset(itemId, 1);
+          break;
+        }
         if (index >= 0 && index + 1 < items.length) {
           focusItem(items[index + 1]);
         }
@@ -146,6 +152,10 @@
       case "ArrowUp": {
         event.preventDefault();
         event.stopPropagation();
+        if (event.altKey && treeCtx.reorderable) {
+          treeCtx.reorderByOffset(itemId, -1);
+          break;
+        }
         if (index > 0) {
           focusItem(items[index - 1]);
         }
@@ -218,6 +228,16 @@
         break;
     }
   }
+  let dropPosition = $state<CoimTreeReorderPosition | null>(null);
+
+  function resolveDropPosition(event: DragEvent, target: HTMLElement): CoimTreeReorderPosition {
+    const rect = target.getBoundingClientRect();
+    if (rect.height <= 0) return "after";
+    const relY = (event.clientY - rect.top) / rect.height;
+    if (relY < 0.25) return "before";
+    if (relY > 0.75) return "after";
+    return "inside";
+  }
 </script>
 
 <li
@@ -238,11 +258,49 @@
 >
   <div
     role="none"
-    class="coim-tree-item-content"
+    class={cn(
+      "coim-tree-item-content",
+      dropPosition === "before" && "border-primary border-t-2",
+      dropPosition === "after" && "border-primary border-b-2",
+      dropPosition === "inside" && "bg-primary/10",
+    )}
     style={`--coim-tree-depth: ${depth}`}
     data-selected={isSelected ? "true" : undefined}
     data-expanded={hasChildren && isExpanded ? "true" : undefined}
     data-focused={isFocused ? "true" : undefined}
+    draggable={treeCtx.reorderable && !disabled && !editing}
+    ondragstart={(e) => {
+      if (!treeCtx.reorderable || disabled || editing) return;
+      e.stopPropagation();
+      treeCtx.setDraggingId(itemId);
+      e.dataTransfer?.setData("text/coim-tree-item", itemId);
+    }}
+    ondragover={(e) => {
+      if (!treeCtx.reorderable || disabled) return;
+      e.preventDefault();
+      e.stopPropagation();
+      dropPosition = resolveDropPosition(e, e.currentTarget as HTMLElement);
+    }}
+    ondragleave={() => {
+      dropPosition = null;
+    }}
+    ondrop={(e) => {
+      if (!treeCtx.reorderable || disabled) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const sourceId =
+        e.dataTransfer?.getData("text/coim-tree-item") || treeCtx.getDraggingId() || "";
+      const pos = dropPosition ?? resolveDropPosition(e, e.currentTarget as HTMLElement);
+      dropPosition = null;
+      treeCtx.setDraggingId(null);
+      if (sourceId && sourceId !== itemId) {
+        treeCtx.moveItem(sourceId, itemId, pos);
+      }
+    }}
+    ondragend={() => {
+      dropPosition = null;
+      treeCtx.setDraggingId(null);
+    }}
     onclick={handleContentClick}
     ondblclick={(e) => {
       if (!editable) return;
@@ -250,6 +308,15 @@
       startEditing();
     }}
   >
+    {#if treeCtx.reorderable && !disabled}
+      <span
+        data-tree-drag-handle="true"
+        aria-hidden="true"
+        class="text-text-secondary/60 inline-flex shrink-0 cursor-grab items-center"
+      >
+        <CiDragVertical size="small" />
+      </span>
+    {/if}
     {#if hasChildren}
       <button
         type="button"

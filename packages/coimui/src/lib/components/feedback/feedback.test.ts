@@ -574,5 +574,38 @@ describe("Phase D Feedback & Overlays", () => {
     await tick();
     expect(onOpenChange).toHaveBeenCalledTimes(2);
     expect(onOpenChange).toHaveBeenLastCalledWith(false);
+    dlg.unmount();
+
+    // Draggable CoimDialog translates on header pointer drag and resets on close
+    const dragDlg = render(CoimDialog, {
+      props: {
+        open: true,
+        draggable: true,
+        ariaLabel: "Draggable window",
+        children: createRawSnippet(() => ({
+          render: () => `<div data-coim-dialog-drag-handle="true">Drag Header</div>`,
+        })),
+      },
+    });
+    await tick();
+    const dialogEl = dragDlg.container.querySelector("dialog") as HTMLDialogElement;
+    expect(dialogEl).toHaveAttribute("data-draggable", "true");
+    const handle = dragDlg.getByText("Drag Header");
+    await fireEvent.pointerDown(handle, { button: 0, clientX: 100, clientY: 100 });
+    await fireEvent.pointerMove(window, { clientX: 145, clientY: 120 });
+    await fireEvent.pointerUp(window);
+    await tick();
+    expect(dialogEl.style.transform).toContain("translate3d(45px, 20px, 0px)");
+
+    await dragDlg.rerender({
+      open: false,
+      draggable: true,
+      ariaLabel: "Draggable window",
+      children: createRawSnippet(() => ({
+        render: () => `<div data-coim-dialog-drag-handle="true">Drag Header</div>`,
+      })),
+    });
+    await tick();
+    expect(dialogEl.style.transform).toBe("");
   });
 });

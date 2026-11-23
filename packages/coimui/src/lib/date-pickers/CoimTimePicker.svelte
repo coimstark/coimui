@@ -2,6 +2,7 @@
   import { Popover } from "bits-ui";
   import { Time } from "@internationalized/date";
   import CiCalendarClock from "../icons/ui/CiCalendarClock.svelte";
+  import CiCross from "../icons/ui/CiCross.svelte";
   import { cn } from "../utilities/utils.js";
   import CoimTimeField from "./CoimTimeField.svelte";
 
@@ -14,6 +15,7 @@
     disabled?: boolean;
     readonly?: boolean;
     required?: boolean;
+    clearable?: boolean;
     hourCycle?: 12 | 24;
     minuteStep?: number;
     analogClock?: boolean;
@@ -31,6 +33,7 @@
     disabled = false,
     readonly = false,
     required = false,
+    clearable = false,
     hourCycle = 24,
     minuteStep = 15,
     analogClock = false,
@@ -89,13 +92,29 @@
       }}
     >
       {#snippet endAdornment()}
-        <Popover.Trigger
-          aria-label="Open time selector"
-          {disabled}
-          class="coim-date-trigger"
-        >
-          <CiCalendarClock size="small" />
-        </Popover.Trigger>
+        <span class="ms-auto inline-flex shrink-0 items-center gap-0.5">
+          {#if clearable && value && !disabled && !readonly}
+            <button
+              type="button"
+              aria-label={`Clear ${label ?? "time"}`}
+              class="text-text-secondary hover:text-error inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-sm bg-transparent transition-colors"
+              onclick={(e) => {
+                e.stopPropagation();
+                value = undefined;
+                onValueChange?.(undefined);
+              }}
+            >
+              <CiCross size="small" />
+            </button>
+          {/if}
+          <Popover.Trigger
+            aria-label="Open time selector"
+            {disabled}
+            class="coim-date-trigger ms-0!"
+          >
+            <CiCalendarClock size="small" />
+          </Popover.Trigger>
+        </span>
       {/snippet}
     </CoimTimeField>
 
@@ -137,7 +156,7 @@
                 aria-selected={value?.hour === h}
                 class={cn(
                   "block w-full rounded px-2 py-1 text-center text-sm tabular-nums",
-                  value?.hour === h ? "bg-primary text-text-contrast font-semibold" : "hover:bg-grey-50",
+                  value?.hour === h ? "bg-primary text-primary-contrast font-semibold" : "hover:bg-grey-50",
                 )}
                 onclick={() => selectHour(h)}
               >
@@ -154,7 +173,7 @@
                 aria-selected={value?.minute === m}
                 class={cn(
                   "block w-full rounded px-2 py-1 text-center text-sm tabular-nums",
-                  value?.minute === m ? "bg-primary text-text-contrast font-semibold" : "hover:bg-grey-50",
+                  value?.minute === m ? "bg-primary text-primary-contrast font-semibold" : "hover:bg-grey-50",
                 )}
                 onclick={() => selectMinute(m)}
               >

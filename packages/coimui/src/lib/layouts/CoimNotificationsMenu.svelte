@@ -210,7 +210,7 @@
               {#if unreadCount > 0}
                 <span
                   aria-label="{unreadCount} unread notifications"
-                  class="bg-primary text-text-contrast font-body pointer-events-none absolute top-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-xs font-semibold ltr:right-2 rtl:left-2"
+                  class="bg-primary text-primary-contrast font-body pointer-events-none absolute top-2 inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-xs font-semibold ltr:right-2 rtl:left-2"
                 >
                   {unreadCount}
                 </span>
@@ -379,8 +379,8 @@
                               class={cn(
                                 "font-body cursor-pointer rounded-xs border-0 px-3 py-1 text-sm leading-4 font-medium transition-colors",
                                 action.type === "positive"
-                                  ? "bg-primary text-text-contrast hover:bg-primary-light"
-                                  : "text-primary hover:bg-primary-light/10 bg-transparent",
+                                  ? "bg-primary text-primary-contrast hover:bg-primary-light"
+                                  : "text-primary-fg hover:bg-primary-light/10 bg-transparent",
                               )}
                             >
                               {action.label}

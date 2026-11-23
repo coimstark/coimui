@@ -26,6 +26,7 @@
   import { COMPONENT_CODE_EXAMPLES } from "#lib/examples/component-docs.ts";
 
   let htmlNotes = $state("<p>CoimUI <strong>v1.0.0</strong> ships isolated rich-text, media, and calendar plugins.</p>");
+  let editorTheme = $state<"snow" | "bubble">("snow");
   let chosenEmoji = $state("🚀");
   let printSectionEl = $state<HTMLElement | null>(null);
 
@@ -75,7 +76,35 @@
   >
     <CoimGrid container spacing={4}>
       <CoimGrid size={{ xs: 12, lg: 6 }}>
-        <CoimRichTextEditor bind:value={htmlNotes} ariaLabel="Release notes editor" />
+        <CoimStack spacing={2}>
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-text-secondary text-xs font-medium">Theme: {editorTheme}</span>
+            <div class="flex gap-1.5">
+              <CoimButton
+                size="tiny"
+                variant={editorTheme === "snow" ? "contained" : "outlined"}
+                onclick={() => (editorTheme = "snow")}
+              >
+                Snow
+              </CoimButton>
+              <CoimButton
+                size="tiny"
+                variant={editorTheme === "bubble" ? "contained" : "outlined"}
+                onclick={() => (editorTheme = "bubble")}
+              >
+                Bubble
+              </CoimButton>
+            </div>
+          </div>
+          {#key editorTheme}
+            <CoimRichTextEditor
+              bind:value={htmlNotes}
+              theme={editorTheme}
+              variant="outlined"
+              ariaLabel="Release notes editor"
+            />
+          {/key}
+        </CoimStack>
       </CoimGrid>
       <CoimGrid size={{ xs: 12, lg: 6 }}>
         <div bind:this={printSectionEl} class="border-grey-100 rounded-xl border p-4">
@@ -115,7 +144,7 @@
         <CoimCarousel items={slides} ariaLabel="Showcase slides" />
       </CoimGrid>
       <CoimGrid size={{ xs: 12, lg: 6 }}>
-        <CoimLightbox images={gallery} />
+        <CoimLightbox images={gallery} showDownload showCaptions />
       </CoimGrid>
       <CoimGrid size={{ xs: 12, md: 6 }}>
         <CoimStack spacing={3}>
@@ -131,7 +160,11 @@
         </CoimStack>
       </CoimGrid>
       <CoimGrid size={{ xs: 12, md: 6 }}>
-        <CoimVideoPlayer poster="/images/misc/video-poster-light.svg" ariaLabel="Demo overview player" />
+        <CoimVideoPlayer
+          src="/videos/products/product-1.mp4"
+          poster="/images/misc/video-poster-light.svg"
+          ariaLabel="Demo overview player"
+        />
       </CoimGrid>
       <CoimGrid size={12}>
         <CoimEventCalendar

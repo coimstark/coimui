@@ -62,6 +62,29 @@
     { label: "Active Teams", value: 2150 },
     { label: "Enterprise", value: 890 },
   ];
+
+  const smoothFunnelStages = [
+    { label: "Awareness", value: 8600 },
+    { label: "Evaluation", value: 4100 },
+    { label: "Pilot", value: 1950 },
+    { label: "Production", value: 920 },
+  ];
+
+  const spreadData = [
+    { band: "Q1", low: 18, high: 46 },
+    { band: "Q2", low: 24, high: 58 },
+    { band: "Q3", low: 31, high: 69 },
+    { band: "Q4", low: 38, high: 82 },
+  ];
+
+  const dualAxisScatterData = [
+    { x: 10, y: 24, series: "CPU (%)", yAxis: "left" as const },
+    { x: 30, y: 48, series: "CPU (%)", yAxis: "left" as const },
+    { x: 50, y: 72, series: "CPU (%)", yAxis: "left" as const },
+    { x: 10, y: 420, series: "Req/sec", yAxis: "right" as const },
+    { x: 30, y: 890, series: "Req/sec", yAxis: "right" as const },
+    { x: 50, y: 1340, series: "Req/sec", yAxis: "right" as const },
+  ];
 </script>
 
 <svelte:head>
@@ -160,6 +183,48 @@
       </CoimGrid>
       <CoimGrid size={12}>
         <CoimFunnelChart title="Activation Funnel" stages={funnelStages} width={520} height={220} />
+      </CoimGrid>
+    </CoimGrid>
+  </ComponentDocCard>
+
+  <ComponentDocCard
+    title="Range Bars, Pointer Gauge, Smooth Funnel, Circular Radar & Dual Y-Axis Scatter"
+    description="Extended analytical variants covering interval range bars, needle gauges, curved conversion funnels, circular radar grids, and secondary right-axis scatter plots."
+    packageEntry="@coimui/svelte/charts"
+    code={COMPONENT_CODE_EXAMPLES.charts}
+  >
+    <CoimGrid container spacing={4}>
+      <CoimGrid size={{ xs: 12, lg: 6 }}>
+        <CoimBarChart
+          title="Quarterly Deal Size Range"
+          data={spreadData}
+          xKey="band"
+          series={[{ key: "spread", label: "Deal Spread ($k)", minKey: "low", maxKey: "high" }]}
+        />
+      </CoimGrid>
+      <CoimGrid size={{ xs: 12, lg: 6 }}>
+        <CoimScatterChart
+          title="Utilization vs Throughput (Dual Y-Axis)"
+          data={dualAxisScatterData}
+          secondaryYAxis
+        />
+      </CoimGrid>
+      <CoimGrid size={{ xs: 12, md: 4 }}>
+        <div class="flex justify-center py-4">
+          <CoimGaugeChart value={74} label="Capacity Index" showPointer />
+        </div>
+      </CoimGrid>
+      <CoimGrid size={{ xs: 12, md: 4 }}>
+        <CoimRadarChart
+          title="Circular Radar"
+          gridShape="circular"
+          axes={["UX", "Speed", "API", "Docs", "Tests"]}
+          series={[{ key: "release", label: "v1.0", values: [92, 95, 90, 88, 96] }]}
+          size={240}
+        />
+      </CoimGrid>
+      <CoimGrid size={{ xs: 12, md: 4 }}>
+        <CoimFunnelChart title="Smooth Curve Funnel" stages={smoothFunnelStages} curve="smooth" width={360} height={220} />
       </CoimGrid>
     </CoimGrid>
   </ComponentDocCard>

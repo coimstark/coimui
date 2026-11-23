@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { CalendarDate, Time } from "@internationalized/date";
+import { CalendarDate, CalendarDateTime, Time } from "@internationalized/date";
 import { cleanup, fireEvent, render } from "@testing-library/svelte";
 import { tick } from "svelte";
 import {
@@ -8,10 +8,12 @@ import {
   CoimDatePicker,
   CoimDateRangePicker,
   CoimDateTimePicker,
+  CoimDateTimeRangePicker,
   CoimRangeCalendar,
   CoimStaticDatePicker,
   CoimTimeField,
   CoimTimePicker,
+  CoimTimeRangePicker,
   formatDateWithDayjs,
   parseIsoDateValue,
   parseIsoTimeValue,
@@ -111,5 +113,60 @@ describe("Date & Time Pickers Subpath", () => {
     expect(
       tpInline.container.querySelector(".coim-date-input .coim-date-trigger"),
     ).toBeInTheDocument();
+    tpInline.unmount();
+
+    const onClearDate = vi.fn();
+    const clearableDate = render(CoimDatePicker, {
+      props: {
+        label: "Clearable date",
+        clearable: true,
+        value: new CalendarDate(2026, 4, 18),
+        onValueChange: onClearDate,
+      },
+    });
+    await fireEvent.click(clearableDate.getByRole("button", { name: "Clear Clearable date" }));
+    expect(onClearDate).toHaveBeenCalledWith(undefined);
+    clearableDate.unmount();
+
+    const onTimeRangeChange = vi.fn();
+    const trp = render(CoimTimeRangePicker, {
+      props: {
+        label: "Shift hours",
+        clearable: true,
+        value: { start: new Time(9, 0), end: new Time(17, 0) },
+        onValueChange: onTimeRangeChange,
+      },
+    });
+    await fireEvent.click(trp.getByRole("button", { name: "Open time range selector" }));
+    await tick();
+    const startHours = trp.getByRole("listbox", { name: "Start hours" });
+    expect(startHours).toBeInTheDocument();
+    await fireEvent.click(startHours.querySelectorAll('[role="option"]')[8]);
+    expect(onTimeRangeChange).toHaveBeenCalledWith(
+      expect.objectContaining({ start: expect.objectContaining({ hour: 8 }) }),
+    );
+    await fireEvent.click(trp.getByRole("button", { name: "Clear Shift hours" }));
+    expect(onTimeRangeChange).toHaveBeenLastCalledWith({ start: undefined, end: undefined });
+    trp.unmount();
+
+    const onDtRangeChange = vi.fn();
+    const dtrp = render(CoimDateTimeRangePicker, {
+      props: {
+        label: "Maintenance window",
+        clearable: true,
+        value: {
+          start: new CalendarDateTime(2026, 4, 15, 9, 0),
+          end: new CalendarDateTime(2026, 4, 16, 17, 30),
+        },
+        onValueChange: onDtRangeChange,
+      },
+    });
+    await fireEvent.click(dtrp.getByRole("button", { name: "Open date and time range picker" }));
+    await tick();
+    expect(dtrp.getByRole("button", { name: "Today" })).toBeInTheDocument();
+    await fireEvent.click(dtrp.getByRole("button", { name: "Today" }));
+    expect(onDtRangeChange).toHaveBeenCalled();
+    await fireEvent.click(dtrp.getByRole("button", { name: "Clear Maintenance window" }));
+    expect(onDtRangeChange).toHaveBeenLastCalledWith({ start: undefined, end: undefined });
   });
 });

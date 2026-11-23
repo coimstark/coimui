@@ -67,13 +67,13 @@
   .coim-menu-item:active,
   .coim-menu-item.active {
     background-color: hsl(var(--grey-500) / 0.15);
-    color: hsl(var(--primary));
+    color: hsl(var(--primary-fg));
   }
 
   .coim-menu-item.is-selected,
   .coim-menu-item[aria-selected="true"] {
     background-color: hsl(var(--grey-500) / 0.1);
-    color: hsl(var(--primary));
+    color: hsl(var(--primary-fg));
   }
 
   .coim-menu-item:focus-visible {
@@ -168,7 +168,7 @@
   .coim-menubar-trigger[data-state="open"],
   .coim-menubar-trigger[aria-expanded="true"] {
     background-color: hsl(var(--background-paper));
-    color: hsl(var(--primary));
+    color: hsl(var(--primary-fg));
   }
 
   .coim-menubar-trigger[data-disabled] {

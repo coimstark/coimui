@@ -13,6 +13,7 @@
     color?: string;
     label?: string;
     unit?: string;
+    showPointer?: boolean;
     ariaLabel?: string;
     class?: string;
   }
@@ -28,6 +29,7 @@
     color = "hsl(var(--primary))",
     label,
     unit = "%",
+    showPointer = false,
     ariaLabel = "Gauge chart",
     class: className = "",
   }: Props = $props();
@@ -60,9 +62,16 @@
       .startAngle(startRad)
       .endAngle(valRad);
 
+    const pointerLen = Math.max(16, innerR - 6);
+    const px = pointerLen * Math.sin(valRad);
+    const py = -pointerLen * Math.cos(valRad);
+    const bx1 = 3.5 * Math.cos(valRad);
+    const by1 = 3.5 * Math.sin(valRad);
+
     return {
       track: trackGen({}) ?? "",
       valueArc: valGen({}) ?? "",
+      pointerPoints: `${px},${py} ${bx1},${by1} ${-bx1},${-by1}`,
     };
   });
 </script>
@@ -83,10 +92,14 @@
       {#if ratio > 0}
         <path d={paths.valueArc} fill={color} />
       {/if}
+      {#if showPointer}
+        <polygon points={paths.pointerPoints} fill={color} data-testid="gauge-pointer" />
+        <circle cx="0" cy="0" r="5" fill="hsl(var(--text-primary))" />
+      {/if}
     </g>
     <text
       x={size / 2}
-      y={size / 2 + 4}
+      y={showPointer ? size / 2 + 30 : size / 2 + 4}
       text-anchor="middle"
       class="fill-text-primary font-heading text-2xl font-bold"
     >
@@ -95,7 +108,7 @@
     {#if label}
       <text
         x={size / 2}
-        y={size / 2 + 24}
+        y={showPointer ? size / 2 + 48 : size / 2 + 24}
         text-anchor="middle"
         class="fill-text-secondary font-body text-xs"
       >

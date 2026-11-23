@@ -73,7 +73,7 @@
   }
 
   .coim-markdown a {
-    color: hsl(var(--primary));
+    color: hsl(var(--primary-fg));
     text-decoration: underline;
   }
 
@@ -191,13 +191,13 @@
   --ec-today-bg-color: hsl(var(--primary) / 0.08);
   --ec-highlight-color: hsl(var(--primary) / 0.12);
   --ec-event-bg-color: hsl(var(--primary));
-  --ec-event-text-color: hsl(var(--text-contrast));
+  --ec-event-text-color: hsl(var(--primary-contrast));
   --ec-button-bg-color: hsl(var(--grey-25));
   --ec-button-border-color: hsl(var(--grey-200));
   --ec-button-text-color: hsl(var(--text-primary));
   --ec-button-active-bg-color: hsl(var(--primary));
   --ec-button-active-border-color: hsl(var(--primary));
-  --ec-button-active-text-color: hsl(var(--text-contrast));
+  --ec-button-active-text-color: hsl(var(--primary-contrast));
   --ec-popup-bg-color: hsl(var(--background-paper));
   --ec-now-indicator-color: hsl(var(--error));
   color: hsl(var(--text-primary));
@@ -224,7 +224,7 @@
 .coim-event-calendar .ec-button.ec-active:hover {
   background-color: hsl(var(--primary));
   border-color: hsl(var(--primary));
-  color: hsl(var(--text-contrast));
+  color: hsl(var(--primary-contrast));
 }
 
 .coim-event-calendar .ec-day-head,
@@ -255,5 +255,5 @@
   padding-inline: 0.25rem;
   border-radius: 9999px;
   background-color: hsl(var(--primary));
-  color: hsl(var(--text-contrast));
+  color: hsl(var(--primary-contrast));
 }

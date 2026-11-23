@@ -221,7 +221,7 @@
             </button>
             <button
               type="submit"
-              class="bg-primary text-text-contrast hover:bg-primary-light cursor-pointer rounded-xs border-0 px-3 py-1 text-xs font-medium"
+              class="bg-primary text-primary-contrast hover:bg-primary-light cursor-pointer rounded-xs border-0 px-3 py-1 text-xs font-medium"
             >
               Save
             </button>

@@ -24,6 +24,8 @@
     inputValue?: string;
     multiple?: boolean;
     freeSolo?: boolean;
+    creatable?: boolean;
+    checkboxSelection?: boolean;
     open?: boolean;
     label?: string;
     placeholder?: string;
@@ -31,6 +33,8 @@
     loading?: boolean;
     loadingText?: string;
     highlightMatch?: boolean;
+    createOptionLabel?: (input: string) => string;
+    onCreateOption?: (input: string) => void;
     variant?: CoimInputVariant;
     size?: CoimInputSize;
     surface?: boolean;
@@ -54,6 +58,8 @@
     inputValue = $bindable(""),
     multiple = false,
     freeSolo = false,
+    creatable = false,
+    checkboxSelection = false,
     open = $bindable(false),
     label,
     placeholder = "Search...",
@@ -61,6 +67,8 @@
     loading = false,
     loadingText = "Loading...",
     highlightMatch = true,
+    createOptionLabel = (q: string) => `Create "${q}"`,
+    onCreateOption,
     variant: variantProp,
     size: sizeProp,
     surface: surfaceProp,
@@ -110,6 +118,53 @@
 
   const singleValue = $derived(!multiple && typeof value === "string" ? value : "");
 
+  const groupedOptions = $derived.by(() => {
+    const groups: Array<{ group: string | null; items: CoimNormalizedOption[] }> = [];
+    const byKey = new Map<string, { group: string | null; items: CoimNormalizedOption[] }>();
+    for (const opt of filteredOptions) {
+      const grp = opt.group ?? null;
+      const key = grp ?? "__ungrouped__";
+      let bucket = byKey.get(key);
+      if (!bucket) {
+        bucket = { group: grp, items: [] };
+        byKey.set(key, bucket);
+        groups.push(bucket);
+      }
+      bucket.items.push(opt);
+    }
+    return groups;
+  });
+
+  const canCreateCurrent = $derived.by(() => {
+    if (!creatable || isDisabled || isReadOnly) return false;
+    const trimmed = inputValue.trim();
+    if (!trimmed) return false;
+    const lower = trimmed.toLowerCase();
+    return !normalizedOptions.some(
+      (opt) => opt.label.toLowerCase() === lower || opt.value.toLowerCase() === lower,
+    );
+  });
+
+  function createCurrentOption() {
+    const trimmed = inputValue.trim();
+    if (!trimmed || isDisabled || isReadOnly) return;
+    onCreateOption?.(trimmed);
+    if (multiple) {
+      if (!selectedArray.includes(trimmed)) {
+        const next = [...selectedArray, trimmed];
+        value = next;
+        onValueChange?.(next);
+      }
+      inputValue = "";
+    } else {
+      value = trimmed;
+      inputValue = trimmed;
+      onValueChange?.(trimmed);
+      open = false;
+      onOpenChange?.(false);
+    }
+  }
+
   function handleClear() {
     if (isDisabled || isReadOnly) return;
     inputValue = "";
@@ -128,12 +183,16 @@
 
   function handleInputKeyDown(e: KeyboardEvent) {
     if (
-      freeSolo &&
+      (freeSolo || creatable) &&
       e.key === "Enter" &&
       inputValue.trim() &&
       filteredOptions.length === 0
     ) {
       e.preventDefault();
+      if (creatable) {
+        createCurrentOption();
+        return;
+      }
       const customVal = inputValue.trim();
       if (multiple) {
         if (!selectedArray.includes(customVal)) {
@@ -159,6 +218,77 @@
     }
   }
 </script>
+
+{#snippet renderDropdownContent(isMulti: boolean)}
+  {#if loading}
+    <div class="coim-autocomplete-loading">{loadingText}</div>
+  {:else if filteredOptions.length === 0 && !canCreateCurrent}
+    <div class="coim-autocomplete-no-options">{noOptionsText}</div>
+  {:else}
+    {#each groupedOptions as bucket (bucket.group ?? "__ungrouped__")}
+      {#if bucket.group}
+        <div
+          role="presentation"
+          class="text-text-secondary px-3 py-1.5 text-xs font-semibold tracking-wide uppercase"
+        >
+          {bucket.group}
+        </div>
+      {/if}
+      {#each bucket.items as opt (opt.value)}
+        {@const isSel = isMulti ? selectedArray.includes(opt.value) : singleValue === opt.value}
+        {@const parts = highlightMatch
+          ? parseHighlights(opt.label, matchHighlights(opt.label, inputValue))
+          : [{ text: opt.label, highlight: false }]}
+        <Combobox.Item
+          value={opt.value}
+          label={opt.label}
+          disabled={opt.disabled}
+          class="coim-autocomplete-option justify-between"
+        >
+          <span class="flex min-w-0 items-center gap-2">
+            {#if isMulti && checkboxSelection}
+              <span
+                aria-hidden="true"
+                class={cn(
+                  "inline-flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors",
+                  isSel
+                    ? "border-primary bg-primary text-primary-contrast"
+                    : "border-grey-300 bg-background-paper",
+                )}
+              >
+                {#if isSel}
+                  <CiCheck size={12} />
+                {/if}
+              </span>
+            {/if}
+            <span class="truncate">
+              {#each parts as part, idx (idx)}
+                {#if part.highlight}
+                  <strong class="text-primary-fg font-bold">{part.text}</strong>
+                {:else}
+                  {part.text}
+                {/if}
+              {/each}
+            </span>
+          </span>
+          {#if isSel && !(isMulti && checkboxSelection)}
+            <CiCheck size="small" class="text-primary-fg shrink-0" />
+          {/if}
+        </Combobox.Item>
+      {/each}
+    {/each}
+
+    {#if canCreateCurrent}
+      <button
+        type="button"
+        class="coim-autocomplete-option text-primary-fg hover:bg-grey-25 w-full justify-start font-medium"
+        onclick={createCurrentOption}
+      >
+        {createOptionLabel(inputValue.trim())}
+      </button>
+    {/if}
+  {/if}
+{/snippet}
 
 <div
   class={cn(
@@ -268,37 +398,7 @@
             resolvedVariant === "outlined" && "outlined",
           )}
         >
-          {#if loading}
-            <div class="coim-autocomplete-loading">{loadingText}</div>
-          {:else if filteredOptions.length === 0}
-            <div class="coim-autocomplete-no-options">{noOptionsText}</div>
-          {:else}
-            {#each filteredOptions as opt (opt.value)}
-              {@const isSel = selectedArray.includes(opt.value)}
-              {@const parts = highlightMatch
-                ? parseHighlights(opt.label, matchHighlights(opt.label, inputValue))
-                : [{ text: opt.label, highlight: false }]}
-              <Combobox.Item
-                value={opt.value}
-                label={opt.label}
-                disabled={opt.disabled}
-                class="coim-autocomplete-option justify-between"
-              >
-                <span>
-                  {#each parts as part, idx (idx)}
-                    {#if part.highlight}
-                      <strong class="text-primary font-bold">{part.text}</strong>
-                    {:else}
-                      {part.text}
-                    {/if}
-                  {/each}
-                </span>
-                {#if isSel}
-                  <CiCheck size="small" class="text-primary shrink-0" />
-                {/if}
-              </Combobox.Item>
-            {/each}
-          {/if}
+          {@render renderDropdownContent(true)}
         </Combobox.Content>
       </Combobox.Portal>
     </Combobox.Root>
@@ -379,37 +479,7 @@
             resolvedVariant === "outlined" && "outlined",
           )}
         >
-          {#if loading}
-            <div class="coim-autocomplete-loading">{loadingText}</div>
-          {:else if filteredOptions.length === 0}
-            <div class="coim-autocomplete-no-options">{noOptionsText}</div>
-          {:else}
-            {#each filteredOptions as opt (opt.value)}
-              {@const isSel = singleValue === opt.value}
-              {@const parts = highlightMatch
-                ? parseHighlights(opt.label, matchHighlights(opt.label, inputValue))
-                : [{ text: opt.label, highlight: false }]}
-              <Combobox.Item
-                value={opt.value}
-                label={opt.label}
-                disabled={opt.disabled}
-                class="coim-autocomplete-option justify-between"
-              >
-                <span>
-                  {#each parts as part, idx (idx)}
-                    {#if part.highlight}
-                      <strong class="text-primary font-bold">{part.text}</strong>
-                    {:else}
-                      {part.text}
-                    {/if}
-                  {/each}
-                </span>
-                {#if isSel}
-                  <CiCheck size="small" class="text-primary shrink-0" />
-                {/if}
-              </Combobox.Item>
-            {/each}
-          {/if}
+          {@render renderDropdownContent(false)}
         </Combobox.Content>
       </Combobox.Portal>
     </Combobox.Root>

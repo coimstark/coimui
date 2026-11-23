@@ -96,7 +96,7 @@
       variant === "outlined" && "border border-solid bg-transparent",
       variant === "surface" &&
         (surfaceStandard
-          ? "surface-standard bg-background-paper shadow-darker-xs outline-line outline -outline-offset-1 backdrop-blur-xs hover:text-primary"
+          ? "surface-standard bg-background-paper shadow-darker-xs outline-line outline -outline-offset-1 backdrop-blur-xs hover:text-primary-fg"
           : "bg-transparent outline -outline-offset-1 outline-transparent hover:bg-background-paper hover:shadow-darker-sm hover:outline-line hover:backdrop-blur-xs"),
       isIconOnly && "coim-btn-icon-only icon-only min-w-0",
       hoverIconShrink && "coim-btn-hover-icon-shrink hover-icon-shrink",

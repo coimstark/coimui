@@ -36,19 +36,19 @@
   }
 
   .coim-snackbar-success .coim-snackbar-icon {
-    color: hsl(var(--success));
+    color: hsl(var(--success-fg));
   }
 
   .coim-snackbar-info .coim-snackbar-icon {
-    color: hsl(var(--info));
+    color: hsl(var(--info-fg));
   }
 
   .coim-snackbar-warning .coim-snackbar-icon {
-    color: hsl(var(--warning));
+    color: hsl(var(--warning-fg));
   }
 
   .coim-snackbar-error .coim-snackbar-icon {
-    color: hsl(var(--error));
+    color: hsl(var(--error-fg));
   }
 
   .coim-snackbar-action {

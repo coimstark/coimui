@@ -1,7 +1,7 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
-  import type { Snippet } from "svelte";
+  import { untrack, type Snippet } from "svelte";
   import {
     CoimAppShell,
     getThemeContext,
@@ -44,7 +44,20 @@
           icon: "CiFolder",
           href: "/projects",
         },
+        {
+          id: "home-sub",
+          label: "nav-home-sub",
+          description: "Nested overview child page",
+          icon: "CiList",
+          href: "/home/sub",
+        },
       ],
+    },
+    {
+      id: "single-menu",
+      label: "nav-single-menu",
+      icon: "CiCompass",
+      href: "/single-menu",
     },
     {
       id: "forms",
@@ -75,6 +88,12 @@
         { id: "sign-in", label: "nav-sign-in", icon: "CiUser", href: "/auth/sign-in" },
         { id: "sign-up", label: "nav-sign-up", icon: "CiPlus", href: "/auth/sign-up" },
         { id: "forgot-pw", label: "nav-forgot-password", icon: "CiKey", href: "/auth/forgot-password" },
+        { id: "get-ver", label: "Get Verification", href: "/auth/get-verification" },
+        { id: "set-ver", label: "Verify OTP", href: "/auth/set-verification" },
+        { id: "pw-new", label: "New Password", href: "/auth/password-new" },
+        { id: "pw-sent", label: "Reset Sent", href: "/auth/password-sent" },
+        { id: "privacy", label: "Privacy Policy", href: "/auth/privacy-policy" },
+        { id: "terms", label: "Terms & Conditions", href: "/auth/terms-and-conditions" },
       ],
     },
   ];
@@ -130,6 +149,16 @@
   const userSecondaryLinks: CoimUserMenuLink[] = [
     { id: "settings", label: "user-settings", href: "/settings", icon: "CiSettings" },
   ];
+
+  let hydratedLocale = false;
+  $effect(() => {
+    if (hydratedLocale) return;
+    hydratedLocale = true;
+    untrack(() => {
+      const dir = starterI18n.hydrateFromStorage();
+      theme.setDirection(dir);
+    });
+  });
 
   function handleLocaleChange(code: string) {
     const dir = starterI18n.setLocale(code);

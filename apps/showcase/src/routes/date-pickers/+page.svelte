@@ -9,12 +9,16 @@
     CoimDatePicker,
     CoimDateRangePicker,
     CoimDateTimePicker,
+    CoimDateTimeRangePicker,
     CoimRangeCalendar,
     CoimStaticDatePicker,
     CoimTimeField,
     CoimTimePicker,
+    CoimTimeRangePicker,
     formatDateWithDayjs,
     getPresetDateRanges,
+    type CoimDateTimeRange,
+    type CoimTimeRange,
     type DateRange,
     type DateValue,
   } from "@coimui/svelte/date-pickers";
@@ -31,6 +35,11 @@
   let digitalTime = $state<Time | undefined>(new Time(9, 15));
   let analogTime = $state<Time | undefined>(new Time(16, 45));
   let dateTime = $state<CalendarDateTime | undefined>(new CalendarDateTime(2026, 11, 22, 10, 30));
+  let timeRange = $state<CoimTimeRange>({ start: new Time(9, 0), end: new Time(17, 30) });
+  let dateTimeRange = $state<CoimDateTimeRange>({
+    start: new CalendarDateTime(2026, 11, 22, 9, 0),
+    end: new CalendarDateTime(2026, 11, 24, 17, 0),
+  });
   let staticDate = $state<DateValue | undefined>(new CalendarDate(2026, 11, 25));
 
   const presets = getPresetDateRanges();
@@ -52,8 +61,8 @@
   <CoimTypography variant="h2">Pickers, Fields &amp; Inline Calendars</CoimTypography>
 
   <ComponentDocCard
-    title="DatePicker, DateRangePicker, TimePicker & DateTimePicker"
-    description="Segmented keyboard fields paired with accessible popover calendars, range presets, and digital/analog clocks."
+    title="DatePicker, DateRangePicker, TimePicker, TimeRangePicker, DateTimePicker & DateTimeRangePicker"
+    description="Segmented keyboard fields paired with accessible popover calendars, range presets, clearable triggers, and digital/analog clocks."
     packageEntry="@coimui/svelte/date-pickers"
     code={COMPONENT_CODE_EXAMPLES.datePickers}
   >
@@ -62,6 +71,7 @@
         <CoimDatePicker
           label="Single Date"
           bind:value={singleDate}
+          clearable
           helperText={singleDate ? `Formatted: ${formatDateWithDayjs(singleDate, "MMM D, YYYY")}` : undefined}
         />
       </CoimGrid>
@@ -70,6 +80,7 @@
         <CoimDateRangePicker
           label="Reporting Window"
           bind:value={rangeValue}
+          clearable
           {presets}
           showPresets
         />
@@ -84,15 +95,23 @@
       </CoimGrid>
 
       <CoimGrid size={{ xs: 12, md: 4 }}>
-        <CoimDateTimePicker label="Scheduled Deployment" bind:value={dateTime} />
+        <CoimDateTimePicker label="Scheduled Deployment" bind:value={dateTime} clearable />
       </CoimGrid>
 
       <CoimGrid size={{ xs: 12, md: 6 }}>
-        <CoimTimePicker label="Digital Time Picker" bind:value={digitalTime} minuteStep={15} />
+        <CoimTimePicker label="Digital Time Picker" bind:value={digitalTime} minuteStep={15} clearable />
       </CoimGrid>
 
       <CoimGrid size={{ xs: 12, md: 6 }}>
-        <CoimTimePicker label="Analog Clock Picker" bind:value={analogTime} analogClock />
+        <CoimTimePicker label="Analog Clock Picker" bind:value={analogTime} analogClock clearable />
+      </CoimGrid>
+
+      <CoimGrid size={{ xs: 12, md: 6 }}>
+        <CoimTimeRangePicker label="Support Shift Hours" bind:value={timeRange} clearable />
+      </CoimGrid>
+
+      <CoimGrid size={{ xs: 12, md: 6 }}>
+        <CoimDateTimeRangePicker label="Maintenance Window" bind:value={dateTimeRange} clearable />
       </CoimGrid>
     </CoimGrid>
   </ComponentDocCard>

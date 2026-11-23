@@ -73,14 +73,14 @@
   const confirmButtonClass = $derived.by(() => {
     switch (severity) {
       case "error":
-        return "bg-error hover:bg-error-dark text-text-contrast";
+        return "bg-error hover:bg-error-dark text-error-contrast";
       case "warning":
-        return "bg-warning hover:bg-warning-dark text-text-contrast";
+        return "bg-warning hover:bg-warning-dark text-warning-contrast";
       case "success":
-        return "bg-success hover:bg-success-dark text-text-contrast";
+        return "bg-success hover:bg-success-dark text-success-contrast";
       case "info":
       default:
-        return "bg-primary hover:bg-primary-dark text-text-contrast";
+        return "bg-primary hover:bg-primary-dark text-primary-contrast";
     }
   });
 

@@ -94,7 +94,7 @@
     class={cn(
       "font-body text-text-primary group hover:bg-grey-25 flex w-full items-center justify-start gap-2 px-4 text-start font-medium no-underline transition-all",
       indent === 1 ? "min-w-10 rounded-lg py-2 text-base leading-6" : buttonSizeClass,
-      isActive && "active text-primary! bg-grey-25!",
+      isActive && "active text-primary-fg! bg-grey-25!",
       className,
     )}
   >
@@ -121,7 +121,7 @@
     }}
     class={cn(
       "font-body text-text-primary group hover:bg-grey-25 flex w-full cursor-pointer items-center justify-start gap-2 rounded-lg border-0 bg-transparent px-4 py-2 text-start text-base leading-6 font-medium transition-all",
-      isActive && "active text-primary! bg-grey-25!",
+      isActive && "active text-primary-fg! bg-grey-25!",
       className,
     )}
   >
@@ -143,7 +143,7 @@
     onclick={(e) => handleInternalLink(e, item.href!)}
     class={cn(
       "font-body text-text-primary group hover:bg-grey-25 flex w-full items-center justify-start gap-2 rounded-lg px-4 py-2 text-start text-base leading-6 font-medium no-underline transition-all",
-      isActive && "active text-primary! bg-grey-25!",
+      isActive && "active text-primary-fg! bg-grey-25!",
       className,
     )}
   >
@@ -165,7 +165,7 @@
       onclick={handleAccordionClick}
       class={cn(
         "font-body text-text-primary group hover:bg-grey-25 flex w-full cursor-pointer items-center justify-start gap-2 rounded-lg border-0 bg-transparent px-4 py-2 text-start text-base leading-6 font-medium transition-all",
-        isActive && "text-primary! bg-grey-25!",
+        isActive && "text-primary-fg! bg-grey-25!",
         (isExpanded || isActive) && "active",
         className,
       )}

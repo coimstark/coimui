@@ -82,24 +82,34 @@
   let simpleExpanded = $state(["src"]);
   let simpleSelected = $state(["tokens"]);
 
-  const richItems: CoimTreeItemData[] = [
+  let richItems = $state<CoimTreeItemData[]>([
     {
       id: "packages",
       label: "packages",
+      editable: true,
       children: [
-        { id: "svelte", label: "@coimui/svelte" },
-        { id: "tokens-json", label: "design-tokens.css" },
+        { id: "svelte", label: "@coimui/svelte", editable: true },
+        { id: "tokens-json", label: "design-tokens.css", editable: true },
       ],
     },
     {
       id: "apps",
       label: "apps",
+      editable: true,
       children: [
-        { id: "starter", label: "@coimui/starter" },
-        { id: "showcase", label: "@coimui/showcase" },
+        { id: "starter", label: "@coimui/starter", editable: true },
+        { id: "showcase", label: "@coimui/showcase", editable: true },
       ],
     },
-  ];
+  ]);
+
+  function renameTreeNode(nodes: CoimTreeItemData[], targetId: string, nextLabel: string): CoimTreeItemData[] {
+    return nodes.map((n) => ({
+      ...n,
+      label: n.id === targetId ? nextLabel : n.label,
+      children: n.children ? renameTreeNode(n.children, targetId, nextLabel) : undefined,
+    }));
+  }
 </script>
 
 <svelte:head>
@@ -268,7 +278,16 @@
                 <CoimTreeItem itemId="components" label="components/" />
               </CoimTreeItem>
             </CoimSimpleTreeView>
-            <CoimRichTreeView items={richItems} defaultExpandedItems={["packages"]} />
+            <CoimRichTreeView
+              bind:items={richItems}
+              defaultExpandedItems={["packages"]}
+              reorderable
+              onItemLabelChange={(id, nextLabel) => {
+                richItems = renameTreeNode(richItems, id, nextLabel);
+                toast.success(`Renamed node "${nextLabel}"`);
+              }}
+              onItemOrderChange={() => toast.info("Updated tree hierarchy")}
+            />
           </CoimStack>
         </CoimGrid>
       </CoimGrid>

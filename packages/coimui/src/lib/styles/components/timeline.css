@@ -78,9 +78,13 @@
 
   .coim-timeline-dot-color-primary {
     --coim-tl-color: var(--primary);
+    --coim-tl-fg: var(--primary-fg);
+    --coim-tl-contrast: var(--primary-contrast);
   }
   .coim-timeline-dot-color-secondary {
     --coim-tl-color: var(--secondary);
+    --coim-tl-fg: var(--secondary-fg);
+    --coim-tl-contrast: var(--secondary-contrast);
   }
   .coim-timeline-dot-color-accent-1 {
     --coim-tl-color: var(--accent-1);
@@ -102,25 +106,33 @@
   }
   .coim-timeline-dot-color-info {
     --coim-tl-color: var(--info);
+    --coim-tl-fg: var(--info-fg);
+    --coim-tl-contrast: var(--info-contrast);
   }
   .coim-timeline-dot-color-success {
     --coim-tl-color: var(--success);
+    --coim-tl-fg: var(--success-fg);
+    --coim-tl-contrast: var(--success-contrast);
   }
   .coim-timeline-dot-color-warning {
     --coim-tl-color: var(--warning);
+    --coim-tl-fg: var(--warning-fg);
+    --coim-tl-contrast: var(--warning-contrast);
   }
   .coim-timeline-dot-color-error {
     --coim-tl-color: var(--error);
+    --coim-tl-fg: var(--error-fg);
+    --coim-tl-contrast: var(--error-contrast);
   }
 
   .coim-timeline-dot-filled:not(.coim-timeline-dot-color-grey) {
     background-color: hsl(var(--coim-tl-color));
-    color: hsl(var(--text-contrast));
+    color: hsl(var(--coim-tl-contrast, var(--text-contrast)));
   }
 
   .coim-timeline-dot-outlined:not(.coim-timeline-dot-color-grey) {
     border-color: hsl(var(--coim-tl-color));
-    color: hsl(var(--coim-tl-color));
+    color: hsl(var(--coim-tl-fg, var(--coim-tl-color)));
   }
 
   .coim-timeline-content {

@@ -332,7 +332,7 @@
               >
                 {#if !customContentSnippet}
                   {#if activeItem?.label}
-                    <p class="font-heading text-primary mb-4 px-2.5 text-lg font-bold">
+                    <p class="font-heading text-primary-fg mb-4 px-2.5 text-lg font-bold">
                       {resolveLabel(translate, activeItem.label)}
                     </p>
                   {/if}
@@ -362,11 +362,11 @@
                         onclick={(e) => handleLinkClick(e, ctaHref)}
                         class="group flex w-full cursor-pointer flex-col items-center justify-center gap-2 no-underline"
                       >
-                        <IllustrationLaunch class="text-primary h-45 w-45 bg-cover bg-center" />
+                        <IllustrationLaunch class="text-primary-fg h-45 w-45 bg-cover bg-center" />
                         <p class="font-body text-text-primary m-0 px-4 text-center text-base font-normal">
                           {resolveLabel(translate, "menu-cta-copy")}
                         </p>
-                        <span class="group-hover:bg-primary/10 text-primary rounded-md px-5 py-2 font-medium transition-colors">
+                        <span class="group-hover:bg-primary/10 text-primary-fg rounded-md px-5 py-2 font-medium transition-colors">
                           {resolveLabel(translate, "menu-cta-button")}
                         </span>
                       </a>

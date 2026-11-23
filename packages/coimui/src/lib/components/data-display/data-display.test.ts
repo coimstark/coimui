@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render } from "@testing-library/svelte";
 import { createRawSnippet, tick } from "svelte";
 import DataDisplayTestHost from "../../../tests/DataDisplayTestHost.svelte";
-import { CoimAvatar } from "./index.js";
+import { CoimAvatar, CoimRichTreeView, reorderTreeItems, type CoimTreeItemData } from "./index.js";
 
 describe("Data Display Component Library", () => {
   beforeEach(() => {
@@ -106,5 +106,62 @@ describe("Data Display Component Library", () => {
     const el = view.container.querySelector(".coim-avatar") as HTMLElement;
     expect(el.className).toContain("coim-avatar-color-primary");
     expect(el.className).not.toContain("bg-grey-300");
+  });
+
+  it("supports RichTreeView drag-and-drop and Alt+Arrow keyboard reordering with guards", async () => {
+    const initialTree: CoimTreeItemData[] = [
+      {
+        id: "alpha",
+        label: "Alpha",
+        editable: true,
+        children: [{ id: "alpha-1", label: "Alpha Child", editable: true }],
+      },
+      { id: "beta", label: "Beta", editable: true },
+      { id: "gamma", label: "Gamma", editable: true },
+    ];
+
+    // Pure cycle guard check: cannot move parent into its own descendant
+    const cycleAttempt = reorderTreeItems(initialTree, "alpha", "alpha-1", "inside");
+    expect(cycleAttempt).toBe(initialTree);
+
+    const onItemOrderChange = vi.fn();
+    const view = render(CoimRichTreeView, {
+      props: {
+        items: initialTree,
+        defaultExpandedItems: ["alpha"],
+        reorderable: true,
+        canMoveItem: (sourceId: string) => sourceId !== "gamma",
+        onItemOrderChange,
+      },
+    });
+    await tick();
+
+    // Alt+ArrowDown moves alpha after beta
+    const alphaNode = view.container.querySelector('[data-item-id="alpha"]') as HTMLElement;
+    await fireEvent.keyDown(alphaNode, { key: "ArrowDown", altKey: true });
+    await tick();
+    expect(onItemOrderChange).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "beta" }),
+        expect.objectContaining({ id: "alpha" }),
+        expect.objectContaining({ id: "gamma" }),
+      ]),
+      { itemId: "alpha", targetId: "beta", position: "after" },
+    );
+
+    // Drag & drop reorder on DOM content node
+    const betaContent = view.container.querySelector('[data-item-id="beta"] .coim-tree-item-content')!;
+    const alphaContent = view.container.querySelector('[data-item-id="alpha"] .coim-tree-item-content')!;
+    await fireEvent.dragStart(betaContent);
+    await fireEvent.drop(alphaContent);
+    await tick();
+    expect(onItemOrderChange).toHaveBeenCalledTimes(2);
+
+    // canMoveItem guard prevents moving "gamma"
+    const callCountBeforeGuard = onItemOrderChange.mock.calls.length;
+    const gammaNode = view.container.querySelector('[data-item-id="gamma"]') as HTMLElement;
+    await fireEvent.keyDown(gammaNode, { key: "ArrowUp", altKey: true });
+    await tick();
+    expect(onItemOrderChange).toHaveBeenCalledTimes(callCountBeforeGuard);
   });
 });

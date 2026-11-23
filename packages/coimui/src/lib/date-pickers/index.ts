@@ -3,10 +3,12 @@ export { default as CoimDateField } from "./CoimDateField.svelte";
 export { default as CoimDatePicker } from "./CoimDatePicker.svelte";
 export { default as CoimDateRangePicker } from "./CoimDateRangePicker.svelte";
 export { default as CoimDateTimePicker } from "./CoimDateTimePicker.svelte";
+export { default as CoimDateTimeRangePicker } from "./CoimDateTimeRangePicker.svelte";
 export { default as CoimRangeCalendar } from "./CoimRangeCalendar.svelte";
 export { default as CoimStaticDatePicker } from "./CoimStaticDatePicker.svelte";
 export { default as CoimTimeField } from "./CoimTimeField.svelte";
 export { default as CoimTimePicker } from "./CoimTimePicker.svelte";
+export { default as CoimTimeRangePicker } from "./CoimTimeRangePicker.svelte";
 
 export {
   formatDateWithDayjs,
@@ -26,6 +28,8 @@ export {
 export type {
   CoimDateGranularity,
   CoimDateRangePreset,
+  CoimDateTimeRange,
+  CoimTimeRange,
   DateRange,
   DateValue,
 } from "./types.js";

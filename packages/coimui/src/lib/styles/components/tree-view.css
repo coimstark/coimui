@@ -40,7 +40,7 @@
   .coim-tree-item-content[data-selected="true"],
   .coim-tree-item-content[data-focused="true"] {
     background-color: hsl(var(--grey-25));
-    color: hsl(var(--primary));
+    color: hsl(var(--primary-fg));
   }
 
   .coim-tree-item[aria-disabled="true"] > .coim-tree-item-content {
@@ -87,7 +87,7 @@
     padding: 0;
     border: 0;
     background: transparent;
-    color: hsl(var(--primary));
+    color: hsl(var(--primary-fg));
     cursor: pointer;
   }
 

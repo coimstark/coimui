@@ -7,6 +7,7 @@
     stages: CoimFunnelStage[];
     width?: number;
     height?: number;
+    curve?: "linear" | "smooth";
     title?: string;
     ariaLabel?: string;
     class?: string;
@@ -16,6 +17,7 @@
     stages,
     width = 500,
     height = 240,
+    curve = "linear",
     title,
     ariaLabel = "Funnel chart",
     class: className = "",
@@ -36,12 +38,22 @@
       const bottomWidth = Math.max(minWidth * 0.85, Math.min(topWidth, widthFor(nextVal)));
       const y1 = idx * slotH + 3;
       const y2 = (idx + 1) * slotH - 3;
-      const points = [
-        `${cx - topWidth / 2},${y1}`,
-        `${cx + topWidth / 2},${y1}`,
-        `${cx + bottomWidth / 2},${y2}`,
-        `${cx - bottomWidth / 2},${y2}`,
+      const x1L = cx - topWidth / 2;
+      const x1R = cx + topWidth / 2;
+      const x2R = cx + bottomWidth / 2;
+      const x2L = cx - bottomWidth / 2;
+      const ym = (y1 + y2) / 2;
+
+      const points = [`${x1L},${y1}`, `${x1R},${y1}`, `${x2R},${y2}`, `${x2L},${y2}`].join(" ");
+      const smoothPath = [
+        `M ${x1L} ${y1}`,
+        `L ${x1R} ${y1}`,
+        `C ${x1R} ${ym}, ${x2R} ${ym}, ${x2R} ${y2}`,
+        `L ${x2L} ${y2}`,
+        `C ${x2L} ${ym}, ${x1L} ${ym}, ${x1L} ${y1}`,
+        "Z",
       ].join(" ");
+
       const conversion = Math.round((stage.value / maxVal) * 100);
       return {
         label: stage.label,
@@ -49,7 +61,8 @@
         conversion,
         color: getChartColor(idx, stage.color),
         points,
-        cy: (y1 + y2) / 2,
+        smoothPath,
+        cy: ym,
         cx,
       };
     });
@@ -63,16 +76,29 @@
 
   <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label={title ?? ariaLabel} class="w-full" style={`max-height: ${height}px;`}>
     {#each bars as item, idx (idx)}
-      <polygon
-        points={item.points}
-        fill={item.color}
-        fill-opacity="0.14"
-        stroke={item.color}
-        stroke-width="2"
-        stroke-linejoin="round"
-      >
-        <title>{item.label}: {item.value.toLocaleString()} ({item.conversion}%)</title>
-      </polygon>
+      {#if curve === "smooth"}
+        <path
+          d={item.smoothPath}
+          fill={item.color}
+          fill-opacity="0.14"
+          stroke={item.color}
+          stroke-width="2"
+          stroke-linejoin="round"
+        >
+          <title>{item.label}: {item.value.toLocaleString()} ({item.conversion}%)</title>
+        </path>
+      {:else}
+        <polygon
+          points={item.points}
+          fill={item.color}
+          fill-opacity="0.14"
+          stroke={item.color}
+          stroke-width="2"
+          stroke-linejoin="round"
+        >
+          <title>{item.label}: {item.value.toLocaleString()} ({item.conversion}%)</title>
+        </polygon>
+      {/if}
       <text
         x={item.cx}
         y={item.cy}

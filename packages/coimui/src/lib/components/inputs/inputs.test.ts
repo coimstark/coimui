@@ -3,6 +3,7 @@ import { cleanup, fireEvent, render } from "@testing-library/svelte";
 import { createRawSnippet, tick } from "svelte";
 import InputsTestHost from "../../../tests/InputsTestHost.svelte";
 import {
+  CoimAutocomplete,
   CoimButton,
   CoimButtonGroup,
   CoimDropzone,
@@ -217,5 +218,50 @@ describe("Inputs Component Library", () => {
     const outlinedBtn = outlined.getByRole("button", { name: "Outlined" });
     expect(outlinedBtn.className).toContain("py-[calc(0.5rem-1px)]");
     expect(outlinedBtn.className).toContain("px-[calc(1.25rem-1px)]");
+  });
+
+  it("supports Autocomplete groups, multiple checkboxSelection, and creatable options", async () => {
+    // Autocomplete option groups, multiple checkboxSelection, and creatable option
+    const onCreateOption = vi.fn();
+    const onAutoChange = vi.fn();
+    const auto = render(CoimAutocomplete, {
+      props: {
+        label: "Regions",
+        multiple: true,
+        checkboxSelection: true,
+        creatable: true,
+        open: true,
+        inputValue: "Antarctica",
+        value: ["apac"],
+        options: [
+          { value: "apac", label: "Asia-Pacific", group: "Eastern Hemisphere" },
+          { value: "eu", label: "Europe", group: "EMEA" },
+        ],
+        onCreateOption,
+        onValueChange: onAutoChange,
+      },
+    });
+    await tick();
+    // Clicking Create button adds option dynamically
+    const createBtn = auto.getByRole("button", { name: 'Create "Antarctica"' });
+    expect(createBtn).toBeInTheDocument();
+    await fireEvent.click(createBtn);
+    expect(onCreateOption).toHaveBeenCalledWith("Antarctica");
+    expect(onAutoChange).toHaveBeenCalledWith(["apac", "Antarctica"]);
+    auto.unmount();
+
+    const groupedAuto = render(CoimAutocomplete, {
+      props: {
+        label: "Cluster",
+        open: true,
+        options: [
+          { value: "us-east", label: "US East", group: "Americas" },
+          { value: "eu-west", label: "EU West", group: "Europe" },
+        ],
+      },
+    });
+    await tick();
+    expect(groupedAuto.getByText("Americas")).toBeInTheDocument();
+    expect(groupedAuto.getByText("Europe")).toBeInTheDocument();
   });
 });

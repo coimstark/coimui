@@ -9,6 +9,7 @@
     type DateValue,
   } from "@internationalized/date";
   import CiCalendarClock from "../icons/ui/CiCalendarClock.svelte";
+  import CiCross from "../icons/ui/CiCross.svelte";
   import { cn } from "../utilities/utils.js";
   import CoimCalendar from "./CoimCalendar.svelte";
   import CoimDateField from "./CoimDateField.svelte";
@@ -23,6 +24,7 @@
     disabled?: boolean;
     readonly?: boolean;
     required?: boolean;
+    clearable?: boolean;
     hourCycle?: 12 | 24;
     onValueChange?: (value: CalendarDateTime | undefined) => void;
     onOpenChange?: (open: boolean) => void;
@@ -38,6 +40,7 @@
     disabled = false,
     readonly = false,
     required = false,
+    clearable = false,
     hourCycle = 24,
     onValueChange,
     onOpenChange,
@@ -104,13 +107,29 @@
       onValueChange={updateDate}
     >
       {#snippet endAdornment()}
-        <Popover.Trigger
-          aria-label="Open date and time picker"
-          {disabled}
-          class="coim-date-trigger"
-        >
-          <CiCalendarClock size="small" />
-        </Popover.Trigger>
+        <span class="ms-auto inline-flex shrink-0 items-center gap-0.5">
+          {#if clearable && value && !disabled && !readonly}
+            <button
+              type="button"
+              aria-label={`Clear ${label ?? "date and time"}`}
+              class="text-text-secondary hover:text-error inline-flex h-6 w-6 cursor-pointer items-center justify-center rounded-sm bg-transparent transition-colors"
+              onclick={(e) => {
+                e.stopPropagation();
+                value = undefined;
+                onValueChange?.(undefined);
+              }}
+            >
+              <CiCross size="small" />
+            </button>
+          {/if}
+          <Popover.Trigger
+            aria-label="Open date and time picker"
+            {disabled}
+            class="coim-date-trigger ms-0!"
+          >
+            <CiCalendarClock size="small" />
+          </Popover.Trigger>
+        </span>
       {/snippet}
     </CoimDateField>
 

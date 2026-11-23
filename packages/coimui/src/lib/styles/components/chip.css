@@ -174,11 +174,15 @@
     --coim-chip-color: var(--primary);
     --coim-chip-color-light: var(--primary-light);
     --coim-chip-color-dark: var(--primary-dark);
+    --coim-chip-fg: var(--primary-fg);
+    --coim-chip-contrast: var(--primary-contrast);
   }
   .coim-chip-color-secondary {
     --coim-chip-color: var(--secondary);
     --coim-chip-color-light: var(--secondary-light);
     --coim-chip-color-dark: var(--secondary-dark);
+    --coim-chip-fg: var(--secondary-fg);
+    --coim-chip-contrast: var(--secondary-contrast);
   }
   .coim-chip-color-accent-1 {
     --coim-chip-color: var(--accent-1);
@@ -214,21 +218,29 @@
     --coim-chip-color: var(--info);
     --coim-chip-color-light: var(--info-light);
     --coim-chip-color-dark: var(--info-dark);
+    --coim-chip-fg: var(--info-fg);
+    --coim-chip-contrast: var(--info-contrast);
   }
   .coim-chip-color-success {
     --coim-chip-color: var(--success);
     --coim-chip-color-light: var(--success-light);
     --coim-chip-color-dark: var(--success-dark);
+    --coim-chip-fg: var(--success-fg);
+    --coim-chip-contrast: var(--success-contrast);
   }
   .coim-chip-color-warning {
     --coim-chip-color: var(--warning);
     --coim-chip-color-light: var(--warning-light);
     --coim-chip-color-dark: var(--warning-dark);
+    --coim-chip-fg: var(--warning-fg);
+    --coim-chip-contrast: var(--warning-contrast);
   }
   .coim-chip-color-error {
     --coim-chip-color: var(--error);
     --coim-chip-color-light: var(--error-light);
     --coim-chip-color-dark: var(--error-dark);
+    --coim-chip-fg: var(--error-fg);
+    --coim-chip-contrast: var(--error-contrast);
   }
   .coim-chip-color-text-primary {
     --coim-chip-color: var(--text-primary);
@@ -248,7 +260,7 @@
 
   .coim-chip-filled:not(.coim-chip-color-grey) {
     background-color: hsl(var(--coim-chip-color));
-    color: hsl(var(--text-contrast));
+    color: hsl(var(--coim-chip-contrast, var(--text-contrast)));
   }
 
   .coim-chip-filled:not(.coim-chip-color-grey).coim-chip-clickable:hover {
@@ -256,7 +268,7 @@
   }
 
   .coim-chip-filled:not(.coim-chip-color-grey) .coim-chip-delete {
-    background-color: hsl(var(--text-contrast));
+    background-color: hsl(var(--coim-chip-contrast, var(--text-contrast)));
     color: hsl(var(--coim-chip-color));
   }
 
@@ -266,7 +278,7 @@
 
   .coim-chip-outlined:not(.coim-chip-color-grey) {
     outline-color: hsl(var(--coim-chip-color));
-    color: hsl(var(--coim-chip-color));
+    color: hsl(var(--coim-chip-fg, var(--coim-chip-color)));
   }
 
   .coim-chip-outlined:not(.coim-chip-color-grey).coim-chip-clickable:hover {
@@ -275,7 +287,7 @@
 
   .coim-chip-outlined:not(.coim-chip-color-grey) .coim-chip-delete {
     background-color: hsl(var(--coim-chip-color));
-    color: hsl(var(--text-contrast));
+    color: hsl(var(--coim-chip-contrast, var(--text-contrast)));
   }
 
   .coim-chip-outlined:not(.coim-chip-color-grey) .coim-chip-delete:hover {
@@ -288,7 +300,7 @@
   }
 
   .dark .coim-chip-pastel:not(.coim-chip-color-grey) {
-    color: hsl(var(--coim-chip-color-light));
+    color: hsl(var(--coim-chip-fg, var(--coim-chip-color-light)));
   }
 
   .coim-chip-pastel:not(.coim-chip-color-grey).coim-chip-clickable:hover {
@@ -297,7 +309,7 @@
 
   .coim-chip-pastel:not(.coim-chip-color-grey) .coim-chip-delete {
     background-color: hsl(var(--coim-chip-color));
-    color: hsl(var(--text-contrast));
+    color: hsl(var(--coim-chip-contrast, var(--text-contrast)));
   }
 
   .coim-chip.is-disabled {
