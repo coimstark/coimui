@@ -16,6 +16,7 @@
     "test:unit": "bun --filter @coimui/svelte test:unit",
     "build": "bun --filter @coimui/svelte package && bun --filter @coimui/starter build && bun --filter @coimui/showcase build",
     "verify:package": "node scripts/verify-package.mjs",
+    "verify:release": "node scripts/verify-npm-release.mjs",
     "test:parity": "playwright test --config=tests/visual-parity/playwright.config.ts"
   },
   "devDependencies": {

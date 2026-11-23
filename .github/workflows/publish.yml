@@ -81,14 +81,27 @@ jobs:
         working-directory: packages/coimui
         run: npm publish --access public --provenance
 
-      - name: Verify published package & provenance on npm registry
+      - name: Report npm submission status
         run: |
+          set -euo pipefail
           VERSION="$(node -p "require('./packages/coimui/package.json').version")"
-          for i in $(seq 1 12); do
-            if npm view "@coimui/svelte@${VERSION}" version dist-tags repository.url --json; then
-              exit 0
-            fi
-            sleep 5
-          done
-          echo "::error::Published package @coimui/svelte@${VERSION} did not appear within 60s."
-          exit 1
+          echo "State: SUBMITTED"
+          echo "Accepted by npm — registry processing pending (@coimui/svelte@${VERSION})"
+          echo "Publish-time malware/security scanning can delay public registry availability for several minutes or longer."
+          echo "Verify availability, provenance, and tarball installability locally before creating the GitHub Release:"
+          echo "  bun run verify:release -- ${VERSION}"
+          {
+            echo "### npm Trusted Publishing Submission"
+            echo ""
+            echo "- **State**: \`SUBMITTED\`"
+            echo "- **Status**: Accepted by npm — registry processing pending (\`@coimui/svelte@${VERSION}\`)"
+            echo "- **Next step**: npm publish-time malware and security scanning can delay public registry availability for several minutes or longer. Verify availability, provenance, and tarball installability locally outside GitHub Actions before creating the GitHub Release (never re-tag or republish an already submitted version):"
+            echo ""
+            echo "\`\`\`bash"
+            echo "bun run verify:release -- ${VERSION}"
+            echo "# or wait locally until AVAILABLE:"
+            echo "bun run verify:release -- ${VERSION} --wait"
+            echo "\`\`\`"
+            echo ""
+            echo "Possible local verifier states: \`SUBMITTED\` (pending scan), \`AVAILABLE\` (indexed, attested, and installable), \`BLOCKED/REJECTED\` (review npm notices/permissions)."
+          } >> "${GITHUB_STEP_SUMMARY}"

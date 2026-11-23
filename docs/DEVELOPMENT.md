@@ -26,3 +26,11 @@
   - Keep interactive controls outside `role="img"` containers.
   - Provide accessible names on progress bars, icon buttons, scrollable code regions (`role="region"` + `aria-label` + `tabindex="0"`), and list action buttons (`<li>` inside `<ul>`).
   - Keep foreground/surface contrast `>= 4.5:1` across both light and dark tokens.
+
+## Release Verification
+
+- **OIDC Submission vs. Availability**: Pushing a `vX.Y.Z` tag runs `.github/workflows/publish.yml`, which finishes once `npm publish --access public --provenance` exits `0` (**`SUBMITTED`**: `Accepted by npm — registry processing pending`). Because npm publish-time malware scanning can delay availability for several minutes or longer, GitHub Actions does not poll the registry.
+- **Local Verification (Outside GitHub Actions)**: Run `bun run verify:release -- <version>` (or add `--wait` to poll locally) before creating a GitHub Release:
+  - **`SUBMITTED` (exit 2)**: Submitted to npm and still pending publish-time security scanning; wait and re-check locally without re-tagging or republishing.
+  - **`AVAILABLE` (exit 0)**: Version is publicly indexed, SLSA provenance attestation metadata is present, and the published tarball installs and passes `npm audit signatures` in a clean temporary directory.
+  - **`BLOCKED/REJECTED` (exit 3)**: Security hold, rejection, missing provenance, signature mismatch, or install failure; check npm maintainer notices/support before taking action.
