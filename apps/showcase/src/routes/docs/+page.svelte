@@ -1,5 +1,6 @@
 <script lang="ts">
   import {
+    COIMUI_VERSION,
     CoimBreadcrumbs,
     CoimButton,
     CoimCard,
@@ -46,7 +47,7 @@
   <div>
     <CoimBreadcrumbs items={[{ label: "Home", href: "/" }, { label: "Documentation" }]} />
     <div class="mt-2 flex flex-wrap items-center gap-3">
-      <CoimTypography variant="h1">CoimUI v1.0.0 Documentation</CoimTypography>
+      <CoimTypography variant="h1">CoimUI v{COIMUI_VERSION} Documentation</CoimTypography>
       <CoimChip label="Svelte 5 + TypeScript 7" color="primary" variant="pastel" />
     </div>
     <p class="text-text-secondary mt-1">

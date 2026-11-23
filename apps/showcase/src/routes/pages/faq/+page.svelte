@@ -1,5 +1,6 @@
 <script lang="ts">
   import {
+    COIMUI_VERSION,
     CoimAccordion,
     CoimAccordionDetails,
     CoimAccordionGroup,
@@ -41,7 +42,7 @@
   <div>
     <CoimBreadcrumbs items={[{ label: "Pages", href: "/" }, { label: "FAQ" }]} />
     <CoimTypography variant="h1" class="mt-2">Frequently Asked Questions</CoimTypography>
-    <p class="text-text-secondary mt-1">Common architectural and integration answers for CoimUI v1.0.0.</p>
+    <p class="text-text-secondary mt-1">Common architectural and integration answers for CoimUI v{COIMUI_VERSION}.</p>
   </div>
 
   <CoimTypography variant="h2">Architecture, Theming &amp; SSR</CoimTypography>
