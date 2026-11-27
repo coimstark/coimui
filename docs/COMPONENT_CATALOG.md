@@ -51,7 +51,7 @@
 
 | Subpath | Exported Components & Utilities |
 |---|---|
-| `@coimui/svelte/data-grid` | `CoimDataGrid`, `CoimDataGridToolbar`, `buildCsvContent`, `downloadCsvExport`, `exportDataGridToExcel`, `printDataGrid` |
+| `@coimui/svelte/data-grid` | `CoimDataGrid`, `CoimDataGridToolbar`, `CoimDataGridPivotPanel`, `CoimDataGridAiBar`, `DEFAULT_DATA_GRID_LABELS`, `resolveDataGridLabel`, `buildPivotTable`, `buildCsvContent`, `downloadCsvExport`, `exportDataGridToExcel`, `printDataGrid` |
 | `@coimui/svelte/charts` | `CoimAreaChart`, `CoimBarChart`, `CoimChartLegend`, `CoimFunnelChart`, `CoimGaugeChart`, `CoimHeatmapChart`, `CoimLineChart`, `CoimPieChart`, `CoimRadarChart`, `CoimScatterChart`, `CoimSparklineChart`, `COIM_CHART_PALETTE`, `getChartColor` |
 | `@coimui/svelte/date-pickers` | `CoimCalendar`, `CoimRangeCalendar`, `CoimDateField`, `CoimTimeField`, `CoimDatePicker`, `CoimDateRangePicker`, `CoimTimePicker`, `CoimDateTimePicker`, `CoimStaticDatePicker`, `CalendarDate`, `CalendarDateTime`, `Time`, `today`, `getLocalTimeZone`, `formatDateWithDayjs`, `getPresetDateRanges`, `parseIsoDateValue`, `parseIsoTimeValue` |
 | `@coimui/svelte/plugins` | `CoimCarousel`, `CoimCodeBlock`, `CoimEmojiPicker`, `CoimEventCalendar`, `CoimLightbox`, `CoimMarkdown`, `CoimRichTextEditor`, `CoimSortableList`, `CoimVideoPlayer`, `printElement` |

@@ -1,4 +1,5 @@
 import type { Snippet } from "svelte";
+import type { TranslateFn } from "../layouts/types.js";
 
 export type CoimDataGridDensity = "compact" | "standard" | "comfortable";
 export type CoimDataGridColumnType = "string" | "number" | "date" | "boolean" | "actions";
@@ -53,6 +54,7 @@ export interface CoimDataGridPivotPanelProps<
 > {
   columns: CoimDataGridColumn<TData>[];
   config: CoimDataGridPivotConfig;
+  translate?: TranslateFn;
   onChange: (next: CoimDataGridPivotConfig) => void;
   onClose?: () => void;
 }
@@ -62,6 +64,7 @@ export interface CoimDataGridAiBarProps<
 > {
   columns: CoimDataGridColumn<TData>[];
   aiProvider?: CoimDataGridAiProvider;
+  translate?: TranslateFn;
   onApplyResult: (result: CoimDataGridAiQueryResult) => void;
   onReset?: () => void;
   onClose?: () => void;
@@ -208,6 +211,7 @@ export interface CoimDataGridProps<TData extends Record<string, unknown> = Recor
   columnOverscan?: number;
   detailPanel?: Snippet<[{ row: TData; rowId: string }]>;
   toolbarActions?: Snippet;
+  translate?: TranslateFn;
   onPaginationChange?: (page: number, pageSize: number) => void;
   onSortChange?: (sorting: CoimDataGridSortItem[]) => void;
   onFilterChange?: (filters: { globalFilter: string; columnFilters: { id: string; value: unknown }[] }) => void;

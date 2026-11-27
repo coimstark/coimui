@@ -165,7 +165,7 @@
         class="border-grey-200 bg-background-paper font-body text-text-primary shadow-darker-sm z-100 rounded-sm border border-solid px-3 py-1.5 text-sm font-semibold"
       >
         <Tooltip.Arrow class="text-background-paper fill-current" />
-        Configuration
+        {resolveLabel(translate, "configuration")}
       </Tooltip.Content>
     </Tooltip.Portal>
   </Tooltip.Root>
@@ -197,7 +197,7 @@
           class="border-grey-200 bg-background-paper font-body text-text-primary shadow-darker-sm z-100 rounded-sm border border-solid px-3 py-1.5 text-sm font-semibold"
         >
           <Tooltip.Arrow class="text-background-paper fill-current" />
-          Plans
+          {resolveLabel(translate, "plans")}
         </Tooltip.Content>
       </Tooltip.Portal>
     </Tooltip.Root>
@@ -215,7 +215,7 @@
 >
   <div class="flex min-h-full min-w-80 flex-col p-5">
     <h2 id="coim-theme-config-title" class="card-title font-heading text-text-primary px-4 pt-4 text-lg font-bold">
-      Configuration
+      {resolveLabel(translate, "configuration")}
     </h2>
 
     <div class="mb-4 flex flex-1 flex-col gap-2 px-5">

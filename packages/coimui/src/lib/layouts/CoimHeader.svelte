@@ -29,12 +29,19 @@
 
   interface Props {
     homeHref?: string;
+    brandText?: string;
+    logoSlot?: Snippet<[{ compact: boolean }]>;
     versions?: CoimVersionOption[];
     searchItems?: CoimSearchItem[];
     shortcuts?: CoimShortcutItem[];
     notifications?: CoimNotificationItem[];
     user?: CoimUserProfile;
     accounts?: CoimUserAccount[];
+    activeAccountId?: string;
+    keepUserProfileOnAccountSwitch?: boolean;
+    showAccounts?: boolean;
+    showThemePicker?: boolean;
+    showLocalePicker?: boolean;
     userMenuLinks?: CoimUserMenuLink[];
     userSecondaryLinks?: CoimUserMenuLink[];
     signOutHref?: string;
@@ -58,12 +65,19 @@
 
   let {
     homeHref = "/",
+    brandText,
+    logoSlot,
     versions,
     searchItems,
     shortcuts,
     notifications,
     user,
     accounts,
+    activeAccountId,
+    keepUserProfileOnAccountSwitch = false,
+    showAccounts = true,
+    showThemePicker = true,
+    showLocalePicker = true,
     userMenuLinks,
     userSecondaryLinks,
     signOutHref,
@@ -158,7 +172,12 @@
     <div class="flex h-full flex-1 flex-row items-center gap-4 md:gap-6">
       {#if !theme.isTopNavContained}
         <a href={homeHref} onclick={handleLogoClick} class="inline-flex items-center no-underline">
-          <CoimLogo classNameFull="ms-2 hidden md:block" classNameMobile="ms-2 md:hidden" />
+          {#if logoSlot}
+            <span class="ms-2 inline-flex md:hidden">{@render logoSlot({ compact: true })}</span>
+            <span class="ms-2 hidden md:inline-flex">{@render logoSlot({ compact: false })}</span>
+          {:else}
+            <CoimLogo {brandText} classNameFull="ms-2 hidden md:block" classNameMobile="ms-2 md:hidden" />
+          {/if}
         </a>
       {/if}
 
@@ -173,7 +192,7 @@
     <div class="flex flex-row items-center sm:gap-1">
       <div class={cn("flex-row items-center sm:flex! sm:gap-1", rightButtonsVisibleMobile ? "flex" : "hidden")}>
         {#if showSearch}
-          <CoimSearchDialog items={searchItems} {advancedSearchHref} {onNavigate} />
+          <CoimSearchDialog items={searchItems} {advancedSearchHref} {onNavigate} {translate} />
         {/if}
         {#if showShortcuts}
           <CoimShortcutsMenu {shortcuts} {onNavigate} />
@@ -185,6 +204,7 @@
             viewAllHref={notificationViewAllHref}
             onAction={onNotificationAction}
             {onNavigate}
+            {translate}
           />
         {/if}
         <CoimModeToggle />
@@ -208,6 +228,11 @@
     <CoimUserMenu
       {user}
       {accounts}
+      {activeAccountId}
+      {keepUserProfileOnAccountSwitch}
+      {showAccounts}
+      {showThemePicker}
+      {showLocalePicker}
       links={userMenuLinks}
       secondaryLinks={userSecondaryLinks}
       {signOutHref}

@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
   import { MenuShowState } from "../theme/types.js";
+  import { cn } from "../utilities/utils.js";
   import { getLayoutContext } from "./layout-state.svelte.js";
   import { findPrimaryNavItem } from "./nav-utils.js";
   import CoimContentWrapper from "./CoimContentWrapper.svelte";
@@ -12,6 +13,8 @@
     bottomItems?: CoimNavItem[];
     currentPath: string;
     footerLinks?: CoimFooterLink[];
+    showFooter?: boolean;
+    fullHeight?: boolean;
     disableContentWrapper?: boolean;
     onNavigate?: NavigateFn;
     translate?: TranslateFn;
@@ -24,6 +27,8 @@
     bottomItems = [],
     currentPath,
     footerLinks,
+    showFooter = true,
+    fullHeight = false,
     disableContentWrapper = false,
     onNavigate,
     translate,
@@ -61,7 +66,7 @@
   style:padding-inline-start={`${mainPadding}px`}
 >
   {@render headerSlot?.()}
-  <div class="min-h-[calc(100vh-7rem)]">
+  <div class={cn(fullHeight ? "flex h-[calc(100dvh-4rem)] min-h-0 flex-1 flex-col overflow-hidden" : "min-h-[calc(100vh-7rem)]")}>
     {#if disableContentWrapper}
       {@render children?.()}
     {:else}
@@ -70,5 +75,7 @@
       </CoimContentWrapper>
     {/if}
   </div>
-  <CoimFooter links={footerLinks} {onNavigate} {translate} />
+  {#if showFooter}
+    <CoimFooter links={footerLinks} {onNavigate} {translate} />
+  {/if}
 </main>

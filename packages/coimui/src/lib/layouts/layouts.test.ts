@@ -324,4 +324,66 @@ describe("LayoutState & CoimAppShell", () => {
     expect(resolveLabel((k) => k, "reset-theme")).toBe("Reset Defaults");
     expect(resolveLabel((k) => (k === "menu-minimal" ? "Kompakt" : k), "menu-minimal")).toBe("Kompakt");
   });
+
+  it("supports custom logoSlot, SingleLayer ctaSlot, fullHeight flush mode, hidden theme config, and keepUserProfileOnAccountSwitch", async () => {
+    createMatchMediaController(true);
+    const onAccountSwitch = vi.fn();
+    localStorage.setItem("coim-test-sl-menu", MenuType.SingleLayer);
+
+    const logoSnippet = createRawSnippet((params: () => { compact: boolean }) => ({
+      render: () => `<span data-testid="custom-logo" data-compact="${params().compact}">CustomBrand</span>`,
+    }));
+    const ctaSnippet = createRawSnippet(() => ({
+      render: () => `<div data-testid="sidebar-cta">Quota Box</div>`,
+    }));
+    const bodySnippet = createRawSnippet(() => ({
+      render: () => `<div data-testid="flush-body">Inbox</div>`,
+    }));
+
+    const view = render(CoimAppShell, {
+      props: {
+        items: sampleItems,
+        currentPath: "/dashboards/default",
+        menuStorageKey: "coim-test-sl-menu",
+        persistMenu: true,
+        showThemeConfiguration: false,
+        showFooter: false,
+        fullHeight: true,
+        disableContentWrapper: true,
+        keepUserProfileOnAccountSwitch: true,
+        activeAccountId: "ws-2",
+        user: { name: "Sari Dewi", email: "sari@tokokita.id" },
+        accounts: [
+          { id: "ws-1", name: "Toko Pusat", email: "Paket Gratis" },
+          { id: "ws-2", name: "Cabang Bandung", email: "Paket Starter" },
+        ],
+        onAccountSwitch,
+        logoSlot: logoSnippet,
+        ctaSlot: ctaSnippet,
+        children: bodySnippet,
+      },
+    });
+    await tick();
+
+    expect(view.getByTestId("custom-logo")).toHaveTextContent("CustomBrand");
+    expect(view.getByTestId("sidebar-cta")).toBeInTheDocument();
+    expect(view.queryByRole("button", { name: "Theme configuration" })).toBeNull();
+    expect(view.container.querySelector("footer")).toBeNull();
+    expect(view.container.querySelector("main#coim-main-content .h-\\[calc\\(100dvh-4rem\\)\\]")).toBeTruthy();
+
+    // Initials avatar fallback renders even without avatar URL
+    const userTrigger = view.getByLabelText("Open user menu for Sari Dewi");
+    expect(userTrigger.textContent).toContain("SD");
+
+    await fireEvent.click(userTrigger);
+    await tick();
+    await fireEvent.click(view.getByText("Switch Account"));
+    await tick();
+    await fireEvent.click(view.getByText("Toko Pusat"));
+    await tick();
+
+    expect(onAccountSwitch).toHaveBeenCalledWith(expect.objectContaining({ id: "ws-1" }));
+    // keepUserProfileOnAccountSwitch preserves the user's name in header trigger
+    expect(view.getByLabelText("Open user menu for Sari Dewi")).toBeInTheDocument();
+  });
 });

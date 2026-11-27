@@ -8,7 +8,9 @@ export {
   exportDataGridToExcel,
   printDataGrid,
 } from "./export-utils.js";
-export { buildPivotTable, type CoimPivotResult } from "./pivot-utils.js";
+export { DEFAULT_DATA_GRID_LABELS, resolveDataGridLabel } from "./i18n.js";
+export { buildPivotTable, type CoimPivotResult, type CoimPivotTableOptions } from "./pivot-utils.js";
+export type { TranslateFn } from "../layouts/types.js";
 export type {
   CoimDataGridAggregationFn,
   CoimDataGridAiBarProps,

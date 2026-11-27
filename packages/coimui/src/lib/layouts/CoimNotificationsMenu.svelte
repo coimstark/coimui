@@ -10,7 +10,8 @@
   import CiUsers from "../icons/ui/CiUsers.svelte";
   import { getThemeContext } from "../theme/theme-state.svelte.js";
   import { cn } from "../utilities/utils.js";
-  import type { CoimNotificationAction, CoimNotificationItem, NavigateFn } from "./types.js";
+  import { resolveLabel } from "./nav-utils.js";
+  import type { CoimNotificationAction, CoimNotificationItem, NavigateFn, TranslateFn } from "./types.js";
 
   interface Props {
     notifications?: CoimNotificationItem[];
@@ -18,6 +19,7 @@
     viewAllHref?: string;
     onAction?: (item: CoimNotificationItem, action: CoimNotificationAction) => void;
     onNavigate?: NavigateFn;
+    translate?: TranslateFn;
     class?: string;
   }
 
@@ -108,6 +110,7 @@
     viewAllHref,
     onAction,
     onNavigate,
+    translate = (k) => k,
     class: className = "",
   }: Props = $props();
 
@@ -192,7 +195,7 @@
                 {...tipProps}
                 {...popProps}
                 type="button"
-                aria-label="Notifications"
+                aria-label={resolveLabel(translate, "notifications-title")}
                 class={cn(
                   "icon-only hover-icon-shrink hover:bg-grey-25 text-text-primary inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg border-0 bg-transparent transition-all",
                   open && "active bg-grey-25 text-primary!",
@@ -227,7 +230,7 @@
         class="border-grey-200 bg-background-paper font-body text-text-primary shadow-darker-sm z-100 rounded-sm border border-solid px-3 py-1.5 text-sm font-semibold"
       >
         <Tooltip.Arrow class="text-background-paper fill-current" />
-        Notifications
+        {resolveLabel(translate, "notifications-title")}
       </Tooltip.Content>
     </Tooltip.Portal>
   </Tooltip.Root>
@@ -240,7 +243,7 @@
     >
       <div class="flex flex-row items-start justify-between pe-4">
         <h2 class="card-title font-heading text-text-primary mb-2 min-h-8 px-4 pt-4 text-lg font-bold">
-          Notifications
+          {resolveLabel(translate, "notifications-title")}
         </h2>
         <div class="mt-3 flex flex-row gap-1">
           <button
@@ -281,7 +284,7 @@
               tabValue === "all" && "border-primary! text-primary!",
             )}
           >
-            <CiStructure size="tiny" /> All
+            <CiStructure size="tiny" /> {resolveLabel(translate, "notifications-all")}
           </Tabs.Trigger>
           <Tabs.Trigger
             value="system"
@@ -290,7 +293,7 @@
               tabValue === "system" && "border-primary! text-primary!",
             )}
           >
-            <CiScreen size="tiny" /> System
+            <CiScreen size="tiny" /> {resolveLabel(translate, "notifications-system")}
           </Tabs.Trigger>
           <Tabs.Trigger
             value="user"
@@ -299,7 +302,7 @@
               tabValue === "user" && "border-primary! text-primary!",
             )}
           >
-            <CiUsers size="tiny" /> User
+            <CiUsers size="tiny" /> {resolveLabel(translate, "notifications-user")}
           </Tabs.Trigger>
         </Tabs.List>
 
@@ -416,14 +419,14 @@
                           onSelect={() => toggleReadState(item.id, false)}
                           class="font-body text-text-primary hover:bg-grey-500/10 cursor-pointer rounded-sm px-3 py-1.5 text-sm font-medium outline-none"
                         >
-                          Mark as Read
+                          {resolveLabel(translate, "notifications-mark-read")}
                         </DropdownMenu.Item>
                       {:else}
                         <DropdownMenu.Item
                           onSelect={() => toggleReadState(item.id, true)}
                           class="font-body text-text-primary hover:bg-grey-500/10 cursor-pointer rounded-sm px-3 py-1.5 text-sm font-medium outline-none"
                         >
-                          Mark as Unread
+                          {resolveLabel(translate, "notifications-mark-unread")}
                         </DropdownMenu.Item>
                       {/if}
                     </DropdownMenu.Content>
@@ -441,7 +444,9 @@
           onclick={handleViewAll}
           class="border-grey-200 text-text-primary hover:bg-grey-200/10 font-body w-full cursor-pointer rounded-xs border border-solid bg-transparent px-3.5 py-1.5 text-sm leading-4 font-medium transition-colors"
         >
-          {viewAllHref ? "View All" : "Mark All Read"}
+          {viewAllHref
+            ? resolveLabel(translate, "notifications-view-all")
+            : resolveLabel(translate, "notifications-mark-all-read")}
         </button>
       </div>
     </Popover.Content>

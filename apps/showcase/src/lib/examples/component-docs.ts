@@ -222,9 +222,10 @@ ${END_SCRIPT}
     { id: "id", field: "id", headerName: "ID", width: 100 },
     { id: "account", field: "account", headerName: "Account", width: 200, editable: true },
   ];
+  const t = (key: string) => key;
 ${END_SCRIPT}
 
-<CoimDataGrid {rows} {columns} checkboxSelection showColumnFilters />`,
+<CoimDataGrid {rows} {columns} translate={t} checkboxSelection showColumnFilters />`,
 
   charts: `<script lang="ts">
   import { CoimBarChart, CoimLineChart, CoimPieChart } from "@coimui/svelte/charts";

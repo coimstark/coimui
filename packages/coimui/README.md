@@ -73,7 +73,7 @@ Heavy optional integrations remain isolated behind explicit subpaths so core app
 | `@coimui/svelte/icons` | `CoimIcon` and UI icon library (`@coimui/svelte/icons/ui/*`, `./icons/illustrations/*`) | — |
 | `@coimui/svelte/forms` | Schema-agnostic form & Zod issue adapter | — |
 | `@coimui/svelte/utilities` | Portal, click-away listener, transitions, screen & utility helpers | — |
-| `@coimui/svelte/data-grid` | TanStack Table v9 + Virtualizer grid, inline editing, pinning, CSV & XLSX exports | `@coimui/svelte/styles/data-grid.css` |
+| `@coimui/svelte/data-grid` | TanStack Table v9 + Virtualizer grid, inline editing, pinning, native i18n (`translate`, `DEFAULT_DATA_GRID_LABELS`, `resolveDataGridLabel`), CSV & XLSX exports | `@coimui/svelte/styles/data-grid.css` |
 | `@coimui/svelte/charts` | Area, Bar, Line, Pie, Scatter, Sparkline, Gauge, Radar, Heatmap & Funnel charts | `@coimui/svelte/styles/charts.css` |
 | `@coimui/svelte/date-pickers` | ISO Calendar, RangeCalendar, DatePicker, DateRangePicker, TimePicker & DateTimePicker | `@coimui/svelte/styles/date-pickers.css` |
 | `@coimui/svelte/plugins` | RichTextEditor, Markdown, CodeBlock, Carousel, Lightbox, EmojiPicker, SortableList, VideoPlayer, EventCalendar & print | `@coimui/svelte/styles/plugins.css` |

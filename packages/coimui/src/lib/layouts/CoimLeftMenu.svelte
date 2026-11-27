@@ -17,6 +17,8 @@
     currentPath: string;
     homeHref?: string;
     ctaHref?: string;
+    brandText?: string;
+    logoSlot?: Snippet<[{ compact: boolean }]>;
     onNavigate?: NavigateFn;
     translate?: TranslateFn;
     ctaSlot?: Snippet;
@@ -28,6 +30,8 @@
     currentPath,
     homeHref = "/",
     ctaHref = "/docs",
+    brandText,
+    logoSlot,
     onNavigate,
     translate = (k) => k,
     ctaSlot,
@@ -210,7 +214,11 @@
             onclick={(e) => handleLinkClick(e, homeHref)}
             class="flex h-16 w-full flex-none items-start justify-center pt-2 no-underline"
           >
-            <CoimLogo classNameFull="flex" classNameMobile="hidden" />
+            {#if logoSlot}
+              {@render logoSlot({ compact: false })}
+            {:else}
+              <CoimLogo {brandText} classNameFull="flex" classNameMobile="hidden" />
+            {/if}
           </a>
         {/if}
 
@@ -220,7 +228,11 @@
             onclick={(e) => handleLinkClick(e, homeHref)}
             class="-ms-2 flex h-13 w-full flex-none items-start justify-center pt-2 no-underline"
           >
-            <CoimLogo classNameFull="hidden" classNameMobile="h-6 w-6" />
+            {#if logoSlot}
+              {@render logoSlot({ compact: true })}
+            {:else}
+              <CoimLogo {brandText} classNameFull="hidden" classNameMobile="h-6 w-6" />
+            {/if}
           </a>
         {/if}
 
@@ -230,7 +242,11 @@
             onclick={(e) => handleLinkClick(e, homeHref)}
             class="flex h-17.25 w-full flex-none items-center justify-center no-underline"
           >
-            <CoimLogo classNameFull="hidden" classNameMobile="h-9 w-8" />
+            {#if logoSlot}
+              {@render logoSlot({ compact: true })}
+            {:else}
+              <CoimLogo {brandText} classNameFull="hidden" classNameMobile="h-9 w-8" />
+            {/if}
           </a>
         {/if}
 
@@ -260,6 +276,12 @@
               />
             {/each}
           </div>
+
+          {#if ctaSlot}
+            <div class="mt-auto mb-3 w-full">
+              {@render ctaSlot()}
+            </div>
+          {/if}
 
           <div class="mb-5 flex w-full flex-col gap-0.5">
             {#each visibleBottomItems as item (item.id)}

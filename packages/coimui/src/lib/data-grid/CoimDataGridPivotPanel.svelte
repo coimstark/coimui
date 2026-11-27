@@ -5,13 +5,14 @@
   import CiDragVertical from "../icons/ui/CiDragVertical.svelte";
   import CiPivot from "../icons/ui/CiPivot.svelte";
   import CiPlus from "../icons/ui/CiPlus.svelte";
+  import { resolveDataGridLabel } from "./i18n.js";
   import type {
     CoimDataGridAggregationFn,
-    CoimDataGridPivotConfig,
     CoimDataGridPivotPanelProps,
   } from "./types.js";
 
-  let { columns, config, onChange, onClose }: CoimDataGridPivotPanelProps<TData> = $props();
+  let { columns, config, translate, onChange, onClose }: CoimDataGridPivotPanelProps<TData> =
+    $props();
 
   let draggedField = $state<string | null>(null);
   let fieldToAdd = $state<string>("");
@@ -94,32 +95,34 @@
 
 <div
   role="region"
-  aria-label="Pivot field configurator"
+  aria-label={resolveDataGridLabel(translate, "data-grid-pivot-panel-aria")}
   class="border-grey-50 bg-grey-25/50 border-b px-4 py-3 text-sm"
 >
   <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
     <div class="flex items-center gap-2 font-semibold">
       <CiPivot size="small" class="text-primary" />
-      <span>Pivot Field Configurator</span>
+      <span>{resolveDataGridLabel(translate, "data-grid-pivot-panel-title")}</span>
       <span class="text-text-secondary text-xs font-normal">
-        Drag fields or use controls to configure rows, columns, and aggregations
+        {resolveDataGridLabel(translate, "data-grid-pivot-panel-subtitle")}
       </span>
     </div>
     {#if onClose}
       <button
         type="button"
-        aria-label="Close pivot field configurator"
+        aria-label={resolveDataGridLabel(translate, "data-grid-pivot-close-aria")}
         class="border-grey-200 hover:bg-grey-100 inline-flex items-center gap-1 rounded border px-2 py-1 text-xs"
         onclick={onClose}
       >
         <CiCross size="small" />
-        <span>Close</span>
+        <span>{resolveDataGridLabel(translate, "data-grid-close")}</span>
       </button>
     {/if}
   </div>
 
   <div class="mb-3 flex flex-wrap items-center gap-1.5">
-    <span class="text-text-secondary text-xs font-medium">Available Fields:</span>
+    <span class="text-text-secondary text-xs font-medium">
+      {resolveDataGridLabel(translate, "data-grid-pivot-available-fields")}
+    </span>
     {#each availableColumns as col (col.id)}
       <button
         type="button"
@@ -139,16 +142,17 @@
   <div class="grid gap-3 md:grid-cols-4">
     <div
       role="group"
-      aria-label="Row fields"
+      aria-label={resolveDataGridLabel(translate, "data-grid-pivot-row-fields-aria")}
       ondragover={(e) => e.preventDefault()}
       ondrop={() => handleRowFieldDrop()}
       class="border-grey-200 bg-background-paper rounded-md border p-2.5"
     >
       <div class="text-text-secondary mb-1.5 text-xs font-semibold uppercase tracking-wide">
-        Row Fields
+        {resolveDataGridLabel(translate, "data-grid-pivot-row-fields")}
       </div>
       <div role="list" class="flex flex-col gap-1.5">
         {#each config.rowFields as rf, idx (rf)}
+          {@const fieldName = columnLabel(rf)}
           <div
             role="listitem"
             draggable="true"
@@ -165,12 +169,12 @@
           >
             <span class="flex items-center gap-1 truncate font-medium">
               <CiDragVertical size="small" class="text-text-secondary shrink-0" />
-              <span class="truncate">{columnLabel(rf)}</span>
+              <span class="truncate">{fieldName}</span>
             </span>
             <span class="flex items-center gap-0.5">
               <button
                 type="button"
-                aria-label={`Move ${columnLabel(rf)} up`}
+                aria-label={resolveDataGridLabel(translate, "data-grid-pivot-move-up-aria", { field: fieldName })}
                 disabled={idx === 0}
                 class="hover:bg-grey-100 inline-flex h-5 w-5 items-center justify-center rounded disabled:opacity-35"
                 onclick={() => moveRowField(idx, -1)}
@@ -179,7 +183,7 @@
               </button>
               <button
                 type="button"
-                aria-label={`Move ${columnLabel(rf)} down`}
+                aria-label={resolveDataGridLabel(translate, "data-grid-pivot-move-down-aria", { field: fieldName })}
                 disabled={idx === config.rowFields.length - 1}
                 class="hover:bg-grey-100 inline-flex h-5 w-5 items-center justify-center rounded disabled:opacity-35"
                 onclick={() => moveRowField(idx, 1)}
@@ -188,7 +192,7 @@
               </button>
               <button
                 type="button"
-                aria-label={`Remove row field ${columnLabel(rf)}`}
+                aria-label={resolveDataGridLabel(translate, "data-grid-pivot-remove-row-field-aria", { field: fieldName })}
                 disabled={config.rowFields.length <= 1}
                 class="hover:bg-error/10 hover:text-error inline-flex h-5 w-5 items-center justify-center rounded disabled:opacity-35"
                 onclick={() => removeRowField(rf)}
@@ -202,18 +206,20 @@
         {#if unusedRowFields.length > 0}
           <div class="mt-1 flex items-center gap-1">
             <select
-              aria-label="Add row field"
+              aria-label={resolveDataGridLabel(translate, "data-grid-pivot-add-row-field-aria")}
               bind:value={fieldToAdd}
               class="border-grey-200 bg-background-paper min-w-0 flex-1 rounded border px-1.5 py-1 text-xs"
             >
-              <option value="">Add row field...</option>
+              <option value="">
+                {resolveDataGridLabel(translate, "data-grid-pivot-add-row-field-placeholder")}
+              </option>
               {#each unusedRowFields as col (col.id)}
                 <option value={col.id}>{col.headerName}</option>
               {/each}
             </select>
             <button
               type="button"
-              aria-label="Confirm add row field"
+              aria-label={resolveDataGridLabel(translate, "data-grid-pivot-confirm-add-row-field-aria")}
               disabled={!fieldToAdd}
               class="border-grey-200 hover:bg-grey-50 inline-flex h-6 w-6 items-center justify-center rounded border disabled:opacity-40"
               onclick={() => addRowField(fieldToAdd)}
@@ -227,17 +233,17 @@
 
     <div
       role="group"
-      aria-label="Column field dropzone"
+      aria-label={resolveDataGridLabel(translate, "data-grid-pivot-column-field-dropzone-aria")}
       ondragover={(e) => e.preventDefault()}
       ondrop={handleColumnFieldDrop}
       class="border-grey-200 bg-background-paper rounded-md border p-2.5"
     >
       <label class="block">
         <span class="text-text-secondary mb-1.5 block text-xs font-semibold uppercase tracking-wide">
-          Column Field
+          {resolveDataGridLabel(translate, "data-grid-pivot-column-field")}
         </span>
         <select
-          aria-label="Pivot column field"
+          aria-label={resolveDataGridLabel(translate, "data-grid-pivot-column-field-aria")}
           value={config.columnField}
           class="border-grey-200 bg-background-paper w-full rounded border px-2 py-1 text-xs"
           onchange={(e) => {
@@ -262,10 +268,10 @@
     <div class="border-grey-200 bg-background-paper rounded-md border p-2.5">
       <label class="block">
         <span class="text-text-secondary mb-1.5 block text-xs font-semibold uppercase tracking-wide">
-          Value Field
+          {resolveDataGridLabel(translate, "data-grid-pivot-value-field")}
         </span>
         <select
-          aria-label="Pivot value field"
+          aria-label={resolveDataGridLabel(translate, "data-grid-pivot-value-field-aria")}
           value={config.valueField}
           class="border-grey-200 bg-background-paper w-full rounded border px-2 py-1 text-xs"
           onchange={(e) => {
@@ -285,10 +291,10 @@
     <div class="border-grey-200 bg-background-paper flex flex-col justify-between gap-2 rounded-md border p-2.5">
       <label class="block">
         <span class="text-text-secondary mb-1.5 block text-xs font-semibold uppercase tracking-wide">
-          Aggregation
+          {resolveDataGridLabel(translate, "data-grid-pivot-aggregation")}
         </span>
         <select
-          aria-label="Pivot aggregation"
+          aria-label={resolveDataGridLabel(translate, "data-grid-pivot-aggregation-aria")}
           value={config.aggregationFn ?? "sum"}
           class="border-grey-200 bg-background-paper w-full rounded border px-2 py-1 text-xs"
           onchange={(e) => {
@@ -299,18 +305,18 @@
             });
           }}
         >
-          <option value="sum">Sum</option>
-          <option value="mean">Mean</option>
-          <option value="min">Min</option>
-          <option value="max">Max</option>
-          <option value="count">Count</option>
+          <option value="sum">{resolveDataGridLabel(translate, "data-grid-agg-sum")}</option>
+          <option value="mean">{resolveDataGridLabel(translate, "data-grid-agg-mean")}</option>
+          <option value="min">{resolveDataGridLabel(translate, "data-grid-agg-min")}</option>
+          <option value="max">{resolveDataGridLabel(translate, "data-grid-agg-max")}</option>
+          <option value="count">{resolveDataGridLabel(translate, "data-grid-agg-count")}</option>
         </select>
       </label>
 
       <label class="flex items-center gap-2 text-xs">
         <input
           type="checkbox"
-          aria-label="Show pivot row totals"
+          aria-label={resolveDataGridLabel(translate, "data-grid-pivot-show-row-totals-aria")}
           checked={config.showRowTotals !== false}
           onchange={(e) => {
             onChange({
@@ -319,7 +325,7 @@
             });
           }}
         />
-        <span>Show row totals</span>
+        <span>{resolveDataGridLabel(translate, "data-grid-pivot-show-row-totals")}</span>
       </label>
     </div>
   </div>

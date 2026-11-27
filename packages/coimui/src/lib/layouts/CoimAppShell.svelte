@@ -32,8 +32,11 @@
     currentPath: string;
     homeHref?: string;
     ctaHref?: string;
+    brandText?: string;
+    logoSlot?: Snippet<[{ compact: boolean }]>;
     purchaseHref?: string;
     showPurchaseLink?: boolean;
+    showThemeConfiguration?: boolean;
     versions?: CoimVersionOption[];
     searchItems?: CoimSearchItem[];
     advancedSearchHref?: string;
@@ -43,6 +46,11 @@
     notificationViewAllHref?: string;
     user?: CoimUserProfile;
     accounts?: CoimUserAccount[];
+    activeAccountId?: string;
+    keepUserProfileOnAccountSwitch?: boolean;
+    showAccounts?: boolean;
+    showThemePicker?: boolean;
+    showLocalePicker?: boolean;
     userMenuLinks?: CoimUserMenuLink[];
     userSecondaryLinks?: CoimUserMenuLink[];
     signOutHref?: string;
@@ -57,6 +65,8 @@
     menuStorageKey?: string;
     persistMenu?: boolean;
     footerLinks?: CoimFooterLink[];
+    showFooter?: boolean;
+    fullHeight?: boolean;
     disableContentWrapper?: boolean;
     showSearch?: boolean;
     showShortcuts?: boolean;
@@ -73,8 +83,11 @@
     currentPath,
     homeHref = "/",
     ctaHref = "/docs",
+    brandText,
+    logoSlot,
     purchaseHref = "/pages/pricing",
     showPurchaseLink = true,
+    showThemeConfiguration = true,
     versions,
     searchItems,
     advancedSearchHref,
@@ -84,6 +97,11 @@
     notificationViewAllHref,
     user,
     accounts,
+    activeAccountId,
+    keepUserProfileOnAccountSwitch = false,
+    showAccounts = true,
+    showThemePicker = true,
+    showLocalePicker = true,
     userMenuLinks,
     userSecondaryLinks,
     signOutHref,
@@ -98,6 +116,8 @@
     menuStorageKey,
     persistMenu,
     footerLinks,
+    showFooter = true,
+    fullHeight = false,
     disableContentWrapper = false,
     showSearch = true,
     showShortcuts = true,
@@ -195,6 +215,8 @@
 {#snippet headerBar()}
   <CoimHeader
     {homeHref}
+    {brandText}
+    {logoSlot}
     {versions}
     {searchItems}
     {advancedSearchHref}
@@ -204,6 +226,11 @@
     {notificationViewAllHref}
     {user}
     {accounts}
+    {activeAccountId}
+    {keepUserProfileOnAccountSwitch}
+    {showAccounts}
+    {showThemePicker}
+    {showLocalePicker}
     {userMenuLinks}
     {userSecondaryLinks}
     {signOutHref}
@@ -243,12 +270,24 @@
     {currentPath}
     {homeHref}
     {ctaHref}
+    {brandText}
+    {logoSlot}
     {onNavigate}
     {translate}
     {ctaSlot}
   />
 
-  <CoimMain {items} {bottomItems} {currentPath} {footerLinks} {disableContentWrapper} {onNavigate} {translate}>
+  <CoimMain
+    {items}
+    {bottomItems}
+    {currentPath}
+    {footerLinks}
+    {showFooter}
+    {fullHeight}
+    {disableContentWrapper}
+    {onNavigate}
+    {translate}
+  >
     {#snippet headerSlot()}
       {#if theme.isTopNavContained}
         {@render headerBar()}
@@ -257,6 +296,8 @@
     {@render children?.()}
   </CoimMain>
 
-  <CoimThemeConfiguration {translate} {purchaseHref} {showPurchaseLink} {onNavigate} />
+  {#if showThemeConfiguration}
+    <CoimThemeConfiguration {translate} {purchaseHref} {showPurchaseLink} {onNavigate} />
+  {/if}
   <CoimMenuBackdrop />
 </Tooltip.Provider>

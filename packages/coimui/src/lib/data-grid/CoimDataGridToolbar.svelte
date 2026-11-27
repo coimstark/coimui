@@ -7,6 +7,8 @@
   import CiSearch from "../icons/ui/CiSearch.svelte";
   import CiSettings from "../icons/ui/CiSettings.svelte";
   import CiSparkle from "../icons/ui/CiSparkle.svelte";
+  import type { TranslateFn } from "../layouts/types.js";
+  import { resolveDataGridLabel } from "./i18n.js";
   import type { CoimDataGridColumn, CoimDataGridDensity } from "./types.js";
 
   interface Props {
@@ -22,6 +24,7 @@
     aiAssistantEnabled?: boolean;
     aiAssistantOpen?: boolean;
     enableExport?: boolean;
+    translate?: TranslateFn;
     onGlobalFilterChange?: (value: string) => void;
     onDensityChange?: (density: CoimDataGridDensity) => void;
     onColumnVisibilityToggle?: (columnId: string) => void;
@@ -48,6 +51,7 @@
     aiAssistantEnabled = false,
     aiAssistantOpen = false,
     enableExport = true,
+    translate,
     onGlobalFilterChange,
     onDensityChange,
     onColumnVisibilityToggle,
@@ -95,8 +99,8 @@
       <input
         type="search"
         value={globalFilter}
-        placeholder="Search..."
-        aria-label="Search rows"
+        placeholder={resolveDataGridLabel(translate, "data-grid-search-placeholder")}
+        aria-label={resolveDataGridLabel(translate, "data-grid-search-aria-label")}
         class="bg-transparent text-sm outline-none"
         oninput={(e) => {
           const val = (e.currentTarget as HTMLInputElement).value;
@@ -108,9 +112,11 @@
 
     {#if groupable}
       <label class="flex items-center gap-1.5 text-sm">
-        <span class="text-text-secondary">Group:</span>
+        <span class="text-text-secondary">
+          {resolveDataGridLabel(translate, "data-grid-group-label")}
+        </span>
         <select
-          aria-label="Group by column"
+          aria-label={resolveDataGridLabel(translate, "data-grid-group-aria-label")}
           value={grouping[0] ?? ""}
           class="border-grey-200 bg-background-paper rounded-md border px-2 py-1 text-sm"
           onchange={(e) => {
@@ -118,7 +124,7 @@
             onGroupingChange?.(val ? [val] : []);
           }}
         >
-          <option value="">None</option>
+          <option value="">{resolveDataGridLabel(translate, "data-grid-group-none")}</option>
           {#each columns.filter((c) => c.groupable !== false && c.type !== "actions") as col (col.id)}
             <option value={col.id}>{col.headerName}</option>
           {/each}
@@ -140,7 +146,7 @@
         onclick={onAiAssistantToggle}
       >
         <CiSparkle size="small" />
-        <span>AI Assistant</span>
+        <span>{resolveDataGridLabel(translate, "data-grid-ai-assistant")}</span>
       </button>
     {/if}
 
@@ -152,7 +158,7 @@
         onclick={onPivotToggle}
       >
         <CiPivot size="small" />
-        <span>Pivot</span>
+        <span>{resolveDataGridLabel(translate, "data-grid-pivot")}</span>
       </button>
 
       {#if pivotMode}
@@ -163,7 +169,7 @@
           onclick={onPivotPanelToggle}
         >
           <CiSettings size="small" />
-          <span>Pivot Fields</span>
+          <span>{resolveDataGridLabel(translate, "data-grid-pivot-fields")}</span>
         </button>
       {/if}
     {/if}
@@ -178,13 +184,13 @@
         }}
       >
         <CiEyeOpen size="small" />
-        <span>Columns</span>
+        <span>{resolveDataGridLabel(translate, "data-grid-columns")}</span>
       </button>
 
       {#if columnsOpen}
         <div
           role="group"
-          aria-label="Toggle columns"
+          aria-label={resolveDataGridLabel(translate, "data-grid-columns-toggle-aria")}
           class="bg-background-paper border-grey-100 shadow-darker-sm absolute end-0 top-full z-20 mt-1 min-w-44 rounded-md border p-2"
         >
           {#each columns.filter((c) => c.hideable !== false) as col (col.id)}
@@ -203,7 +209,7 @@
     </div>
 
     <select
-      aria-label="Row density"
+      aria-label={resolveDataGridLabel(translate, "data-grid-density-aria")}
       value={density}
       class="border-grey-200 bg-background-paper rounded-md border px-2 py-1.5 text-sm"
       onchange={(e) => {
@@ -212,9 +218,9 @@
         onDensityChange?.(next);
       }}
     >
-      <option value="compact">Compact</option>
-      <option value="standard">Standard</option>
-      <option value="comfortable">Comfortable</option>
+      <option value="compact">{resolveDataGridLabel(translate, "data-grid-density-compact")}</option>
+      <option value="standard">{resolveDataGridLabel(translate, "data-grid-density-standard")}</option>
+      <option value="comfortable">{resolveDataGridLabel(translate, "data-grid-density-comfortable")}</option>
     </select>
 
     {#if enableExport}
@@ -224,7 +230,7 @@
         onclick={onExportCsv}
       >
         <CiDownloadCloud size="small" />
-        <span>CSV</span>
+        <span>{resolveDataGridLabel(translate, "data-grid-export-csv")}</span>
       </button>
       <button
         type="button"
@@ -232,7 +238,7 @@
         onclick={onExportExcel}
       >
         <CiDownloadCloud size="small" />
-        <span>Excel</span>
+        <span>{resolveDataGridLabel(translate, "data-grid-export-excel")}</span>
       </button>
       <button
         type="button"
@@ -240,7 +246,7 @@
         onclick={onPrint}
       >
         <CiPrinter size="small" />
-        <span>Print</span>
+        <span>{resolveDataGridLabel(translate, "data-grid-export-print")}</span>
       </button>
     {/if}
   </div>

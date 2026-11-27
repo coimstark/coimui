@@ -16,12 +16,14 @@
   import CoimIcon from "../icons/CoimIcon.svelte";
   import { getThemeContext } from "../theme/theme-state.svelte.js";
   import { cn } from "../utilities/utils.js";
-  import type { CoimSearchItem, NavigateFn } from "./types.js";
+  import { resolveLabel } from "./nav-utils.js";
+  import type { CoimSearchItem, NavigateFn, TranslateFn } from "./types.js";
 
   interface Props {
     items?: CoimSearchItem[];
     advancedSearchHref?: string;
     onNavigate?: NavigateFn;
+    translate?: TranslateFn;
     class?: string;
   }
 
@@ -105,6 +107,7 @@
     items = defaultItems,
     advancedSearchHref,
     onNavigate,
+    translate = (k) => k,
     class: className = "",
   }: Props = $props();
   const theme = getThemeContext();
@@ -188,6 +191,10 @@
     });
   });
 
+  const hasCustomItems = $derived(items !== defaultItems);
+  const hasProductTab = $derived(!hasCustomItems || items.some((i) => i.category === "products"));
+  const hasCategoryTab = $derived(!hasCustomItems || items.some((i) => i.category === "categories"));
+  const hasUserTab = $derived(!hasCustomItems || items.some((i) => i.category === "users"));
   const productResults = $derived(filteredItems.filter((i) => i.category === "products"));
   const categoryResults = $derived(filteredItems.filter((i) => i.category === "categories"));
   const userResults = $derived(filteredItems.filter((i) => i.category === "users"));
@@ -220,7 +227,7 @@
       class="border-grey-200 bg-background-paper font-body text-text-primary shadow-darker-sm z-100 rounded-sm border border-solid px-3 py-1.5 text-sm font-semibold"
     >
       <Tooltip.Arrow class="text-background-paper fill-current" />
-      Search ({isMac ? "cmd" : "ctrl"}+k)
+      {resolveLabel(translate, "search-label")} ({isMac ? "cmd" : "ctrl"}+k)
     </Tooltip.Content>
   </Tooltip.Portal>
 </Tooltip.Root>
@@ -228,7 +235,7 @@
 <dialog
   bind:this={dialogEl}
   closedby="any"
-  aria-label="Global search"
+  aria-label={resolveLabel(translate, "search-label")}
   onclose={handleDialogClose}
   onpointerdown={handlePointerDown}
   onpointerup={handlePointerUp}
@@ -240,8 +247,8 @@
       bind:this={inputEl}
       bind:value={query}
       type="search"
-      placeholder="Search"
-      aria-label="Search query"
+      placeholder={resolveLabel(translate, "search-placeholder")}
+      aria-label={resolveLabel(translate, "search-placeholder")}
       class="font-body text-text-primary placeholder:opacity-disabled w-full border-0 bg-transparent text-base leading-5 outline-none"
     />
     <button
@@ -265,8 +272,9 @@
           )}
         >
           <CiStructure size="medium" />
-          <span class="hidden md:inline">All</span>
+          <span class="hidden md:inline">{resolveLabel(translate, "search-all")}</span>
         </Tabs.Trigger>
+        {#if hasProductTab}
         <Tabs.Trigger
           value="products"
           class={cn(
@@ -275,8 +283,10 @@
           )}
         >
           <CiDocumentImage size="medium" />
-          <span class="hidden md:inline">Products</span>
+          <span class="hidden md:inline">{resolveLabel(translate, "search-products")}</span>
         </Tabs.Trigger>
+        {/if}
+        {#if hasCategoryTab}
         <Tabs.Trigger
           value="categories"
           class={cn(
@@ -285,8 +295,10 @@
           )}
         >
           <CiDirectory size="medium" />
-          <span class="hidden md:inline">Categories</span>
+          <span class="hidden md:inline">{resolveLabel(translate, "search-categories")}</span>
         </Tabs.Trigger>
+        {/if}
+        {#if hasUserTab}
         <Tabs.Trigger
           value="users"
           class={cn(
@@ -295,8 +307,10 @@
           )}
         >
           <CiUsers size="medium" />
-          <span class="hidden md:inline">Users</span>
+          <span class="hidden md:inline">{resolveLabel(translate, "search-users")}</span>
         </Tabs.Trigger>
+        {/if}
+        {#if !hasCustomItems}
         <Tabs.Trigger
           value="result"
           class={cn(
@@ -305,19 +319,20 @@
           )}
         >
           <CiSlashHexagon size="medium" />
-          <span class="hidden md:inline">No Result</span>
+          <span class="hidden md:inline">{resolveLabel(translate, "search-no-result")}</span>
         </Tabs.Trigger>
+        {/if}
       </Tabs.List>
 
       <div class="flex flex-col gap-4 pb-2">
         {#if filteredItems.length === 0}
           <p class="font-body text-text-secondary py-8 text-center text-base">
-            No matching results found.
+            {resolveLabel(translate, "search-empty")}
           </p>
         {:else}
           {#if productResults.length > 0}
             <div>
-              <p class="font-body text-text-disabled mb-2 text-sm font-medium">Recent</p>
+              <p class="font-body text-text-disabled mb-2 text-sm font-medium">{resolveLabel(translate, "search-recent")}</p>
               <ul class="m-0 flex list-none flex-col gap-1 p-0">
                 {#each productResults as item (item.id)}
                   <li>
@@ -359,7 +374,7 @@
 
           {#if categoryResults.length > 0}
             <div>
-              <p class="font-body text-text-disabled mb-2 text-sm font-medium">Categories</p>
+              <p class="font-body text-text-disabled mb-2 text-sm font-medium">{resolveLabel(translate, "search-categories")}</p>
               <ul class="m-0 flex list-none flex-col gap-1 p-0">
                 {#each categoryResults as item (item.id)}
                   <li>
@@ -399,7 +414,7 @@
 
           {#if userResults.length > 0}
             <div>
-              <p class="font-body text-text-disabled mb-2 text-sm font-medium">Users</p>
+              <p class="font-body text-text-disabled mb-2 text-sm font-medium">{resolveLabel(translate, "search-users")}</p>
               <ul class="m-0 flex list-none flex-col gap-1 p-0">
                 {#each userResults as item (item.id)}
                   <li>
@@ -444,7 +459,7 @@
         }}
         class="font-body text-primary hover:bg-primary-light/10 cursor-pointer rounded-xs border-0 bg-transparent px-3.5 py-1.5 text-sm font-medium transition-colors"
       >
-        Advanced Search
+        {resolveLabel(translate, "search-advanced")}
       </button>
     </div>
   {:else}

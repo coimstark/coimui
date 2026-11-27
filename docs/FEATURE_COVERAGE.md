@@ -9,7 +9,7 @@
 | Design System & Theme Engine (`theme/`, `styles/`) | 4 theme presets (`theme-purple`, `theme-blue`, `theme-green`, `theme-orange`), light/dark/system modes, flat/elevated, boxed/fluid, LTR/RTL, WCAG 2.1 AA contrast tokens | Verified |
 | Forms & Validation (`forms/`) | `createZodValidator` + progressive enhancement with `zod@4.6.7` & `sveltekit-superforms@3.1.0` | Verified |
 | Icons & Vector Artwork (`icons/`) | **469** UI icons (`Ci*` + `CiCoimMark`), **14** form SVGs, **16** SVG illustrations | Verified |
-| Data Grid (`@coimui/svelte/data-grid`) | `CoimDataGrid`, `CoimDataGridToolbar`, CSV + dynamic XLSX export, column pinning, filtering, grouping, inline edit, virtualization | Verified |
+| Data Grid (`@coimui/svelte/data-grid`) | `CoimDataGrid`, `CoimDataGridToolbar`, `CoimDataGridPivotPanel`, `CoimDataGridAiBar`, native `translate` + `DEFAULT_DATA_GRID_LABELS` i18n, CSV + dynamic XLSX export, column pinning, filtering, grouping, inline/row edit, pivot, virtualization | Verified |
 | Charts (`@coimui/svelte/charts`) | **11** components across 10 chart families + shared legend | Verified |
 | Date & Time Pickers (`@coimui/svelte/date-pickers`) | **9** components + ISO helpers & Day.js formatting | Verified |
 | Plugins (`@coimui/svelte/plugins`) | **9** components (`RichTextEditor`, `Carousel`, `Lightbox`, `EmojiPicker`, `Markdown`, `CodeBlock`, `VideoPlayer`, `EventCalendar`, `SortableList`) + `printElement` | Verified |

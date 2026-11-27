@@ -16,6 +16,7 @@
   } from "@coimui/svelte/data-grid";
   import ComponentDocCard from "#lib/components/ComponentDocCard.svelte";
   import { COMPONENT_CODE_EXAMPLES } from "#lib/examples/component-docs.ts";
+  import { showcaseI18n } from "#lib/i18n.svelte.ts";
 
   interface AccountRow extends Record<string, unknown> {
     id: string;
@@ -173,6 +174,7 @@
       { name: "checkboxSelection", type: "boolean", defaultValue: "false", description: "Prepends accessible multi/single row selection checkboxes." },
       { name: "virtualize", type: "boolean", defaultValue: "false", description: "Enables TanStack Virtual windowing for large datasets." },
       { name: "enableExport", type: "boolean", defaultValue: "true", description: "Exposes CSV, Excel (lazy ExcelJS), and print toolbar exports." },
+      { name: "translate", type: "(key: string) => string", description: "Optional i18n translator function overriding built-in DEFAULT_DATA_GRID_LABELS." },
     ]}
   >
     <CoimStack spacing={3}>
@@ -185,6 +187,7 @@
       <CoimDataGrid
         {rows}
         {columns}
+        translate={showcaseI18n.t}
         bind:selectedRowIds={selectedIds}
         checkboxSelection
         showColumnFilters
@@ -212,6 +215,7 @@
       <CoimDataGrid
         rows={opsRows}
         columns={opsColumns}
+        translate={showcaseI18n.t}
         columnGroups={opsColumnGroups}
         groupHeaderHeight={40}
         editMode="row"

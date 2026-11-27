@@ -1,6 +1,6 @@
 {
   "name": "@coimui/svelte",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "CoimUI Svelte 5 component library, design system tokens, layouts, data grid, charts, date pickers, and specialized UI plugins",
   "license": "MIT",
   "type": "module",

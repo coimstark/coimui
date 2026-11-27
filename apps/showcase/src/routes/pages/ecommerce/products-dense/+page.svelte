@@ -3,6 +3,7 @@
   import { CoimCard, CoimCardContent, CoimCardHeader } from "@coimui/svelte";
   import { CoimDataGrid, type CoimDataGridColumn } from "@coimui/svelte/data-grid";
   import { ecommerceStore, type EcommerceProduct } from "#lib/pages/ecommerce.svelte.ts";
+  import { showcaseI18n } from "#lib/i18n.svelte.ts";
   import EcommerceShell from "#lib/pages/EcommerceShell.svelte";
 
   const columns: CoimDataGridColumn<EcommerceProduct & Record<string, unknown>>[] = [
@@ -26,6 +27,7 @@
       <CoimDataGrid
         rows={ecommerceStore.products as unknown as (EcommerceProduct & Record<string, unknown>)[]}
         {columns}
+        translate={showcaseI18n.t}
         density="compact"
         onRowClick={(row) => {
           ecommerceStore.selectProduct(row.id);

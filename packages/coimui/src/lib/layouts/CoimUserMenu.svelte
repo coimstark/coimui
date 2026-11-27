@@ -25,6 +25,11 @@
   interface Props {
     user?: CoimUserProfile;
     accounts?: CoimUserAccount[];
+    activeAccountId?: string;
+    keepUserProfileOnAccountSwitch?: boolean;
+    showAccounts?: boolean;
+    showThemePicker?: boolean;
+    showLocalePicker?: boolean;
     links?: CoimUserMenuLink[];
     secondaryLinks?: CoimUserMenuLink[];
     locales?: CoimLocaleOption[];
@@ -71,6 +76,11 @@
   let {
     user = defaultUser,
     accounts = defaultAccounts,
+    activeAccountId,
+    keepUserProfileOnAccountSwitch = false,
+    showAccounts = true,
+    showThemePicker = true,
+    showLocalePicker = true,
     links = defaultLinks,
     secondaryLinks = defaultSecondaryLinks,
     locales = defaultLocales,
@@ -90,7 +100,7 @@
   let selectedAccount = $state<CoimUserAccount | null>(null);
 
   const activeUser = $derived<CoimUserProfile>(
-    selectedAccount
+    selectedAccount && !keepUserProfileOnAccountSwitch
       ? {
           name: selectedAccount.name,
           email: selectedAccount.email,
@@ -98,6 +108,13 @@
         }
       : user,
   );
+
+  function getInitials(name: string): string {
+    const parts = name.trim().split(/\s+/).filter(Boolean);
+    if (parts.length === 0) return "U";
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return `${parts[0][0] ?? ""}${parts[1][0] ?? ""}`.toUpperCase();
+  }
 
   function go(href: string) {
     open = false;
@@ -168,6 +185,16 @@
                 open && "h-8! w-8! md:ms-0.5",
               )}
             />
+          {:else}
+            <span
+              aria-hidden="true"
+              class={cn(
+                "bg-primary-light/15 text-primary font-heading inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-sm font-bold transition-all md:h-8 md:w-8",
+                open && "bg-primary/20",
+              )}
+            >
+              {getInitials(activeUser.name)}
+            </span>
           {/if}
         </button>
       </div>
@@ -185,11 +212,19 @@
           <div class="mb-4 flex flex-col items-center">
             {#if activeUser.avatar}
               <img src={activeUser.avatar} alt={activeUser.name} class="mb-2 h-10 w-10 rounded-lg object-cover" />
+            {:else}
+              <span
+                aria-hidden="true"
+                class="bg-primary-light/15 text-primary font-heading mb-2 inline-flex h-10 w-10 items-center justify-center rounded-lg text-sm font-bold"
+              >
+                {getInitials(activeUser.name)}
+              </span>
             {/if}
             <p class="font-body text-text-primary m-0 text-base font-bold">{activeUser.name}</p>
             <p class="font-body text-text-secondary m-0 mt-0.5 text-sm">{activeUser.email}</p>
           </div>
 
+          {#if showAccounts && accounts.length > 0}
           <!-- Switchable Accounts Accordion -->
           <div>
             <button
@@ -230,7 +265,8 @@
                         onclick={() => handleSelectAccount(acc)}
                         class={cn(
                           "hover:bg-grey-500/10 flex w-full cursor-pointer items-center gap-2 rounded-sm border-0 bg-transparent px-2 py-1.5 text-start transition-colors",
-                          activeUser.email === acc.email && "bg-primary/10 text-primary",
+                          (activeAccountId ? acc.id === activeAccountId : activeUser.email === acc.email) &&
+                            "bg-primary/10 text-primary",
                         )}
                       >
                         {#if acc.avatar}
@@ -249,6 +285,9 @@
           </div>
 
           <hr class="border-grey-100 my-4 border-0 border-t" />
+          {:else}
+          <hr class="border-grey-100 my-3 border-0 border-t" />
+          {/if}
 
           <div class="flex flex-col gap-0.5">
             {#each links as item (item.id)}
@@ -262,10 +301,11 @@
               </button>
             {/each}
 
-            {#if links.length > 0}
+            {#if links.length > 0 && (showThemePicker || (showLocalePicker && locales.length > 0))}
               <hr class="border-grey-100 my-3 border-0 border-t" />
             {/if}
 
+            {#if showThemePicker}
             <!-- Mode Submenu -->
             <DropdownMenu.Root>
               <DropdownMenu.Trigger>
@@ -355,7 +395,9 @@
                 </DropdownMenu.Content>
               </DropdownMenu.Portal>
             </DropdownMenu.Root>
+            {/if}
 
+            {#if showLocalePicker && locales.length > 0}
             <!-- Language Submenu -->
             <DropdownMenu.Root>
               <DropdownMenu.Trigger>
@@ -396,6 +438,7 @@
                 </DropdownMenu.Content>
               </DropdownMenu.Portal>
             </DropdownMenu.Root>
+            {/if}
 
             {#if secondaryLinks.length > 0}
               <hr class="border-grey-100 my-3 border-0 border-t" />

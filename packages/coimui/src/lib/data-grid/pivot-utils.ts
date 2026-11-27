@@ -1,3 +1,5 @@
+import type { TranslateFn } from "../layouts/types.js";
+import { resolveDataGridLabel } from "./i18n.js";
 import type {
   CoimDataGridAggregationFn,
   CoimDataGridColumn,
@@ -9,6 +11,10 @@ export interface CoimPivotResult {
   rows: Record<string, unknown>[];
   columns: CoimDataGridColumn<Record<string, unknown>>[];
   columnGroups: CoimDataGridColumnGroup[];
+}
+
+export interface CoimPivotTableOptions {
+  translate?: TranslateFn;
 }
 
 function readFieldValue<TData extends Record<string, unknown>>(
@@ -37,7 +43,9 @@ export function buildPivotTable<TData extends Record<string, unknown>>(
   rows: TData[],
   columns: CoimDataGridColumn<TData>[],
   config: CoimDataGridPivotConfig,
+  options?: CoimPivotTableOptions,
 ): CoimPivotResult {
+  const translate = options?.translate;
   const colMap = new Map(columns.map((c) => [c.id, c]));
   const aggFn: CoimDataGridAggregationFn = config.aggregationFn ?? "sum";
   const pivotSourceCol = colMap.get(config.columnField);
@@ -138,7 +146,7 @@ export function buildPivotTable<TData extends Record<string, unknown>>(
     metricCols.push({
       id: "__pivot_total",
       field: "__pivot_total",
-      headerName: "Total",
+      headerName: resolveDataGridLabel(translate, "data-grid-pivot-total"),
       type: "number",
       align: "right",
       width: 130,
@@ -152,11 +160,16 @@ export function buildPivotTable<TData extends Record<string, unknown>>(
     });
   }
 
+  const aggLabel = resolveDataGridLabel(translate, `data-grid-pivot-agg-${aggFn}`);
   const columnGroups: CoimDataGridColumnGroup[] = metricCols.length
     ? [
         {
           id: "pivot-columns-group",
-          headerName: `${valueSourceCol?.headerName ?? config.valueField} (${aggFn}) by ${pivotSourceCol?.headerName ?? config.columnField}`,
+          headerName: resolveDataGridLabel(translate, "data-grid-pivot-group-header", {
+            value: valueSourceCol?.headerName ?? config.valueField,
+            aggregation: aggLabel,
+            column: pivotSourceCol?.headerName ?? config.columnField,
+          }),
           children: metricCols.map((c) => c.id),
         },
       ]

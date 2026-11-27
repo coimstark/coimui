@@ -2,10 +2,17 @@
   import CiCross from "../icons/ui/CiCross.svelte";
   import CiRefresh from "../icons/ui/CiRefresh.svelte";
   import CiSparkle from "../icons/ui/CiSparkle.svelte";
+  import { resolveDataGridLabel } from "./i18n.js";
   import type { CoimDataGridAiBarProps } from "./types.js";
 
-  let { columns, aiProvider, onApplyResult, onReset, onClose }: CoimDataGridAiBarProps<TData> =
-    $props();
+  let {
+    columns,
+    aiProvider,
+    translate,
+    onApplyResult,
+    onReset,
+    onClose,
+  }: CoimDataGridAiBarProps<TData> = $props();
 
   let prompt = $state("");
   let running = $state(false);
@@ -31,10 +38,17 @@
             options: c.options,
           })),
       });
-      lastSummary = result.summary ?? `Applied query from ${aiProvider.label}.`;
+      lastSummary =
+        result.summary ??
+        resolveDataGridLabel(translate, "data-grid-ai-applied-summary", {
+          provider: aiProvider.label,
+        });
       onApplyResult(result);
     } catch (err) {
-      errorMsg = err instanceof Error ? err.message : "Failed to execute AI query.";
+      errorMsg =
+        err instanceof Error
+          ? err.message
+          : resolveDataGridLabel(translate, "data-grid-ai-error-fallback");
     } finally {
       running = false;
     }
@@ -50,32 +64,32 @@
 
 <div
   role="region"
-  aria-label="Data grid AI assistant"
+  aria-label={resolveDataGridLabel(translate, "data-grid-ai-region-aria")}
   class="border-grey-50 bg-grey-25/50 border-b px-4 py-3 text-sm"
 >
   <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
     <div class="flex items-center gap-2 font-semibold">
       <CiSparkle size="small" class="text-primary" />
-      <span>AI Assistant</span>
+      <span>{resolveDataGridLabel(translate, "data-grid-ai-assistant")}</span>
       {#if aiProvider}
         <span class="bg-primary/10 text-primary rounded px-2 py-0.5 text-xs font-medium">
           {aiProvider.label}
         </span>
       {:else}
         <span class="bg-warning/15 text-warning-pastel-fg rounded px-2 py-0.5 text-xs font-medium">
-          Configuration Required
+          {resolveDataGridLabel(translate, "data-grid-ai-config-required")}
         </span>
       {/if}
     </div>
     {#if onClose}
       <button
         type="button"
-        aria-label="Close AI assistant"
+        aria-label={resolveDataGridLabel(translate, "data-grid-ai-close-aria")}
         class="border-grey-200 hover:bg-grey-100 inline-flex items-center gap-1 rounded border px-2 py-1 text-xs"
         onclick={onClose}
       >
         <CiCross size="small" />
-        <span>Close</span>
+        <span>{resolveDataGridLabel(translate, "data-grid-close")}</span>
       </button>
     {/if}
   </div>
@@ -85,9 +99,7 @@
       role="status"
       class="border-warning/30 bg-warning/10 text-text-primary mb-2 rounded-md border px-3 py-2 text-xs"
     >
-      AI provider not configured. Supply an <code class="font-mono">aiProvider</code> adapter implementing
-      <code class="font-mono">CoimDataGridAiProvider</code> to run natural-language filtering, sorting,
-      grouping, or pivot queries.
+      {resolveDataGridLabel(translate, "data-grid-ai-not-configured")}
     </div>
   {/if}
 
@@ -96,10 +108,10 @@
       type="text"
       bind:value={prompt}
       disabled={!aiProvider || running}
-      aria-label="AI query prompt"
+      aria-label={resolveDataGridLabel(translate, "data-grid-ai-prompt-aria")}
       placeholder={aiProvider
-        ? "Ask your provider to filter, sort, group, or pivot rows..."
-        : "AI prompt disabled until an aiProvider is configured"}
+        ? resolveDataGridLabel(translate, "data-grid-ai-prompt-placeholder")
+        : resolveDataGridLabel(translate, "data-grid-ai-prompt-disabled-placeholder")}
       class="border-grey-200 bg-background-paper min-w-64 flex-1 rounded-md border px-3 py-1.5 text-sm disabled:cursor-not-allowed disabled:opacity-60"
     />
     <button
@@ -108,17 +120,21 @@
       class="bg-primary text-primary-contrast inline-flex items-center gap-1 rounded-md px-3 py-1.5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50"
     >
       <CiSparkle size="small" />
-      <span>{running ? "Running..." : "Apply Prompt"}</span>
+      <span>
+        {running
+          ? resolveDataGridLabel(translate, "data-grid-ai-running")
+          : resolveDataGridLabel(translate, "data-grid-ai-apply")}
+      </span>
     </button>
     {#if aiProvider}
       <button
         type="button"
-        aria-label="Reset AI filters"
+        aria-label={resolveDataGridLabel(translate, "data-grid-ai-reset-aria")}
         class="border-grey-200 hover:bg-grey-50 inline-flex items-center gap-1 rounded-md border px-2.5 py-1.5 text-sm"
         onclick={handleResetClick}
       >
         <CiRefresh size="small" />
-        <span>Reset</span>
+        <span>{resolveDataGridLabel(translate, "data-grid-ai-reset")}</span>
       </button>
     {/if}
   </form>

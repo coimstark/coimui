@@ -94,4 +94,36 @@ describe("DataGrid SSR Safety", () => {
     expect(pivotBody).toContain("Pivot Fields");
     expect(pivotBody).toContain("AI Assistant");
   });
+
+  it("renders translated DataGrid labels cleanly during SSR", () => {
+    const translate = (key: string) =>
+      (
+        ({
+          "data-grid-aria-label": "Tabel kontak",
+          "data-grid-search-placeholder": "Cari...",
+          "data-grid-columns": "Kolom",
+          "data-grid-actions-header": "Aksi",
+          "data-grid-total-rows": "{count} total baris",
+          "data-grid-page-of": "Halaman {page} dari {totalPages}",
+          "data-grid-empty": "Belum ada data.",
+        }) as Record<string, string>
+      )[key] ?? key;
+
+    const { body } = render(CoimDataGrid, {
+      props: {
+        rows: [],
+        columns: cols as unknown as CoimDataGridColumn[],
+        editMode: "row",
+        translate,
+      },
+    });
+
+    expect(body).toContain('aria-label="Tabel kontak"');
+    expect(body).toContain('placeholder="Cari..."');
+    expect(body).toContain("Kolom");
+    expect(body).toContain("Aksi");
+    expect(body).toContain("0 total baris");
+    expect(body).toContain("Halaman 1 dari 1");
+    expect(body).toContain("Belum ada data.");
+  });
 });

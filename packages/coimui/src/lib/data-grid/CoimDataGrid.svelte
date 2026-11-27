@@ -48,6 +48,7 @@
     exportDataGridToExcel,
     printDataGrid,
   } from "./export-utils.js";
+  import { resolveDataGridLabel } from "./i18n.js";
   import { buildPivotTable } from "./pivot-utils.js";
   import type {
     CoimDataGridAiQueryResult,
@@ -100,11 +101,11 @@
     maxHeight = "32rem",
     loading = false,
     errorMessage,
-    emptyMessage = "No records found.",
+    emptyMessage,
     storageKey,
     enableExport = true,
     exportFilename = "coimui-export",
-    ariaLabel = "Data grid",
+    ariaLabel,
     columnGroups,
     groupHeaderHeight,
     editMode = "cell",
@@ -133,6 +134,7 @@
     columnOverscan = 2,
     detailPanel,
     toolbarActions,
+    translate,
     onPaginationChange,
     onSortChange,
     onFilterChange,
@@ -256,18 +258,24 @@
     return row[col.id];
   }
 
+  const resolvedAriaLabel = $derived(
+    ariaLabel ?? resolveDataGridLabel(translate, "data-grid-aria-label"),
+  );
+  const resolvedEmptyMessage = $derived(
+    emptyMessage ?? resolveDataGridLabel(translate, "data-grid-empty"),
+  );
   const effectivePivotConfig = $derived(internalPivotConfig ?? pivotConfig);
   const pivotActive = $derived(Boolean(pivotMode && effectivePivotConfig));
   const pivotResult = $derived.by(() =>
     pivotActive && effectivePivotConfig
-      ? buildPivotTable(rows, columns, effectivePivotConfig)
+      ? buildPivotTable(rows, columns, effectivePivotConfig, { translate })
       : null,
   );
   const activeColumns = $derived.by<CoimDataGridColumn<TData>[]>(() =>
     pivotResult ? (pivotResult.columns as unknown as CoimDataGridColumn<TData>[]) : columns,
   );
   const activeColumnGroups = $derived(pivotResult ? pivotResult.columnGroups : columnGroups);
-  const showRowActions = $derived(editMode === "row" && !pivotActive);
+  const showRowActions = $derived((editMode === "row" || Boolean(onRowDelete)) && !pivotActive);
 
   function isGroupCollapsed(grp: CoimDataGridColumnGroup): boolean {
     if (collapsedGroups[grp.id] !== undefined) {
@@ -663,33 +671,39 @@
     if (!colDef.aggregationFn) return "";
     const leafRows = table.getFilteredRowModel().flatRows.filter((r) => !r.getIsGrouped());
     if (colDef.aggregationFn === "count") {
-      return `Count: ${leafRows.length}`;
+      return resolveDataGridLabel(translate, "data-grid-summary-format", {
+        label: resolveDataGridLabel(translate, "data-grid-agg-count"),
+        value: leafRows.length,
+      });
     }
     const nums = leafRows
       .map((r) => Number(resolveRawValue(r.original, colDef)))
       .filter((n) => Number.isFinite(n));
     if (nums.length === 0) return "";
     let result = 0;
-    let prefix = "Sum";
+    let prefixKey = "data-grid-agg-sum";
     if (colDef.aggregationFn === "sum") {
       result = nums.reduce((a, b) => a + b, 0);
-      prefix = "Sum";
+      prefixKey = "data-grid-agg-sum";
     } else if (colDef.aggregationFn === "min") {
       result = Math.min(...nums);
-      prefix = "Min";
+      prefixKey = "data-grid-agg-min";
     } else if (colDef.aggregationFn === "max") {
       result = Math.max(...nums);
-      prefix = "Max";
+      prefixKey = "data-grid-agg-max";
     } else if (colDef.aggregationFn === "mean") {
       result = nums.reduce((a, b) => a + b, 0) / nums.length;
-      prefix = "Avg";
+      prefixKey = "data-grid-agg-avg";
     }
     const formatted = colDef.valueFormatter
       ? colDef.valueFormatter(result, leafRows[0].original)
       : Number.isInteger(result)
         ? String(result)
         : result.toFixed(2);
-    return `${prefix}: ${formatted}`;
+    return resolveDataGridLabel(translate, "data-grid-summary-format", {
+      label: resolveDataGridLabel(translate, prefixKey),
+      value: formatted,
+    });
   }
 
   // Optional virtualizer
@@ -1227,6 +1241,7 @@
       {pivotPanelOpen}
       aiAssistantEnabled={enableAiAssistant || Boolean(aiProvider)}
       {aiAssistantOpen}
+      {translate}
       onPivotToggle={togglePivotMode}
       onPivotPanelToggle={() => {
         pivotPanelOpen = !pivotPanelOpen;
@@ -1247,9 +1262,12 @@
       onExportCsv={() =>
         downloadCsvExport(getExportRows(), activeColumns, { filename: `${exportFilename}.csv` })}
       onExportExcel={() => {
-        void exportDataGridToExcel(getExportRows(), activeColumns, { filename: `${exportFilename}.xlsx` });
+        void exportDataGridToExcel(getExportRows(), activeColumns, {
+          filename: `${exportFilename}.xlsx`,
+          sheetName: resolveDataGridLabel(translate, "data-grid-export-sheet-name"),
+        });
       }}
-      onPrint={() => printDataGrid(getExportRows(), activeColumns, ariaLabel)}
+      onPrint={() => printDataGrid(getExportRows(), activeColumns, resolvedAriaLabel)}
       actions={toolbarActions}
     />
   {/if}
@@ -1264,6 +1282,7 @@
     <CoimDataGridAiBar
       columns={columns as unknown as CoimDataGridColumn<Record<string, unknown>>[]}
       {aiProvider}
+      {translate}
       onApplyResult={applyAiQueryResult}
       onReset={resetAiFilters}
       onClose={() => {
@@ -1276,6 +1295,7 @@
     <CoimDataGridPivotPanel
       columns={columns as unknown as CoimDataGridColumn<Record<string, unknown>>[]}
       config={effectivePivotConfig}
+      {translate}
       onChange={updatePivotConfig}
       onClose={() => {
         pivotPanelOpen = false;
@@ -1285,6 +1305,7 @@
 
 {#snippet renderHeaderCell(header: (typeof visibleRenderHeaders)[number])}
   {@const colDef = columnLookup.get(header.column.id)}
+  {@const colTitle = colDef?.headerName ?? header.column.id}
   {@const sorted = header.column.getIsSorted()}
   {@const pinned = header.column.getIsPinned()}
   {@const pinStyle =
@@ -1295,9 +1316,10 @@
         : ""}
   <th
     role="columnheader"
+    scope="col"
     tabindex={0}
     data-col-id={header.column.id}
-    aria-sort={sorted === "asc" ? "ascending" : sorted === "desc" ? "descending" : "none"}
+    aria-sort={sorted === "asc" ? "ascending" : sorted === "desc" ? "descending" : undefined}
     style={`width: ${header.getSize()}px; ${pinStyle}`}
     class={cn(
       pinned === "start" && "coim-data-grid-cell-pinned-left",
@@ -1344,9 +1366,9 @@
     {#if showColumnFilters && header.column.getCanFilter()}
       <input
         type="text"
-        aria-label={`Filter ${colDef?.headerName ?? header.column.id}`}
+        aria-label={resolveDataGridLabel(translate, "data-grid-filter-column-aria", { column: colTitle })}
         value={(header.column.getFilterValue() as string) ?? ""}
-        placeholder="Filter..."
+        placeholder={resolveDataGridLabel(translate, "data-grid-filter-placeholder")}
         class="border-grey-200 bg-background-paper mt-1 w-full rounded border px-1.5 py-0.5 text-xs font-normal"
         oninput={(e) => {
           header.column.setFilterValue((e.currentTarget as HTMLInputElement).value);
@@ -1357,7 +1379,7 @@
     {#if header.column.getCanResize()}
       <button
         type="button"
-        aria-label={`Resize ${colDef?.headerName ?? header.column.id} column`}
+        aria-label={resolveDataGridLabel(translate, "data-grid-resize-column-aria", { column: colTitle })}
         class={cn(
           "coim-data-grid-resizer",
           header.column.getIsResizing() && "is-resizing",
@@ -1441,7 +1463,7 @@
     {:else if isEditing}
       {#if colDef?.options && colDef.options.length > 0}
         <select
-          aria-label={`Edit ${colDef.headerName}`}
+          aria-label={resolveDataGridLabel(translate, "data-grid-edit-cell-aria", { column: colDef.headerName })}
           value={isRowEditing ? (rowEditDraft[cell.column.id] ?? "") : draftEditValue}
           class="border-primary bg-background-paper w-full rounded border px-1.5 py-0.5 text-sm"
           onclick={(e) => e.stopPropagation()}
@@ -1462,7 +1484,7 @@
       {:else if colDef?.type === "boolean"}
         <input
           type="checkbox"
-          aria-label={`Edit ${colDef.headerName}`}
+          aria-label={resolveDataGridLabel(translate, "data-grid-edit-cell-aria", { column: colDef.headerName })}
           checked={isRowEditing ? rowEditDraft[cell.column.id] === "true" : draftEditValue === "true"}
           onclick={(e) => e.stopPropagation()}
           onchange={(e) => {
@@ -1489,7 +1511,7 @@
       {:else}
         <input
           type={colDef?.type === "number" ? "number" : colDef?.type === "date" ? "date" : "text"}
-          aria-label={`Edit ${colDef?.headerName ?? cell.column.id}`}
+          aria-label={resolveDataGridLabel(translate, "data-grid-edit-cell-aria", { column: colDef?.headerName ?? cell.column.id })}
           value={isRowEditing ? (rowEditDraft[cell.column.id] ?? "") : draftEditValue}
           class="border-primary bg-background-paper w-full rounded border px-1.5 py-0.5 text-sm"
           onclick={(e) => e.stopPropagation()}
@@ -1516,7 +1538,9 @@
         {#if row.getCanExpand() && cell.column.getIndex() === 0}
           <button
             type="button"
-            aria-label={row.getIsExpanded() ? "Collapse row" : "Expand row"}
+            aria-label={row.getIsExpanded()
+              ? resolveDataGridLabel(translate, "data-grid-collapse-row-aria")
+              : resolveDataGridLabel(translate, "data-grid-expand-row-aria")}
             class="inline-flex h-5 w-5 items-center justify-center rounded hover:bg-grey-100"
             onclick={(e) => {
               e.stopPropagation();
@@ -1539,7 +1563,11 @@
             column: colDef,
           })}
         {:else if colDef?.type === "boolean" && !colDef.valueFormatter}
-          <span>{Boolean(rawValue) ? "Yes" : "No"}</span>
+          <span>
+            {Boolean(rawValue)
+              ? resolveDataGridLabel(translate, "data-grid-boolean-yes")
+              : resolveDataGridLabel(translate, "data-grid-boolean-no")}
+          </span>
         {:else}
           <span class="truncate">
             {colDef?.valueFormatter
@@ -1568,8 +1596,8 @@
           <button
             type="button"
             data-row-drag-handle="true"
-            aria-label={`Reorder row ${row.id}`}
-            title="Drag or Alt+ArrowUp/Down to reorder"
+            aria-label={resolveDataGridLabel(translate, "data-grid-reorder-row-aria", { rowId: row.id })}
+            title={resolveDataGridLabel(translate, "data-grid-reorder-row-title")}
             class="text-text-secondary hover:text-primary inline-flex h-6 w-6 cursor-grab items-center justify-center rounded active:cursor-grabbing"
             onclick={(e) => e.stopPropagation()}
             onkeydown={(e) => {
@@ -1595,7 +1623,7 @@
         <button
           type="button"
           aria-expanded={Boolean(expandedDetailIds[row.id])}
-          aria-label={`Toggle details for row ${row.id}`}
+          aria-label={resolveDataGridLabel(translate, "data-grid-toggle-details-aria", { rowId: row.id })}
           class="inline-flex h-6 w-6 items-center justify-center rounded hover:bg-grey-100"
           onclick={(e) => {
             e.stopPropagation();
@@ -1615,7 +1643,7 @@
       <td class="coim-data-grid-cell">
         <input
           type="checkbox"
-          aria-label={`Select row ${row.id}`}
+          aria-label={resolveDataGridLabel(translate, "data-grid-select-row-aria", { rowId: row.id })}
           checked={isSelected}
           disabled={!row.getCanSelect()}
           onclick={(e) => e.stopPropagation()}
@@ -1662,8 +1690,8 @@
             <div class="inline-flex items-center justify-end gap-1">
               <button
                 type="button"
-                aria-label={`Save row ${row.id}`}
-                title="Save"
+                aria-label={resolveDataGridLabel(translate, "data-grid-action-save-row-aria", { rowId: row.id })}
+                title={resolveDataGridLabel(translate, "data-grid-action-save")}
                 class="text-success hover:bg-success/10 inline-flex h-7 w-7 items-center justify-center rounded"
                 onclick={() => commitRowEdit(row)}
               >
@@ -1671,8 +1699,8 @@
               </button>
               <button
                 type="button"
-                aria-label={`Cancel row ${row.id}`}
-                title="Cancel"
+                aria-label={resolveDataGridLabel(translate, "data-grid-action-cancel-row-aria", { rowId: row.id })}
+                title={resolveDataGridLabel(translate, "data-grid-action-cancel")}
                 class="text-text-secondary hover:bg-grey-100 inline-flex h-7 w-7 items-center justify-center rounded"
                 onclick={() => cancelRowEdit(row.id)}
               >
@@ -1681,20 +1709,22 @@
             </div>
           {:else}
             <div class="inline-flex items-center justify-end gap-1">
-              <button
-                type="button"
-                aria-label={`Edit row ${row.id}`}
-                title="Edit"
-                class="text-text-secondary hover:text-primary hover:bg-grey-100 inline-flex h-7 w-7 items-center justify-center rounded"
-                onclick={() => beginRowEdit(row)}
-              >
-                <CiPen size="small" />
-              </button>
+              {#if editMode === "row"}
+                <button
+                  type="button"
+                  aria-label={resolveDataGridLabel(translate, "data-grid-action-edit-row-aria", { rowId: row.id })}
+                  title={resolveDataGridLabel(translate, "data-grid-action-edit")}
+                  class="text-text-secondary hover:text-primary hover:bg-grey-100 inline-flex h-7 w-7 items-center justify-center rounded"
+                  onclick={() => beginRowEdit(row)}
+                >
+                  <CiPen size="small" />
+                </button>
+              {/if}
               {#if onRowDelete}
                 <button
                   type="button"
-                  aria-label={`Delete row ${row.id}`}
-                  title="Delete"
+                  aria-label={resolveDataGridLabel(translate, "data-grid-action-delete-row-aria", { rowId: row.id })}
+                  title={resolveDataGridLabel(translate, "data-grid-action-delete")}
                   class="text-text-secondary hover:text-error hover:bg-error/10 inline-flex h-7 w-7 items-center justify-center rounded"
                   onclick={() => onRowDelete?.(row.original, row.id)}
                 >
@@ -1717,8 +1747,12 @@
   {/if}
 {/snippet}
 
+  <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
   <div
     bind:this={scrollEl}
+    tabindex={0}
+    role="region"
+    aria-label={resolvedAriaLabel}
     class="coim-data-grid-scroll"
     style={virtualize ? `max-height: ${maxHeight};` : undefined}
     onscroll={handleScrollContainerScroll}
@@ -1726,7 +1760,7 @@
     <table
       bind:this={tableEl}
       role="grid"
-      aria-label={ariaLabel}
+      aria-label={resolvedAriaLabel}
       aria-busy={loading || undefined}
       onkeydown={handleGridKeyDown}
       onpaste={handleTablePaste}
@@ -1759,8 +1793,8 @@
                     type="button"
                     aria-expanded={!grp.collapsed}
                     aria-label={grp.collapsed
-                      ? `Expand group ${grp.headerName}`
-                      : `Collapse group ${grp.headerName}`}
+                      ? resolveDataGridLabel(translate, "data-grid-expand-group-aria", { group: grp.headerName })
+                      : resolveDataGridLabel(translate, "data-grid-collapse-group-aria", { group: grp.headerName })}
                     class="hover:text-primary inline-flex items-center justify-center gap-1 font-medium"
                     onclick={() => toggleColumnGroup(grp.group!)}
                   >
@@ -1785,17 +1819,17 @@
         {#if headerGroups.length > 0}
           <tr>
             {#if rowReordering}
-              <th style="width: 40px;" aria-label="Reorder row"></th>
+              <th style="width: 40px;" aria-label={resolveDataGridLabel(translate, "data-grid-reorder-column-aria")}></th>
             {/if}
             {#if detailPanel}
-              <th style="width: 44px;" aria-label="Expand details"></th>
+              <th style="width: 44px;" aria-label={resolveDataGridLabel(translate, "data-grid-expand-details-column-aria")}></th>
             {/if}
             {#if checkboxSelection}
               <th style="width: 44px;">
                 {#if multiSelect}
                   <input
                     type="checkbox"
-                    aria-label="Select all rows"
+                    aria-label={resolveDataGridLabel(translate, "data-grid-select-all-aria")}
                     checked={allSelectedOnGrid}
                     onchange={table.getToggleAllRowsSelectedHandler()}
                   />
@@ -1832,8 +1866,12 @@
             {/each}
 
             {#if showRowActions}
-              <th style="width: 96px;" class="text-end" aria-label="Row actions">
-                <span class="font-bold">Actions</span>
+              <th
+                style="width: 96px;"
+                class="text-end"
+                aria-label={resolveDataGridLabel(translate, "data-grid-actions-column-aria")}
+              >
+                <span class="font-bold">{resolveDataGridLabel(translate, "data-grid-actions-header")}</span>
               </th>
             {/if}
           </tr>
@@ -1852,7 +1890,7 @@
         {:else if topPinnedRows.length === 0 && unpinnedRows.length === 0 && bottomPinnedRows.length === 0}
           <tr>
             <td colspan={visibleColumnsCount} class="coim-data-grid-cell text-text-secondary py-8 text-center">
-              {emptyMessage}
+              {resolvedEmptyMessage}
             </td>
           </tr>
         {:else}
@@ -1893,7 +1931,10 @@
 
       {#if renderSummaryRow}
         <tfoot>
-          <tr class="coim-data-grid-summary-row" aria-label="Summary row">
+          <tr
+            class="coim-data-grid-summary-row"
+            aria-label={resolveDataGridLabel(translate, "data-grid-summary-row-aria")}
+          >
             {#if rowReordering}
               <td class="coim-data-grid-cell"></td>
             {/if}
@@ -1962,17 +2003,19 @@
 
   <div class="coim-data-grid-footer">
     <div class="text-text-secondary flex items-center gap-2">
-      <span>{totalFilteredCount} total row(s)</span>
+      <span>{resolveDataGridLabel(translate, "data-grid-total-rows", { count: totalFilteredCount })}</span>
       {#if selectedRowIds.length > 0}
-        <span class="text-primary font-medium">· {selectedRowIds.length} selected</span>
+        <span class="text-primary font-medium">
+          · {resolveDataGridLabel(translate, "data-grid-selected-count", { count: selectedRowIds.length })}
+        </span>
       {/if}
     </div>
 
     <div class="flex flex-wrap items-center gap-3">
       <label class="flex items-center gap-1.5">
-        <span class="text-text-secondary">Rows:</span>
+        <span class="text-text-secondary">{resolveDataGridLabel(translate, "data-grid-rows-label")}</span>
         <select
-          aria-label="Rows per page"
+          aria-label={resolveDataGridLabel(translate, "data-grid-rows-per-page-aria")}
           value={pageSize}
           class="border-grey-200 bg-background-paper rounded border px-2 py-1 text-sm"
           onchange={(e) => {
@@ -1986,12 +2029,14 @@
         </select>
       </label>
 
-      <span class="text-text-secondary">Page {page + 1} of {totalPages}</span>
+      <span class="text-text-secondary">
+        {resolveDataGridLabel(translate, "data-grid-page-of", { page: page + 1, totalPages })}
+      </span>
 
       <div class="flex items-center gap-1">
         <button
           type="button"
-          aria-label="First page"
+          aria-label={resolveDataGridLabel(translate, "data-grid-first-page-aria")}
           disabled={!table.getCanPreviousPage()}
           class="hover:bg-grey-50 disabled:opacity-disabled rounded p-1"
           onclick={() => table.firstPage()}
@@ -2000,7 +2045,7 @@
         </button>
         <button
           type="button"
-          aria-label="Previous page"
+          aria-label={resolveDataGridLabel(translate, "data-grid-previous-page-aria")}
           disabled={!table.getCanPreviousPage()}
           class="hover:bg-grey-50 disabled:opacity-disabled rounded p-1"
           onclick={() => table.previousPage()}
@@ -2009,7 +2054,7 @@
         </button>
         <button
           type="button"
-          aria-label="Next page"
+          aria-label={resolveDataGridLabel(translate, "data-grid-next-page-aria")}
           disabled={!table.getCanNextPage()}
           class="hover:bg-grey-50 disabled:opacity-disabled rounded p-1"
           onclick={() => table.nextPage()}
@@ -2018,7 +2063,7 @@
         </button>
         <button
           type="button"
-          aria-label="Last page"
+          aria-label={resolveDataGridLabel(translate, "data-grid-last-page-aria")}
           disabled={!table.getCanNextPage()}
           class="hover:bg-grey-50 disabled:opacity-disabled rounded p-1"
           onclick={() => table.lastPage()}

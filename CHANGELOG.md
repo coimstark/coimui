@@ -2,6 +2,17 @@
 
 All notable changes to `@coimui/svelte` and the CoimUI workspace are documented in this file.
 
+## [1.1.0] - 2026-11-27
+
+### Application Shell & DataGrid Enhancements
+- Added native `translate?: TranslateFn` i18n support across `CoimDataGrid`, `CoimDataGridToolbar`, `CoimDataGridPivotPanel`, `CoimDataGridAiBar`, and `buildPivotTable`, backed by `DEFAULT_DATA_GRID_LABELS` and `resolveDataGridLabel` exported from `@coimui/svelte/data-grid`.
+- Improved DataGrid keyboard scrolling and sorting semantics (`role="region"` + `tabindex="0"` scroll container and conditional `aria-sort` without `"none"`).
+- Added `logoSlot`, `brandText`, `showThemeConfiguration`, `showFooter`, and `fullHeight` props on `CoimAppShell` (threaded through `CoimHeader`, `CoimLeftMenu`, and `CoimMain`) for white-label SaaS branding and full-height flush workspaces.
+- Enabled `ctaSlot` rendering in `MenuType.SingleLayer` in `CoimLeftMenu`.
+- Added initials avatar fallback for avatar-less users (fixing `< md` mobile visibility) plus `activeAccountId`, `keepUserProfileOnAccountSwitch`, `showAccounts`, `showThemePicker`, and `showLocalePicker` options on `CoimUserMenu`.
+- Threaded `translate` into `CoimSearchDialog`, `CoimNotificationsMenu`, and `CoimThemeConfiguration` with fallback keys in `DEFAULT_LAYOUT_LABELS`, and hid unused/demo category tabs when custom search items are supplied.
+- Decoupled standalone `onRowDelete` action rendering in `CoimDataGrid` from `editMode="row"`.
+
 ## [1.0.1] - 2026-11-23
 
 ### Visual & Layout Refinements

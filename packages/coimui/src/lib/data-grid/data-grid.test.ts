@@ -604,4 +604,167 @@ describe("CoimDataGrid", () => {
     expect(configured.getByText("Charlie")).toBeInTheDocument();
     expect(configured.queryByText("Bob")).toBeNull();
   });
+
+  it("renders standalone delete row action when onRowDelete is set without editMode='row'", async () => {
+    const onRowDelete = vi.fn();
+    const view = render(CoimDataGrid, {
+      props: {
+        rows: sampleRows.slice(0, 2),
+        columns: sampleColumns as unknown as CoimDataGridColumn[],
+        onRowDelete: onRowDelete as unknown as (row: Record<string, unknown>, rowId: string) => void,
+      },
+    });
+    await tick();
+
+    expect(view.queryByLabelText("Edit row 1")).toBeNull();
+    const delBtn = view.getByLabelText("Delete row 1");
+    await fireEvent.click(delBtn);
+    expect(onRowDelete).toHaveBeenCalledWith(sampleRows[0], "1");
+  });
+
+  it("localizes all toolbar, filter, row action, summary, boolean, pagination, pivot, and AI labels via translate", async () => {
+    const dict: Record<string, string> = {
+      "data-grid-aria-label": "Grille produits",
+      "data-grid-empty": "Aucun résultat.",
+      "data-grid-boolean-yes": "Oui",
+      "data-grid-boolean-no": "Non",
+      "data-grid-search-placeholder": "Rechercher...",
+      "data-grid-search-aria-label": "Rechercher des lignes",
+      "data-grid-group-label": "Grouper :",
+      "data-grid-group-aria-label": "Grouper par colonne",
+      "data-grid-group-none": "Aucun",
+      "data-grid-ai-assistant": "Assistant IA",
+      "data-grid-pivot": "Tableau croisé",
+      "data-grid-pivot-fields": "Champs croisés",
+      "data-grid-columns": "Colonnes",
+      "data-grid-columns-toggle-aria": "Afficher les colonnes",
+      "data-grid-density-aria": "Densité des lignes",
+      "data-grid-density-compact": "Compacte",
+      "data-grid-density-standard": "Standard",
+      "data-grid-density-comfortable": "Confortable",
+      "data-grid-export-csv": "Export CSV",
+      "data-grid-export-excel": "Export Excel",
+      "data-grid-export-print": "Imprimer",
+      "data-grid-filter-placeholder": "Filtrer...",
+      "data-grid-filter-column-aria": "Filtrer {column}",
+      "data-grid-actions-header": "Opérations",
+      "data-grid-actions-column-aria": "Actions sur la ligne",
+      "data-grid-action-edit": "Modifier",
+      "data-grid-action-edit-row-aria": "Modifier la ligne {rowId}",
+      "data-grid-action-save": "Enregistrer",
+      "data-grid-action-save-row-aria": "Enregistrer la ligne {rowId}",
+      "data-grid-action-cancel": "Annuler",
+      "data-grid-action-cancel-row-aria": "Annuler la ligne {rowId}",
+      "data-grid-action-delete": "Supprimer",
+      "data-grid-action-delete-row-aria": "Supprimer la ligne {rowId}",
+      "data-grid-agg-sum": "Somme",
+      "data-grid-summary-format": "{label} : {value}",
+      "data-grid-total-rows": "{count} ligne(s) au total",
+      "data-grid-selected-count": "{count} sélectionné(s)",
+      "data-grid-rows-label": "Lignes :",
+      "data-grid-rows-per-page-aria": "Lignes par page",
+      "data-grid-page-of": "Page {page} sur {totalPages}",
+      "data-grid-first-page-aria": "Première page",
+      "data-grid-previous-page-aria": "Page précédente",
+      "data-grid-next-page-aria": "Page suivante",
+      "data-grid-last-page-aria": "Dernière page",
+      "data-grid-select-all-aria": "Tout sélectionner",
+      "data-grid-select-row-aria": "Sélectionner la ligne {rowId}",
+      "data-grid-pivot-total": "Total général",
+      "data-grid-pivot-agg-sum": "somme",
+      "data-grid-pivot-group-header": "{value} ({aggregation}) par {column}",
+      "data-grid-pivot-panel-aria": "Configurateur croisé",
+      "data-grid-pivot-panel-title": "Champs du tableau croisé",
+      "data-grid-pivot-panel-subtitle": "Glissez les champs",
+      "data-grid-pivot-close-aria": "Fermer croisé",
+      "data-grid-close": "Fermer",
+      "data-grid-ai-region-aria": "Assistant IA grille",
+      "data-grid-ai-config-required": "Configuration requise",
+      "data-grid-ai-close-aria": "Fermer IA",
+      "data-grid-ai-not-configured": "Fournisseur IA non configuré.",
+      "data-grid-ai-prompt-aria": "Requête IA",
+      "data-grid-ai-apply": "Appliquer",
+    };
+    const translate = (key: string) => dict[key] ?? key;
+
+    interface L10nRow extends Record<string, unknown> {
+      id: string;
+      name: string;
+      department: string;
+      active: boolean;
+      revenue: number;
+    }
+
+    const l10nCols: CoimDataGridColumn<L10nRow>[] = [
+      { id: "name", field: "name", headerName: "Nom", editable: true },
+      { id: "department", field: "department", headerName: "Service", groupable: true },
+      { id: "active", field: "active", headerName: "Actif", type: "boolean" },
+      { id: "revenue", field: "revenue", headerName: "Revenu", type: "number", aggregationFn: "sum" },
+    ];
+
+    const view = render(CoimDataGrid, {
+      props: {
+        rows: [{ id: "1", name: "Alice", department: "Tech", active: true, revenue: 1000 }],
+        columns: l10nCols as unknown as CoimDataGridColumn[],
+        translate,
+        checkboxSelection: true,
+        selectedRowIds: ["1"],
+        showColumnFilters: true,
+        groupable: true,
+        showSummaryRow: true,
+        editMode: "row",
+        enableAiAssistant: true,
+        pivotConfig: {
+          rowFields: ["department"],
+          columnField: "active",
+          valueField: "revenue",
+          aggregationFn: "sum",
+        },
+        onRowDelete: vi.fn(),
+      },
+    });
+    await tick();
+
+    expect(view.getByLabelText("Rechercher des lignes")).toHaveAttribute("placeholder", "Rechercher...");
+    expect(view.getByRole("button", { name: "Colonnes" })).toBeInTheDocument();
+    expect(view.getByRole("option", { name: "Compacte" })).toBeInTheDocument();
+    expect(view.getByRole("button", { name: "Export CSV" })).toBeInTheDocument();
+    expect(view.getByRole("button", { name: "Export Excel" })).toBeInTheDocument();
+    expect(view.getByRole("button", { name: "Imprimer" })).toBeInTheDocument();
+    expect(view.getByLabelText("Filtrer Nom")).toHaveAttribute("placeholder", "Filtrer...");
+    expect(view.getByText("Oui")).toBeInTheDocument();
+    expect(view.getByText("Opérations")).toBeInTheDocument();
+    expect(view.getByLabelText("Modifier la ligne 1")).toBeInTheDocument();
+    expect(view.getByLabelText("Supprimer la ligne 1")).toBeInTheDocument();
+    expect(view.getByText("Somme : 1000")).toBeInTheDocument();
+    expect(view.getByText("1 ligne(s) au total")).toBeInTheDocument();
+    expect(view.getByText(/1 sélectionné\(s\)/)).toBeInTheDocument();
+    expect(view.getByText("Page 1 sur 1")).toBeInTheDocument();
+    expect(view.getByLabelText("Première page")).toBeInTheDocument();
+
+    // Open AI assistant bar and check localized labels
+    await fireEvent.click(view.getByRole("button", { name: "Assistant IA" }));
+    await tick();
+    expect(view.getByText("Configuration requise")).toBeInTheDocument();
+    expect(view.getByText("Fournisseur IA non configuré.")).toBeInTheDocument();
+    expect(view.getByRole("button", { name: "Appliquer" })).toBeInTheDocument();
+
+    // Toggle Pivot mode and open Pivot fields configurator
+    await fireEvent.click(view.getByRole("button", { name: "Tableau croisé" }));
+    await tick();
+    expect(view.getByText("Revenu (somme) par Actif")).toBeInTheDocument();
+    expect(view.getByRole("columnheader", { name: /Total général/i })).toBeInTheDocument();
+    await fireEvent.click(view.getByRole("button", { name: "Champs croisés" }));
+    await tick();
+    expect(view.getByRole("region", { name: "Configurateur croisé" })).toBeInTheDocument();
+    expect(view.getByText("Champs du tableau croisé")).toBeInTheDocument();
+
+    // Filter to non-matching search verifies localized empty state
+    await fireEvent.click(view.getByRole("button", { name: "Tableau croisé" }));
+    await fireEvent.input(view.getByLabelText("Rechercher des lignes"), {
+      target: { value: "zzzz-missing" },
+    });
+    await tick();
+    expect(view.getByText("Aucun résultat.")).toBeInTheDocument();
+  });
 });
