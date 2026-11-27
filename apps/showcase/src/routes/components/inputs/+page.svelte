@@ -7,10 +7,17 @@
     CoimCheckbox,
     CoimDropzone,
     CoimFab,
+    CoimFormControl,
     CoimFormControlLabel,
+    CoimFormGroup,
+    CoimFormHelperText,
+    CoimFormLabel,
     CoimGrid,
     CoimIconButton,
+    CoimInput,
+    CoimInputAdornment,
     CoimNumberField,
+    CoimNumberSpinner,
     CoimOtpInput,
     CoimRadio,
     CoimRadioGroup,
@@ -20,14 +27,23 @@
     CoimStack,
     CoimSwitch,
     CoimTextField,
+    CoimTextareaAutosize,
     CoimToggleButton,
     CoimToggleButtonGroup,
     CoimTypography,
+    type CoimButtonSize,
+    type CoimButtonVariant,
+    type CoimColor,
+    type CoimInputSize,
+    type CoimInputVariant,
     toast,
   } from "@coimui/svelte";
   import { CiBell, CiBinEmpty, CiPen, CiPlus, CiSearch } from "@coimui/svelte/icons";
   import ComponentDocCard from "#lib/components/ComponentDocCard.svelte";
+  import type { ComponentApiGroup } from "#lib/components/doc-types.ts";
   import { COMPONENT_CODE_EXAMPLES } from "#lib/examples/component-docs.ts";
+
+  const END_SCRIPT = "</" + "script>";
 
   let toggleView = $state("grid");
   let cadenceRange = $state<"day" | "week" | "month">("week");
@@ -42,10 +58,110 @@
   let ratingValue = $state<number | null>(4.5);
   let otpValue = $state("581920");
   let droppedFiles = $state<File[]>([]);
+
+  // Interactive Playground state (below fold)
+  let btnVariant = $state<CoimButtonVariant>("contained");
+  let btnColor = $state<CoimColor>("primary");
+  let btnSize = $state<CoimButtonSize>("medium");
+  let btnLoading = $state(false);
+  let btnDisabled = $state(false);
+
+  let tfVariant = $state<CoimInputVariant>("outlined");
+  let tfSize = $state<CoimInputSize>("medium");
+  let tfError = $state(false);
+  let tfFloating = $state(false);
+  let tfMultiline = $state(false);
+  let tfValue = $state("release@coimui.dev");
+
+  const playgroundCode = $derived(`<script lang="ts">
+  import { CoimButton, CoimTextField } from "@coimui/svelte";
+  let value = $state(${JSON.stringify(tfValue)});
+${END_SCRIPT}
+
+<CoimButton
+  variant="${btnVariant}"
+  color="${btnColor}"
+  size="${btnSize}"${btnLoading ? "\n  loading" : ""}${btnDisabled ? "\n  disabled" : ""}
+>
+  Save Workspace
+</CoimButton>
+
+<CoimTextField
+  label="Notification Email"
+  variant="${tfVariant}"
+  size="${tfSize}"${tfError ? "\n  error\n  helperText=\"Enter a valid email address\"" : ""}${tfFloating ? "\n  floatingLabel" : ""}${tfMultiline ? "\n  multiline\n  minRows={2}" : ""}
+  bind:value
+  fullWidth
+/>`);
+
+  // Low-level input & form primitives state
+  let rawDomain = $state("coimui");
+  let spinnerCount = $state<number | null>(3);
+  let notesValue = $state("Auto-growing release notes line 1\nLine 2");
+  let primitiveError = $state(false);
+
+  const primitivesCode = $derived(`<script lang="ts">
+  import {
+    CoimFormControl,
+    CoimFormGroup,
+    CoimFormLabel,
+    CoimFormHelperText,
+    CoimInput,
+    CoimInputAdornment,
+    CoimNumberSpinner,
+    CoimTextareaAutosize,
+    CoimCheckbox,
+  } from "@coimui/svelte";
+
+  let domain = $state(${JSON.stringify(rawDomain)});
+  let workers = $state<number | null>(${spinnerCount ?? 3});
+  let notes = $state(${JSON.stringify(notesValue)});
+${END_SCRIPT}
+
+<CoimFormControl error={${primitiveError}} fullWidth>
+  <CoimFormLabel required>Custom Subdomain</CoimFormLabel>
+  <CoimInput bind:value={domain} variant="outlined">
+    {#snippet startAdornment()}
+      <CoimInputAdornment position="start">https://</CoimInputAdornment>
+    {/snippet}
+    {#snippet endAdornment()}
+      <CoimInputAdornment position="end">.coimui.dev</CoimInputAdornment>
+    {/snippet}
+  </CoimInput>
+  <CoimFormHelperText>${primitiveError ? "Subdomain is already reserved" : "Lowercase alphanumeric slug"}</CoimFormHelperText>
+</CoimFormControl>
+
+<CoimNumberSpinner label="Worker Replicas" bind:value={workers} min={1} max={16} />
+<CoimTextareaAutosize bind:value={notes} minRows={2} maxRows={6} class="w-full rounded-md border p-2.5 text-sm" />
+<CoimFormGroup legend="Channels" row>
+  <CoimCheckbox label="Webhook" checked />
+  <CoimCheckbox label="Email" />
+</CoimFormGroup>`);
+
+  const primitivesApiGroups: ComponentApiGroup[] = [
+    {
+      title: "CoimInput, CoimInputAdornment, CoimNumberSpinner & CoimTextareaAutosize",
+      props: [
+        { name: "CoimInput.value", type: "string", kind: "bindable", description: "Input text value; also supports mask, startAdornment, and endAdornment snippets." },
+        { name: "CoimInputAdornment.position", type: "\"start\" | \"end\"", description: "Aligns prefix/suffix icons or text tokens inside CoimInput." },
+        { name: "CoimNumberSpinner", type: "value?, min?, max?, step?, precision?", description: "Compact numeric spinner with +/- buttons and keyboard arrow stepping." },
+        { name: "CoimTextareaAutosize", type: "value?, minRows?, maxRows?, ref?", description: "Native textarea that grows smoothly within row bounds." },
+      ],
+    },
+    {
+      title: "CoimFormControl, CoimFormGroup, CoimFormLabel & CoimFormHelperText",
+      props: [
+        { name: "CoimFormControl", type: "error?, disabled?, required?, readOnly?, size?, variant?, fullWidth?", description: "Provides shared form state context to child labels, inputs, and helper text." },
+        { name: "CoimFormGroup", type: "row?, legend?, disabled?", description: "Semantic <fieldset> wrapper grouping related checkboxes or switches." },
+        { name: "CoimFormLabel", type: "for?, component?, required?, error?, disabled?", description: "Renders <label>, <legend>, or <span> inheriting form state." },
+        { name: "CoimFormHelperText", type: "id?, error?, disabled?", description: "Accessible caption or validation message below inputs." },
+      ],
+    },
+  ];
 </script>
 
 <svelte:head>
-  <title>CoimUI Showcase — Inputs & Controls</title>
+  <title>CoimUI Showcase — Inputs &amp; Controls</title>
 </svelte:head>
 
 <CoimStack spacing={6}>
@@ -60,13 +176,15 @@
   <CoimTypography variant="h2">Action Triggers, Text Entry &amp; Selection Widgets</CoimTypography>
 
   <ComponentDocCard
-    title="Buttons, Groups, FAB & Toggle Groups"
+    id="coim-button"
+    title="Buttons, Groups, FAB &amp; Toggle Groups"
     description="Standard, pastel, outlined, and contained buttons plus compact icon controls."
     code={COMPONENT_CODE_EXAMPLES.buttons}
     propsDocs={[
-      { name: "variant", type: '"contained" | "outlined" | "text" | "pastel" | "surface"', defaultValue: '"text"', description: "Visual emphasis level across button families." },
+      { name: "variant", type: "\"contained\" | \"outlined\" | \"text\" | \"pastel\" | \"surface\"", defaultValue: "\"text\"", description: "Visual emphasis level across button families." },
+      { name: "color / size", type: "CoimColor / \"tiny\" | \"small\" | \"medium\" | \"large\"", defaultValue: "\"primary\" / \"medium\"", description: "Theme color token and touch-target sizing." },
       { name: "loading", type: "boolean", defaultValue: "false", description: "Renders inline indicator while preserving layout geometry." },
-      { name: "CoimToggleButtonGroup", type: 'type: "single" | "multiple"', defaultValue: '"single"', description: "Roving focus radio/toggle semantics via Bits UI." },
+      { name: "CoimToggleButtonGroup", type: "type: \"single\" | \"multiple\"", defaultValue: "\"single\"", description: "Roving focus radio/toggle semantics via Bits UI." },
     ]}
   >
     <CoimStack spacing={4}>
@@ -126,11 +244,13 @@
   </ComponentDocCard>
 
   <ComponentDocCard
-    title="TextField, NumberField, Select & Autocomplete"
+    id="coim-text-field"
+    title="TextField, NumberField, Select &amp; Autocomplete"
     description="Labeled inputs wired to CoimFormControl with start/end adornments and combobox search."
     code={COMPONENT_CODE_EXAMPLES.textAndSelectInputs}
     propsDocs={[
-      { name: "floatingLabel", type: "boolean", description: "Enables animated top label treatment on outlined and filled inputs." },
+      { name: "floatingLabel", type: "boolean", defaultValue: "false", description: "Enables animated top label treatment on outlined and filled inputs." },
+      { name: "value", type: "string | number | string[] | null", kind: "bindable", description: "Two-way bound input/selection value." },
       { name: "freeSolo (Autocomplete)", type: "boolean", defaultValue: "false", description: "Allows custom text alongside filtered option suggestions." },
       { name: "multiple (Select)", type: "boolean", defaultValue: "false", description: "Switches value binding between string and string[]." },
     ]}
@@ -186,9 +306,16 @@
   </ComponentDocCard>
 
   <ComponentDocCard
-    title="Checkboxes, Radios, Switches, Slider, Rating, OTP & Dropzone"
+    id="coim-selection"
+    title="Checkboxes, Radios, Switches, Slider, Rating, OTP &amp; Dropzone"
     description="Binary, discrete, continuous, verification, and file-upload interactive controls."
     code={COMPONENT_CODE_EXAMPLES.selectionAndAdvancedInputs}
+    propsDocs={[
+      { name: "CoimCheckbox / CoimSwitch", type: "checked?: boolean, indeterminate?: boolean", kind: "bindable", description: "Two-way bound boolean selection controls." },
+      { name: "CoimRadioGroup", type: "value?: string, row?: boolean", kind: "bindable", description: "Manages active radio choice horizontally or vertically." },
+      { name: "CoimSlider / CoimRating", type: "value?: number | number[] / number | null, precision?", kind: "bindable", description: "Continuous slider and half-star rating selector." },
+      { name: "CoimOtpInput / CoimDropzone", type: "value?, length? / files?, maxFiles?, onDrop?", description: "Multi-cell verification input and drag-and-drop file uploader." },
+    ]}
   >
     <CoimGrid container spacing={4}>
       <CoimGrid size={{ xs: 12, md: 6 }}>
@@ -234,5 +361,193 @@
         </CoimStack>
       </CoimGrid>
     </CoimGrid>
+  </ComponentDocCard>
+
+  <ComponentDocCard
+    id="coim-input-playground"
+    title="Interactive Playground: CoimButton &amp; CoimTextField"
+    description="Toggle props live below to inspect rendered contrast, sizing, and synchronized Svelte 5 code."
+    code={playgroundCode}
+  >
+    <div class="grid gap-4 md:grid-cols-2 md:items-center">
+      <div class="flex flex-wrap items-center gap-3">
+        <CoimButton
+          variant={btnVariant}
+          color={btnColor}
+          size={btnSize}
+          loading={btnLoading}
+          disabled={btnDisabled}
+          onclick={() => toast.success(`Clicked ${btnVariant} ${btnColor} button`)}
+        >
+          Save Workspace
+        </CoimButton>
+      </div>
+      <div>
+        <CoimTextField
+          label="Notification Email"
+          variant={tfVariant}
+          size={tfSize}
+          error={tfError}
+          helperText={tfError ? "Enter a valid email address" : "Used for release & webhook alerts"}
+          floatingLabel={tfFloating}
+          multiline={tfMultiline}
+          minRows={2}
+          bind:value={tfValue}
+          fullWidth
+        />
+      </div>
+    </div>
+
+    {#snippet controls()}
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <CoimSelect
+          label="Button Variant"
+          size="small"
+          value={btnVariant}
+          onValueChange={(v) => {
+            if (typeof v === "string") btnVariant = v as CoimButtonVariant;
+          }}
+          options={[
+            { value: "contained", label: "contained" },
+            { value: "outlined", label: "outlined" },
+            { value: "pastel", label: "pastel" },
+            { value: "surface", label: "surface" },
+            { value: "text", label: "text" },
+          ]}
+          fullWidth
+        />
+        <CoimSelect
+          label="Button Color"
+          size="small"
+          value={btnColor}
+          onValueChange={(v) => {
+            if (typeof v === "string") btnColor = v as CoimColor;
+          }}
+          options={[
+            { value: "primary", label: "primary" },
+            { value: "secondary", label: "secondary" },
+            { value: "success", label: "success" },
+            { value: "warning", label: "warning" },
+            { value: "error", label: "error" },
+            { value: "info", label: "info" },
+          ]}
+          fullWidth
+        />
+        <CoimSelect
+          label="Button Size"
+          size="small"
+          value={btnSize}
+          onValueChange={(v) => {
+            if (typeof v === "string") btnSize = v as CoimButtonSize;
+          }}
+          options={[
+            { value: "tiny", label: "tiny" },
+            { value: "small", label: "small" },
+            { value: "medium", label: "medium" },
+            { value: "large", label: "large" },
+          ]}
+          fullWidth
+        />
+        <CoimSelect
+          label="TextField Variant"
+          size="small"
+          value={tfVariant}
+          onValueChange={(v) => {
+            if (typeof v === "string") tfVariant = v as CoimInputVariant;
+          }}
+          options={[
+            { value: "outlined", label: "outlined" },
+            { value: "filled", label: "filled" },
+            { value: "standard", label: "standard" },
+          ]}
+          fullWidth
+        />
+        <CoimSelect
+          label="TextField Size"
+          size="small"
+          value={tfSize}
+          onValueChange={(v) => {
+            if (typeof v === "string") tfSize = v as CoimInputSize;
+          }}
+          options={[
+            { value: "small", label: "small" },
+            { value: "medium", label: "medium" },
+          ]}
+          fullWidth
+        />
+        <div class="flex flex-wrap items-center gap-3">
+          <CoimFormControlLabel label="Btn Loading"><CoimSwitch bind:checked={btnLoading} /></CoimFormControlLabel>
+          <CoimFormControlLabel label="Btn Disabled"><CoimSwitch bind:checked={btnDisabled} /></CoimFormControlLabel>
+          <CoimFormControlLabel label="Field Error"><CoimSwitch bind:checked={tfError} /></CoimFormControlLabel>
+          <CoimFormControlLabel label="Floating Label"><CoimSwitch bind:checked={tfFloating} /></CoimFormControlLabel>
+          <CoimFormControlLabel label="Multiline"><CoimSwitch bind:checked={tfMultiline} /></CoimFormControlLabel>
+        </div>
+      </div>
+    {/snippet}
+  </ComponentDocCard>
+
+  <ComponentDocCard
+    id="coim-input-primitives"
+    title="Low-Level Input &amp; Form Control Primitives"
+    description="Composable primitives (CoimInput, CoimInputAdornment, CoimNumberSpinner, CoimTextareaAutosize, CoimFormControl, CoimFormGroup, CoimFormLabel, CoimFormHelperText)."
+    code={primitivesCode}
+    apiGroups={primitivesApiGroups}
+  >
+    <CoimGrid container spacing={4}>
+      <CoimGrid size={{ xs: 12, md: 6 }}>
+        <CoimFormControl error={primitiveError} fullWidth>
+          <CoimFormLabel required>Custom Subdomain</CoimFormLabel>
+          <CoimInput bind:value={rawDomain} variant="outlined" fullWidth>
+            {#snippet startAdornment()}
+              <CoimInputAdornment position="start">https://</CoimInputAdornment>
+            {/snippet}
+            {#snippet endAdornment()}
+              <CoimInputAdornment position="end">.coimui.dev</CoimInputAdornment>
+            {/snippet}
+          </CoimInput>
+          <CoimFormHelperText>
+            {primitiveError ? "Subdomain is already reserved" : "Lowercase alphanumeric slug"}
+          </CoimFormHelperText>
+        </CoimFormControl>
+      </CoimGrid>
+
+      <CoimGrid size={{ xs: 12, md: 6 }}>
+        <CoimNumberSpinner
+          label="Worker Replicas"
+          bind:value={spinnerCount}
+          min={1}
+          max={16}
+          step={1}
+          fullWidth
+        />
+      </CoimGrid>
+
+      <CoimGrid size={{ xs: 12, md: 6 }}>
+        <CoimStack spacing={1.5}>
+          <CoimFormLabel for="autosize-notes">Release Notes (CoimTextareaAutosize)</CoimFormLabel>
+          <CoimTextareaAutosize
+            id="autosize-notes"
+            bind:value={notesValue}
+            minRows={2}
+            maxRows={5}
+            class="border-grey-200 bg-background-paper text-text-primary w-full rounded-md border p-2.5 text-sm outline-none focus:border-primary"
+          />
+        </CoimStack>
+      </CoimGrid>
+
+      <CoimGrid size={{ xs: 12, md: 6 }}>
+        <CoimFormGroup legend="Alert Channels (CoimFormGroup)" row>
+          <CoimCheckbox label="Webhook" checked />
+          <CoimCheckbox label="Email" />
+          <CoimCheckbox label="SMS" />
+        </CoimFormGroup>
+      </CoimGrid>
+    </CoimGrid>
+
+    {#snippet controls()}
+      <CoimFormControlLabel label="Simulate Subdomain Error">
+        <CoimSwitch bind:checked={primitiveError} />
+      </CoimFormControlLabel>
+    {/snippet}
   </ComponentDocCard>
 </CoimStack>

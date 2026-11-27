@@ -14,6 +14,7 @@
     CoimTypography,
   } from "@coimui/svelte";
   import ComponentDocCard from "#lib/components/ComponentDocCard.svelte";
+  import type { ComponentApiGroup } from "#lib/components/doc-types.ts";
   import { COMPONENT_CODE_EXAMPLES } from "#lib/examples/component-docs.ts";
 
   const gallery = [
@@ -31,10 +32,46 @@
     { label: "Editorial Scales", heightClass: "min-h-28", detail: "Urbanist headings paired with Mulish body copy" },
     { label: "Container Gutters", heightClass: "min-h-32", detail: "Centered fixed and fluid maxWidth wrappers" },
   ];
+
+  const layoutGridApiGroups: ComponentApiGroup[] = [
+    {
+      title: "CoimGrid & CoimStack",
+      props: [
+        { name: "container / spacing", type: "boolean / ResponsiveValue", defaultValue: "false / 0", description: "Turns CoimGrid into a 12-column responsive flex container." },
+        { name: "size / offset", type: "ResponsiveValue<number | \"grow\" | \"auto\">", description: "Sets column span or offset across xs..3xl breakpoints." },
+        { name: "direction (CoimStack)", type: "ResponsiveValue<\"row\" | \"column\">", defaultValue: "\"column\"", description: "Responsive flex direction for uniform child gaps." },
+      ],
+    },
+    {
+      title: "CoimBox & CoimContainer",
+      props: [
+        { name: "maxWidth (Container)", type: "\"xs\" | \"sm\" | \"md\" | \"lg\" | \"xl\" | false", defaultValue: "\"lg\"", description: "Constrains horizontal width unless false." },
+        { name: "disableGutters", type: "boolean", defaultValue: "false", description: "Removes horizontal container padding." },
+        { name: "component / as (Box)", type: "string", defaultValue: "\"div\"", description: "Polymorphic HTML element tag rendered by CoimBox." },
+      ],
+    },
+  ];
+
+  const mediaGridApiGroups: ComponentApiGroup[] = [
+    {
+      title: "CoimImageList, CoimImageListItem & CoimImageListItemBar",
+      props: [
+        { name: "cols / gap", type: "number / number | string", defaultValue: "2 / 4", description: "Controls column count and gap spacing on CoimImageList." },
+        { name: "position (Bar)", type: "\"top\" | \"bottom\" | \"below\"", defaultValue: "\"bottom\"", description: "Renders overlay caption bar or below-image footer." },
+      ],
+    },
+    {
+      title: "CoimMasonry",
+      props: [
+        { name: "columns", type: "ResponsiveValue<number>", defaultValue: "4", description: "Responsive CSS column count for balanced tiles." },
+        { name: "spacing", type: "number | string", defaultValue: "2", description: "Column & row gap spacing between masonry items." },
+      ],
+    },
+  ];
 </script>
 
 <svelte:head>
-  <title>CoimUI Showcase — Foundation & Layout</title>
+  <title>CoimUI Showcase — Foundation &amp; Layout</title>
 </svelte:head>
 
 <CoimStack spacing={6}>
@@ -49,17 +86,18 @@
   <CoimTypography variant="h2">Core Typography &amp; Structural Layout</CoimTypography>
 
   <ComponentDocCard
-    title="CoimTypography & CoimDivider"
+    id="coim-typography"
+    title="CoimTypography &amp; CoimDivider"
     description="Semantic heading hierarchy, body variants, truncation, and horizontal/vertical dividers."
     code={COMPONENT_CODE_EXAMPLES.typography}
     propsDocs={[
-      { name: "variant", type: '"h1" | ... | "body1" | "caption"', defaultValue: '"body1"', description: "Maps semantic element tag and Urbanist/Mulish typographic scale." },
+      { name: "variant", type: "\"h1\" .. \"h6\" | \"subtitle1\" | \"subtitle2\" | \"body1\" | \"body2\" | \"caption\" | \"overline\"", defaultValue: "\"body1\"", description: "Maps semantic element tag and Urbanist/Mulish typographic scale." },
       { name: "component", type: "string", defaultValue: "mapped tag", description: "Overrides rendered HTML element without altering visual variant." },
       { name: "ellipsisLines", type: "1 | 2 | 3 | 4 | 5 | 6", description: "Clamps overflowing prose cleanly with ellipsis." },
-      { name: "orientation", type: '"horizontal" | "vertical"', defaultValue: '"horizontal"', description: "Controls CoimDivider axis and aria-orientation." },
+      { name: "orientation (Divider)", type: "\"horizontal\" | \"vertical\"", defaultValue: "\"horizontal\"", description: "Controls CoimDivider axis and aria-orientation." },
     ]}
     accessibilityNotes={[
-      "Pass component='p' if using subtitle1 visuals as a non-heading subheader so h1->h2->h3 outline stays sequential.",
+      "Pass component='p' if using heading visuals as a non-heading subheader so h1->h2->h3 outline stays sequential.",
       "CoimDivider assigns role='separator' and aria-orientation='vertical' automatically when vertical.",
     ]}
   >
@@ -81,14 +119,11 @@
   </ComponentDocCard>
 
   <ComponentDocCard
-    title="CoimContainer, CoimBox, CoimGrid & CoimStack"
+    id="coim-layout-grid"
+    title="CoimContainer, CoimBox, CoimGrid &amp; CoimStack"
     description="Responsive layout primitives accepting object or scalar breakpoint configurations."
     code={COMPONENT_CODE_EXAMPLES.gridAndStack}
-    propsDocs={[
-      { name: "container / spacing", type: "boolean / ResponsiveValue", defaultValue: "false / 0", description: "Turns CoimGrid into a multi-column flex grid container." },
-      { name: "size", type: "ResponsiveValue<number | 'grow' | 'auto'>", description: "Controls column span out of 12 per breakpoint." },
-      { name: "direction", type: "ResponsiveValue<'row' | 'column'>", defaultValue: '"column"', description: "Sets CoimStack flex direction responsively." },
-    ]}
+    apiGroups={layoutGridApiGroups}
   >
     <CoimContainer maxWidth="lg" disableGutters>
       <CoimBox class="bg-grey-50 dark:bg-grey-800/40 rounded-xl p-4">
@@ -113,13 +148,11 @@
   </ComponentDocCard>
 
   <ComponentDocCard
-    title="CoimImageList & CoimMasonry"
+    id="coim-media-grid"
+    title="CoimImageList &amp; CoimMasonry"
     description="Multi-column media galleries with caption bars plus responsive masonry columns."
     code={COMPONENT_CODE_EXAMPLES.imageListAndMasonry}
-    propsDocs={[
-      { name: "cols / gap", type: "number / number | string", defaultValue: "2 / 4", description: "Controls column count and gap spacing on CoimImageList." },
-      { name: "columns", type: "ResponsiveValue<number>", defaultValue: "4", description: "Responsive CSS column count for CoimMasonry." },
-    ]}
+    apiGroups={mediaGridApiGroups}
   >
     <CoimStack spacing={6}>
       <CoimImageList cols={2} gap={12}>

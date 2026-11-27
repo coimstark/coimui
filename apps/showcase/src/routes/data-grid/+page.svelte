@@ -2,21 +2,33 @@
   import {
     CoimBreadcrumbs,
     CoimChip,
+    CoimPaper,
     CoimStack,
     CoimTypography,
     toast,
   } from "@coimui/svelte";
   import {
     CoimDataGrid,
+    CoimDataGridAiBar,
+    CoimDataGridPivotPanel,
+    CoimDataGridToolbar,
+    DEFAULT_DATA_GRID_LABELS,
+    buildPivotTable,
+    resolveDataGridLabel,
     type CoimDataGridCellCoord,
     type CoimDataGridCellEditEvent,
     type CoimDataGridColumn,
     type CoimDataGridColumnGroup,
+    type CoimDataGridDensity,
+    type CoimDataGridPivotConfig,
     type CoimDataGridRowEditEvent,
   } from "@coimui/svelte/data-grid";
   import ComponentDocCard from "#lib/components/ComponentDocCard.svelte";
+  import type { ComponentApiGroup } from "#lib/components/doc-types.ts";
   import { COMPONENT_CODE_EXAMPLES } from "#lib/examples/component-docs.ts";
   import { showcaseI18n } from "#lib/i18n.svelte.ts";
+
+  const END_SCRIPT = "</" + "script>";
 
   interface AccountRow extends Record<string, unknown> {
     id: string;
@@ -143,6 +155,71 @@
       valueFormatter: (v) => `$${Number(v ?? 0).toLocaleString()}`,
     },
   ];
+
+  // Modular sub-component states (below fold)
+  let toolbarSearch = $state("");
+  let toolbarDensity = $state<CoimDataGridDensity>("standard");
+  let toolbarPivotOpen = $state(false);
+  let toolbarAiOpen = $state(false);
+  let pivotConfig = $state<CoimDataGridPivotConfig>({
+    rowFields: ["region"],
+    columnField: "tier",
+    valueField: "mrr",
+    aggregationFn: "sum",
+    showRowTotals: true,
+  });
+
+  const pivotResult = $derived(
+    buildPivotTable(rows, columns, pivotConfig, { translate: showcaseI18n.t }),
+  );
+
+  const modularCode = `<script lang="ts">
+  import {
+    CoimDataGridToolbar,
+    CoimDataGridPivotPanel,
+    CoimDataGridAiBar,
+    DEFAULT_DATA_GRID_LABELS,
+    resolveDataGridLabel,
+    buildPivotTable,
+  } from "@coimui/svelte/data-grid";
+${END_SCRIPT}
+
+<CoimDataGridToolbar
+  bind:globalFilter={search}
+  bind:density={density}
+  {columns}
+  pivotable
+  aiAssistantEnabled
+  translate={t}
+/>
+<CoimDataGridPivotPanel
+  {columns}
+  config={pivotConfig}
+  translate={t}
+  onChange={(next) => (pivotConfig = next)}
+/>
+<CoimDataGridAiBar {columns} {aiProvider} translate={t} onApplyResult={(res) => applyAi(res)} />`;
+
+  const modularApiGroups: ComponentApiGroup[] = [
+    {
+      title: "CoimDataGridToolbar & CoimDataGridPivotPanel & CoimDataGridAiBar",
+      props: [
+        { name: "CoimDataGridToolbar", type: "globalFilter?, density?, columns?, pivotable?, aiAssistantEnabled?, translate?", kind: "bindable", description: "Composable grid toolbar exposing search, grouping, columns, density & exports." },
+        { name: "CoimDataGridPivotPanel", type: "columns, config, translate?, onChange, onClose?", kind: "event", description: "Drag/drop and accessible controls to configure pivot row/column/value fields." },
+        { name: "CoimDataGridAiBar", type: "columns, aiProvider?, translate?, onApplyResult?, onReset?, onClose?", kind: "event", description: "Natural-language query bar delegated to user-supplied CoimDataGridAiProvider." },
+      ],
+    },
+    {
+      title: "i18n & Pivot Utilities (v1.1.0)",
+      props: [
+        { name: "DEFAULT_DATA_GRID_LABELS", type: "Record<string, string>", description: `English fallbacks covering ${Object.keys(DEFAULT_DATA_GRID_LABELS).length} grid chrome & ARIA keys.` },
+        { name: "resolveDataGridLabel(translate, key, vars?)", type: "string", description: "Interpolates {var} tokens after resolving translated or default label." },
+        { name: "buildPivotTable(rows, cols, config, options?)", type: "CoimPivotResult", description: "Generates pivoted column/row definitions with translated total headers." },
+      ],
+    },
+  ];
+
+  void resolveDataGridLabel;
 </script>
 
 {#snippet statusBadge({ row }: { value: unknown; row: AccountRow; rowId: string; column: CoimDataGridColumn<AccountRow> })}
@@ -165,8 +242,9 @@
   <CoimTypography variant="h2">Interactive Enterprise Grid</CoimTypography>
 
   <ComponentDocCard
+    id="coim-data-grid"
     title="CoimDataGrid"
-    description="Supports column pinning, sorting, column filters, grouping, density switching, inline editing, row selection, CSV & XLSX exports."
+    description="Supports column pinning, sorting, column filters, grouping, density switching, inline editing, row selection, CSV &amp; XLSX exports."
     packageEntry="@coimui/svelte/data-grid"
     code={COMPONENT_CODE_EXAMPLES.dataGrid}
     propsDocs={[
@@ -174,7 +252,7 @@
       { name: "checkboxSelection", type: "boolean", defaultValue: "false", description: "Prepends accessible multi/single row selection checkboxes." },
       { name: "virtualize", type: "boolean", defaultValue: "false", description: "Enables TanStack Virtual windowing for large datasets." },
       { name: "enableExport", type: "boolean", defaultValue: "true", description: "Exposes CSV, Excel (lazy ExcelJS), and print toolbar exports." },
-      { name: "translate", type: "(key: string) => string", description: "Optional i18n translator function overriding built-in DEFAULT_DATA_GRID_LABELS." },
+      { name: "translate", type: "(key: string) => string", description: "Optional v1.1.0 i18n translator function overriding built-in DEFAULT_DATA_GRID_LABELS." },
     ]}
   >
     <CoimStack spacing={3}>
@@ -200,7 +278,7 @@
   </ComponentDocCard>
 
   <ComponentDocCard
-    title="Collapsible Column Groups, Full-Row Editing, Pivoting & Summary Footer"
+    title="Collapsible Column Groups, Full-Row Editing, Pivoting &amp; Summary Footer"
     description="Supports collapsible column group headers, full-row Edit/Save/Cancel/Delete actions, toolbar Pivot mode, summary aggregates, top/bottom pinned rows, drag or Alt+Arrow row reordering, cell range selection, and TSV clipboard paste."
     packageEntry="@coimui/svelte/data-grid"
     code={COMPONENT_CODE_EXAMPLES.dataGrid}
@@ -240,6 +318,57 @@
           toast.info("Updated service priority order");
         }}
       />
+    </CoimStack>
+  </ComponentDocCard>
+
+  <ComponentDocCard
+    id="coim-datagrid-modular"
+    title="Modular Sub-Components: Toolbar, PivotPanel, AiBar &amp; i18n"
+    description="Compose CoimDataGridToolbar, CoimDataGridPivotPanel, and CoimDataGridAiBar independently or translate all grid strings via DEFAULT_DATA_GRID_LABELS."
+    packageEntry="@coimui/svelte/data-grid"
+    code={modularCode}
+    apiGroups={modularApiGroups}
+  >
+    <CoimStack spacing={3}>
+      <CoimDataGridToolbar
+        bind:globalFilter={toolbarSearch}
+        bind:density={toolbarDensity}
+        columns={columns as unknown as CoimDataGridColumn<Record<string, unknown>>[]}
+        pivotable
+        pivotMode={false}
+        pivotPanelOpen={toolbarPivotOpen}
+        aiAssistantEnabled
+        aiAssistantOpen={toolbarAiOpen}
+        translate={showcaseI18n.t}
+        onPivotPanelToggle={() => (toolbarPivotOpen = !toolbarPivotOpen)}
+        onAiAssistantToggle={() => (toolbarAiOpen = !toolbarAiOpen)}
+        onExportCsv={() => toast.info("Triggered CSV export callback")}
+      />
+
+      {#if toolbarAiOpen}
+        <CoimDataGridAiBar
+          {columns}
+          translate={showcaseI18n.t}
+          onApplyResult={() => toast.info("Applied AI assistant query result")}
+          onClose={() => (toolbarAiOpen = false)}
+        />
+      {/if}
+
+      {#if toolbarPivotOpen}
+        <CoimDataGridPivotPanel
+          {columns}
+          config={pivotConfig}
+          translate={showcaseI18n.t}
+          onChange={(next) => (pivotConfig = next)}
+          onClose={() => (toolbarPivotOpen = false)}
+        />
+      {/if}
+
+      <CoimPaper variant="outlined" class="flex flex-wrap items-center gap-2 p-3 text-xs">
+        <CoimChip label={`Density: ${toolbarDensity}`} size="small" color="primary" variant="pastel" />
+        <CoimChip label={`Pivot Rows Computed: ${pivotResult.rows.length}`} size="small" color="secondary" variant="pastel" />
+        <CoimChip label={`i18n Keys Built-in: ${Object.keys(DEFAULT_DATA_GRID_LABELS).length}`} size="small" variant="outlined" />
+      </CoimPaper>
     </CoimStack>
   </ComponentDocCard>
 </CoimStack>

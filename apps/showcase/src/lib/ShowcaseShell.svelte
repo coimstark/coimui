@@ -3,16 +3,17 @@
   import { page } from "$app/state";
   import { untrack, type Snippet } from "svelte";
   import {
+    COIMUI_VERSION,
     CoimAppShell,
     getThemeContext,
     type CoimNotificationItem,
-    type CoimSearchItem,
     type CoimShortcutItem,
     type CoimUserMenuLink,
     type CoimVersionOption,
   } from "@coimui/svelte";
   import { SHOWCASE_LOCALES, showcaseI18n } from "./i18n.svelte.ts";
   import { showcaseBottomNavItems, showcaseNavItems } from "./navigation.ts";
+  import { showcaseSearchItems } from "./search-index.ts";
 
   interface Props {
     children?: Snippet;
@@ -25,24 +26,9 @@
   const isStandaloneAuth = $derived(currentPath.startsWith("/pages/auth"));
 
   const versions: CoimVersionOption[] = [
-    { label: "CoimUI v1.0.0", href: "/" },
-    { label: "UI Components", href: "/components" },
+    { label: `CoimUI v${COIMUI_VERSION}`, href: "/" },
+    { label: "Component API", href: "/components" },
     { label: "Documentation", href: "/docs" },
-  ];
-
-  const searchItems: CoimSearchItem[] = [
-    { id: "sh-1", title: "Executive Overview", subtitle: "Primary KPIs & revenue trends", href: "/", category: "products", avatarSrc: "/images/products/product-1.jpg", status: "active" },
-    { id: "sh-2", title: "Data Grid Engine", subtitle: "TanStack v9 filtering, editing & export", href: "/data-grid", category: "products", avatarSrc: "/images/products/product-2.jpg", status: "active" },
-    { id: "sh-3", title: "Charts Gallery", subtitle: "Ten LayerChart & D3 families", href: "/charts", category: "products", avatarSrc: "/images/products/product-3.jpg", status: "active" },
-    { id: "sh-4", title: "Inputs & Controls", subtitle: "Buttons, Selects, Autocomplete & OTP", href: "/components/inputs", category: "categories", icon: "CiInput", iconBgClass: "bg-primary-light/10", iconColorClass: "text-primary" },
-    { id: "sh-5", title: "Data Display", subtitle: "Avatars, Tables, Trees & Timelines", href: "/components/data-display", category: "categories", icon: "CiTree", iconBgClass: "bg-secondary-light/10", iconColorClass: "text-secondary" },
-    { id: "sh-6", title: "Kanban & Apps", subtitle: "Kanban, Calendar, Chat, Invoices & Inbox", href: "/apps/kanban", category: "categories", icon: "CiInbox", iconBgClass: "bg-accent-1/10", iconColorClass: "text-accent-1" },
-    { id: "sh-7", title: "Laura Ellis", subtitle: "laura.ellis@coimui.dev", href: "/pages/profile", category: "users", avatarSrc: "/images/avatars/avatar-3.jpg" },
-    { id: "sh-8", title: "Travis Howard", subtitle: "travis.howard@coimui.dev", href: "/pages/profile", category: "users", avatarSrc: "/images/avatars/avatar-2.jpg" },
-    { id: "sh-9", title: "Cloud Drive", subtitle: "Folders, uploads, shared files & recovery", href: "/apps/drive/home", category: "products", status: "active" },
-    { id: "sh-10", title: "AI Content Studio", subtitle: "Image, video, upscale pipelines & library", href: "/apps/ai-content/home", category: "products", status: "active" },
-    { id: "sh-11", title: "Ecommerce & Orders", subtitle: "Catalog filters, invoices & SKU management", href: "/pages/ecommerce/products-filters", category: "categories" },
-    { id: "sh-12", title: "Support Desk", subtitle: "Ticket queue, triage & discussion", href: "/pages/support/overview", category: "categories" },
   ];
 
   const shortcuts: CoimShortcutItem[] = [
@@ -82,8 +68,8 @@
     },
     {
       id: "n-3",
-      labelBold: "CoimUI v1.0.0",
-      labelRegular: "Explore 120 core components and 4 subpath modules.",
+      labelBold: `CoimUI v${COIMUI_VERSION}`,
+      labelRegular: "Explore 185 Svelte 5 components, 469 icons, and Data Grid i18n.",
       type: "system",
       time: "1 hour ago",
       href: "/docs",
@@ -130,7 +116,7 @@
     bottomItems={showcaseBottomNavItems}
     {currentPath}
     {versions}
-    {searchItems}
+    searchItems={showcaseSearchItems}
     {shortcuts}
     {notifications}
     {userMenuLinks}

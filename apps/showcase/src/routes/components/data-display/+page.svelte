@@ -5,20 +5,25 @@
     CoimBadge,
     CoimBreadcrumbs,
     CoimChip,
+    CoimFormControlLabel,
     CoimGrid,
     CoimList,
     CoimListItem,
+    CoimListItemAvatar,
     CoimListItemButton,
     CoimListItemIcon,
     CoimListItemText,
     CoimListSubheader,
     CoimRichTreeView,
+    CoimSelect,
     CoimSimpleTreeView,
     CoimStack,
+    CoimSwitch,
     CoimTable,
     CoimTableBody,
     CoimTableCell,
     CoimTableContainer,
+    CoimTableFooter,
     CoimTableHead,
     CoimTablePagination,
     CoimTableRow,
@@ -40,7 +45,10 @@
   } from "@coimui/svelte";
   import { CiBell, CiCheckSquare, CiFolder, CiUser } from "@coimui/svelte/icons";
   import ComponentDocCard from "#lib/components/ComponentDocCard.svelte";
+  import type { ComponentApiGroup } from "#lib/components/doc-types.ts";
   import { COMPONENT_CODE_EXAMPLES } from "#lib/examples/component-docs.ts";
+
+  const END_SCRIPT = "</" + "script>";
 
   const avatars: CoimAvatarItem[] = [
     { id: "1", initials: "LE", alt: "Laura Ellis" },
@@ -52,6 +60,42 @@
 
   const defaultTags = ["TypeScript 7", "Svelte 5", "Tailwind 4", "WCAG AA"];
   let tags = $state([...defaultTags]);
+
+  // Interactive Badge & Chip controls
+  let chipVariant = $state<"filled" | "outlined" | "pastel">("pastel");
+  let chipColor = $state<"primary" | "secondary" | "success" | "warning" | "error" | "info">("primary");
+  let chipDeletable = $state(true);
+
+  const badgeChipCode = $derived(`<script lang="ts">
+  import { CoimAvatarGroup, CoimBadge, CoimChip, CoimTooltip, CoimTooltipProvider } from "@coimui/svelte";
+${END_SCRIPT}
+
+<CoimTooltipProvider>
+  <CoimAvatarGroup {avatars} max={3} />
+  <CoimBadge badgeContent={14} max={9} color="${chipColor}">
+    <CoimChip label="Inbox" variant="${chipVariant}" color="${chipColor}"${chipDeletable ? " deletable" : ""} />
+  </CoimBadge>
+  <CoimTooltip title="Active queue" placement="top"><span>Hover or Focus Me</span></CoimTooltip>
+</CoimTooltipProvider>`);
+
+  const badgeChipApiGroups: ComponentApiGroup[] = [
+    {
+      title: "CoimAvatar & CoimAvatarGroup & CoimBadge",
+      props: [
+        { name: "CoimAvatar", type: "src?, alt?, initials?, size?, color?", description: "Circular profile avatar with fallback initials." },
+        { name: "CoimAvatarGroup.max", type: "number", defaultValue: "5", description: "Caps rendered avatars and shows +N overflow pill." },
+        { name: "CoimBadge.badgeContent / max", type: "string | number / number", defaultValue: "undefined / 99", description: "Anchored counter or status dot (dot?: boolean)." },
+      ],
+    },
+    {
+      title: "CoimChip & CoimTooltip",
+      props: [
+        { name: "CoimChip.variant / color", type: "\"filled\" | \"outlined\" | \"pastel\" / CoimColor", defaultValue: "\"filled\" / \"grey\"", description: "Visual tag style and semantic tone." },
+        { name: "CoimChip.deletable / onDelete", type: "boolean / () => void", defaultValue: "false", kind: "event", description: "Displays accessible delete icon button." },
+        { name: "CoimTooltip.title / placement", type: "string / \"top\" | \"bottom\" | \"left\" | \"right\"", description: "Keyboard & pointer tooltip rendered inside CoimTooltipProvider." },
+      ],
+    },
+  ];
 
   interface MetricRow {
     id: string;
@@ -78,6 +122,7 @@
     ),
   );
   const pagedRows = $derived(sortedRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage));
+  const totalTests = baseRows.reduce((acc, r) => acc + r.tests, 0);
 
   let simpleExpanded = $state(["src"]);
   let simpleSelected = $state(["tokens"]);
@@ -110,6 +155,26 @@
       children: n.children ? renameTreeNode(n.children, targetId, nextLabel) : undefined,
     }));
   }
+
+  const tableTreeApiGroups: ComponentApiGroup[] = [
+    {
+      title: "CoimTable & CoimTableFooter & CoimTablePagination",
+      props: [
+        { name: "CoimTable.size", type: "\"small\" | \"medium\"", defaultValue: "\"medium\"", description: "Controls cell padding density." },
+        { name: "CoimTableFooter", type: "HTMLTableSectionElement attrs", description: "Semantic <tfoot> summary row section." },
+        { name: "CoimTablePagination", type: "count, page (bindable), rowsPerPage, rowsPerPageOptions", kind: "bindable", description: "Accessible table pagination footer bar." },
+      ],
+    },
+    {
+      title: "CoimList, CoimListItemAvatar, TreeViews & Timeline",
+      props: [
+        { name: "CoimListItemAvatar", type: "children: Snippet", kind: "snippet", description: "Aligns CoimAvatar cleanly inside CoimListItem / CoimListItemButton." },
+        { name: "CoimSimpleTreeView", type: "expandedItems?, selectedItems?, multiSelect?, bordered?", kind: "bindable", description: "Declarative tree composed with CoimTreeItem children." },
+        { name: "CoimRichTreeView", type: "items (bindable), reorderable?, onItemLabelChange?, onItemOrderChange?", kind: "event", description: "Data-driven tree supporting inline rename & drag/drop reordering." },
+        { name: "CoimTimeline.position", type: "\"left\" | \"right\" | \"alternate\"", defaultValue: "\"right\"", description: "Controls timeline content & opposite-content side alignment." },
+      ],
+    },
+  ];
 </script>
 
 <svelte:head>
@@ -122,27 +187,24 @@
       <CoimBreadcrumbs items={[{ label: "Components", href: "/components" }, { label: "Data Display" }]} />
       <CoimTypography variant="h1" class="mt-2">Data Display</CoimTypography>
       <p class="text-text-secondary mt-1">
-        Avatars, overflow badges, deletable chips, tooltips, semantic lists, sortable tables, timelines, and tree views.
+        Avatars, overflow badges, deletable chips, tooltips, semantic lists with avatars, sortable tables with footers, timelines, and tree views.
       </p>
     </div>
 
     <CoimTypography variant="h2">Identity, Structured Tables &amp; Hierarchy</CoimTypography>
 
     <ComponentDocCard
-      title="Avatars, Badges, Chips & Tooltips"
+      id="coim-badge-chip"
+      title="Avatars, Badges, Chips &amp; Tooltips"
       description="Compact identity clusters, bounded notification counters, filter chips, and hover/focus tooltips."
-      code={COMPONENT_CODE_EXAMPLES.avatarsAndChips}
-      propsDocs={[
-        { name: "CoimAvatarGroup.max", type: "number", defaultValue: "5", description: "Caps visible avatars and formats overflow pill (+N)." },
-        { name: "CoimBadge.badgeContent", type: "string | number", description: "Formatted against max prop (e.g. 14 with max=9 -> 9+)." },
-        { name: "CoimChip.deletable", type: "boolean", defaultValue: "false", description: "Adds accessible Delete icon button wired to onDelete." },
-      ]}
+      code={badgeChipCode}
+      apiGroups={badgeChipApiGroups}
     >
       <CoimStack spacing={4}>
         <div class="flex flex-wrap items-center gap-6">
           <CoimAvatarGroup {avatars} max={3} />
           <CoimAvatar initials="CU" alt="CoimUI Maintainer" color="primary" />
-          <CoimBadge badgeContent={14} max={9} color="error">
+          <CoimBadge badgeContent={14} max={9} color={chipColor}>
             <span class="border-grey-200 inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-sm">
               <CiBell size={16} /> Notifications
             </span>
@@ -156,9 +218,9 @@
           {#each tags as tag (tag)}
             <CoimChip
               label={tag}
-              color="primary"
-              variant="pastel"
-              deletable
+              color={chipColor}
+              variant={chipVariant}
+              deletable={chipDeletable}
               onDelete={() => {
                 tags = tags.filter((t) => t !== tag);
                 toast.info(`Removed chip: ${tag}`);
@@ -176,12 +238,53 @@
           {/if}
         </div>
       </CoimStack>
+
+      {#snippet controls()}
+        <div class="grid gap-3 sm:grid-cols-3 sm:items-center">
+          <CoimSelect
+            label="Chip Variant"
+            size="small"
+            value={chipVariant}
+            onValueChange={(v) => {
+              if (v === "filled" || v === "outlined" || v === "pastel") chipVariant = v;
+            }}
+            options={[
+              { value: "pastel", label: "pastel" },
+              { value: "filled", label: "filled" },
+              { value: "outlined", label: "outlined" },
+            ]}
+            fullWidth
+          />
+          <CoimSelect
+            label="Badge / Chip Color"
+            size="small"
+            value={chipColor}
+            onValueChange={(v) => {
+              if (typeof v === "string") chipColor = v as typeof chipColor;
+            }}
+            options={[
+              { value: "primary", label: "primary" },
+              { value: "secondary", label: "secondary" },
+              { value: "success", label: "success" },
+              { value: "info", label: "info" },
+              { value: "warning", label: "warning" },
+              { value: "error", label: "error" },
+            ]}
+            fullWidth
+          />
+          <CoimFormControlLabel label="Deletable Chips">
+            <CoimSwitch bind:checked={chipDeletable} />
+          </CoimFormControlLabel>
+        </div>
+      {/snippet}
     </ComponentDocCard>
 
     <ComponentDocCard
-      title="Lists, Tables, Timelines & Tree Views"
-      description="Sortable semantic tables with pagination, activity timelines, and interactive tree explorers."
+      id="coim-table-tree"
+      title="Lists, Tables, Timelines &amp; Tree Views"
+      description="Sortable semantic tables with CoimTableFooter & pagination, CoimListItemAvatar rows, activity timelines, and interactive tree explorers."
       code={COMPONENT_CODE_EXAMPLES.tablesListsTrees}
+      apiGroups={tableTreeApiGroups}
     >
       <CoimGrid container spacing={4}>
         <CoimGrid size={{ xs: 12, lg: 7 }}>
@@ -213,6 +316,13 @@
                   </CoimTableRow>
                 {/each}
               </CoimTableBody>
+              <CoimTableFooter>
+                <CoimTableRow>
+                  <CoimTableCell class="font-semibold">Total Across 5 Entrypoints</CoimTableCell>
+                  <CoimTableCell align="right" class="font-semibold">194 KB</CoimTableCell>
+                  <CoimTableCell align="right" class="font-semibold">{totalTests}</CoimTableCell>
+                </CoimTableRow>
+              </CoimTableFooter>
             </CoimTable>
             <CoimTablePagination
               count={baseRows.length}
@@ -226,13 +336,19 @@
         <CoimGrid size={{ xs: 12, lg: 5 }}>
           <CoimList class="border-grey-100 rounded-xl border">
             <CoimListSubheader>Quick Audit</CoimListSubheader>
+            <CoimListItem>
+              <CoimListItemAvatar>
+                <CoimAvatar initials="LE" alt="Laura Ellis" color="primary" size="small" />
+              </CoimListItemAvatar>
+              <CoimListItemText primary="Laura Ellis" secondary="Release Lead (CoimListItemAvatar)" />
+            </CoimListItem>
             <CoimListItemButton onclick={() => toast.info("Opened team directory")}>
               <CoimListItemIcon><CiUser /></CoimListItemIcon>
               <CoimListItemText primary="Maintainers Directory" secondary="12 active reviewers" />
             </CoimListItemButton>
             <CoimListItem>
               <CoimListItemIcon><CiCheckSquare /></CoimListItemIcon>
-              <CoimListItemText primary="Schema Frozen" secondary="Release v1.0.0 verified" />
+              <CoimListItemText primary="Schema Frozen" secondary="Release v1.1.0 verified" />
             </CoimListItem>
           </CoimList>
         </CoimGrid>
@@ -260,7 +376,7 @@
               <CoimTimelineSeparator>
                 <CoimTimelineDot variant="outlined" color="info" />
               </CoimTimelineSeparator>
-              <CoimTimelineContent>v1.0.0 artifact packed</CoimTimelineContent>
+              <CoimTimelineContent>v1.1.0 artifact verified</CoimTimelineContent>
             </CoimTimelineItem>
           </CoimTimeline>
         </CoimGrid>

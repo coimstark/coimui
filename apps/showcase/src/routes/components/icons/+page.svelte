@@ -6,6 +6,7 @@
     CoimCardContent,
     CoimChip,
     CoimGrid,
+    CoimIcon,
     CoimStack,
     CoimTextField,
     CoimToggleButton,
@@ -33,12 +34,14 @@
     IllustrationSupport,
     type IconName,
   } from "@coimui/svelte/icons";
-  import { CoimIcon } from "@coimui/svelte";
+  import ComponentDocCard from "#lib/components/ComponentDocCard.svelte";
 
   const ALL_ICON_NAMES = Object.keys(IconMap) as IconName[];
+  const END_SCRIPT = "</" + "script>";
 
   let searchQuery = $state("");
   let variant = $state<"outlined" | "contained">("outlined");
+  let copyMode = $state<"import" | "markup">("markup");
   let visibleCount = $state(72);
 
   const filteredIcons = $derived.by(() => {
@@ -49,17 +52,30 @@
 
   const shownIcons = $derived(filteredIcons.slice(0, visibleCount));
 
-  function copyIconImport(name: IconName) {
-    const snippet = `import { ${name} } from "@coimui/svelte/icons";`;
+  const iconUsageCode = $derived(`<script lang="ts">
+  // Option A — Tree-shakeable direct icon component import (recommended for production):
+  import { CiSparkle } from "@coimui/svelte/icons";
+  // Option B — Dynamic runtime lookup by IconName string:
+  import { CoimIcon } from "@coimui/svelte";
+${END_SCRIPT}
+
+<CiSparkle variant="${variant}" size={22} class="text-primary" />
+<CoimIcon icon="CiSparkle" variant="${variant}" size={22} class="text-primary" />`);
+
+  function copyIconSnippet(name: IconName) {
+    const snippet =
+      copyMode === "import"
+        ? `import { ${name} } from "@coimui/svelte/icons";`
+        : `<${name}${variant === "contained" ? ` variant="contained"` : ""} size={20} />`;
     if (typeof navigator !== "undefined" && navigator.clipboard) {
       void navigator.clipboard.writeText(snippet);
     }
-    toast.info(`Copied ${name} import statement`);
+    toast.info(`Copied ${name} ${copyMode === "import" ? "import" : "Svelte markup"}`);
   }
 </script>
 
 <svelte:head>
-  <title>CoimUI Showcase — Icon Library & Illustrations</title>
+  <title>CoimUI Showcase — Icon Library &amp; Illustrations</title>
 </svelte:head>
 
 <CoimStack spacing={6}>
@@ -71,21 +87,47 @@
     </p>
   </div>
 
+  <ComponentDocCard
+    id="coim-icon-api"
+    title="CoimIcon &amp; Tree-Shakeable @coimui/svelte/icons Usage"
+    description="Import direct Ci* components for minimal bundles, or use CoimIcon for dynamic string-keyed icons (navigation, badges, tables)."
+    packageEntry="@coimui/svelte/icons"
+    code={iconUsageCode}
+    propsDocs={[
+      { name: "icon (CoimIcon)", type: "IconName", description: "Typed union of all 469 Ci* icon names (only for dynamic CoimIcon)." },
+      { name: "variant", type: "\"outlined\" | \"contained\"", defaultValue: "\"outlined\"", description: "Switches between crisp outline strokes and filled tone." },
+      { name: "size", type: "number | \"tiny\" | \"small\" | \"medium\" | \"large\"", defaultValue: "20", description: "Pixel size or named scale token." },
+      { name: "oneTone / strokeWidth / label", type: "boolean / number / string", description: "Single-tone fill override, stroke thickness, and optional ARIA label." },
+    ]}
+  >
+    <div class="flex flex-wrap items-center gap-4">
+      <CoimIcon icon="CiSparkle" {variant} size={24} class="text-primary" />
+      <CoimIcon icon="CiChartBar" {variant} size={24} class="text-secondary" />
+      <CoimIcon icon="CiBell" {variant} size={24} class="text-info" />
+      <CoimIcon icon="CiCheckSquare" {variant} size={24} class="text-success" />
+      <span class="text-text-secondary text-sm">Click any icon in the grid below to copy its import or markup.</span>
+    </div>
+  </ComponentDocCard>
+
   <div class="flex flex-wrap items-center justify-between gap-4">
     <div class="w-full max-w-sm">
       <CoimTextField
         label="Search Icons"
-        placeholder="Filter e.g. chart, user, arrow, coim..."
+        placeholder="Filter e.g. chart, user, arrow..."
         bind:value={searchQuery}
         fullWidth
       />
     </div>
 
-    <div class="flex items-center gap-3">
+    <div class="flex flex-wrap items-center gap-3">
       <CoimChip label={`${filteredIcons.length} matches`} color="primary" variant="pastel" />
       <CoimToggleButtonGroup type="single" bind:value={variant} color="primary">
         <CoimToggleButton value="outlined">Outlined</CoimToggleButton>
         <CoimToggleButton value="contained">Contained</CoimToggleButton>
+      </CoimToggleButtonGroup>
+      <CoimToggleButtonGroup type="single" bind:value={copyMode} color="secondary">
+        <CoimToggleButton value="markup">Copy JSX/Svelte</CoimToggleButton>
+        <CoimToggleButton value="import">Copy Import</CoimToggleButton>
       </CoimToggleButtonGroup>
     </div>
   </div>
@@ -96,8 +138,8 @@
       {#each shownIcons as name (name)}
         <button
           type="button"
-          onclick={() => copyIconImport(name)}
-          class="border-grey-100 bg-background-paper hover:border-primary focus-visible:outline-primary flex flex-col items-center gap-2 rounded-xl border p-3 text-center transition-colors focus-visible:outline-2"
+          onclick={() => copyIconSnippet(name)}
+          class="border-grey-100 bg-background-paper hover:border-primary focus-visible:outline-primary flex cursor-pointer flex-col items-center gap-2 rounded-xl border p-3 text-center transition-colors focus-visible:outline-2"
         >
           <CoimIcon icon={name} {variant} size={22} class="text-primary" />
           <span class="text-text-secondary w-full truncate font-mono text-[11px]">{name}</span>

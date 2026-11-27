@@ -1,8 +1,10 @@
 <script lang="ts">
-  import { CoimBreadcrumbs, CoimGrid, CoimStack, CoimTypography } from "@coimui/svelte";
+  import { CoimBreadcrumbs, CoimGrid, CoimPaper, CoimStack, CoimTypography } from "@coimui/svelte";
   import {
+    COIM_CHART_PALETTE,
     CoimAreaChart,
     CoimBarChart,
+    CoimChartLegend,
     CoimFunnelChart,
     CoimGaugeChart,
     CoimHeatmapChart,
@@ -11,9 +13,14 @@
     CoimRadarChart,
     CoimScatterChart,
     CoimSparklineChart,
+    getChartColor,
+    type CoimLegendEntry,
   } from "@coimui/svelte/charts";
   import ComponentDocCard from "#lib/components/ComponentDocCard.svelte";
+  import type { ComponentApiGroup } from "#lib/components/doc-types.ts";
   import { COMPONENT_CODE_EXAMPLES } from "#lib/examples/component-docs.ts";
+
+  const END_SCRIPT = "</" + "script>";
 
   const barData = [
     { quarter: "Q1", cloud: 44, platform: 28 },
@@ -85,6 +92,57 @@
     { x: 30, y: 890, series: "Req/sec", yAxis: "right" as const },
     { x: 50, y: 1340, series: "Req/sec", yAxis: "right" as const },
   ];
+
+  // Interactive CoimChartLegend demo (below fold)
+  let legendItems = $state<CoimLegendEntry[]>([
+    { key: "infra", label: "Infrastructure", color: getChartColor(0), visible: true },
+    { key: "software", label: "Software", color: getChartColor(1), visible: true },
+    { key: "advisory", label: "Advisory", color: getChartColor(2), visible: true },
+  ]);
+
+  function toggleLegendSeries(key: string) {
+    legendItems = legendItems.map((entry) =>
+      entry.key === key ? { ...entry, visible: !entry.visible } : entry,
+    );
+  }
+
+  const legendCode = `<script lang="ts">
+  import { CoimChartLegend, getChartColor, type CoimLegendEntry } from "@coimui/svelte/charts";
+
+  let items = $state<CoimLegendEntry[]>([
+    { key: "infra", label: "Infrastructure", color: getChartColor(0), visible: true },
+    { key: "software", label: "Software", color: getChartColor(1), visible: true },
+  ]);
+${END_SCRIPT}
+
+<CoimChartLegend
+  {items}
+  onToggle={(key) => {
+    items = items.map((e) => (e.key === key ? { ...e, visible: !e.visible } : e));
+  }}
+/>`;
+
+  const chartsApiGroups: ComponentApiGroup[] = [
+    {
+      title: "CoimChartLegend & Palette Helpers",
+      props: [
+        { name: "items", type: "CoimLegendEntry[]", description: "Legend entries ({ key, label, color, visible })." },
+        { name: "onToggle", type: "(key: string) => void", kind: "event", description: "Fires when a user toggles a legend pill button." },
+        { name: "COIM_CHART_PALETTE / getChartColor", type: "readonly string[] / (idx, explicit?) => string", description: "CSS variable palette mapped cleanly to primary, secondary, and accent-1..6." },
+      ],
+    },
+    {
+      title: "Chart Families (@coimui/svelte/charts)",
+      props: [
+        { name: "CoimBarChart / Line / Area", type: "data, xKey, series[], title?, stacked?", description: "Cartesian series charts supporting minKey/maxKey range bars." },
+        { name: "CoimPieChart", type: "data: CoimPieDatum[], donut?, title?", description: "Proportional pie or donut visualization." },
+        { name: "CoimScatterChart / Radar / Heatmap / Funnel", type: "secondaryYAxis?, gridShape?, curve?, width?, height?", description: "Specialized analytical & telemetry SVG components." },
+        { name: "CoimGaugeChart / CoimSparklineChart", type: "value, label?, showPointer? / data, variant?", description: "KPI arc gauges and compact bar/line/area sparklines." },
+      ],
+    },
+  ];
+
+  void COIM_CHART_PALETTE;
 </script>
 
 <svelte:head>
@@ -103,7 +161,7 @@
   <CoimTypography variant="h2">Core &amp; Specialized Chart Families</CoimTypography>
 
   <ComponentDocCard
-    title="Bar, Line, Area & Pie Charts"
+    title="Bar, Line, Area &amp; Pie Charts"
     description="Cartesian and proportional series backed by LayerChart with interactive legends."
     packageEntry="@coimui/svelte/charts"
     code={COMPONENT_CODE_EXAMPLES.charts}
@@ -150,7 +208,7 @@
   </ComponentDocCard>
 
   <ComponentDocCard
-    title="Scatter, Sparklines, Gauge, Radar, Heatmap & Funnel"
+    title="Scatter, Sparklines, Gauge, Radar, Heatmap &amp; Funnel"
     description="Telemetry KPI gauges, compact sparklines, correlation plots, cohort matrices, and conversion funnels."
     packageEntry="@coimui/svelte/charts"
     code={COMPONENT_CODE_EXAMPLES.charts}
@@ -188,7 +246,7 @@
   </ComponentDocCard>
 
   <ComponentDocCard
-    title="Range Bars, Pointer Gauge, Smooth Funnel, Circular Radar & Dual Y-Axis Scatter"
+    title="Range Bars, Pointer Gauge, Smooth Funnel, Circular Radar &amp; Dual Y-Axis Scatter"
     description="Extended analytical variants covering interval range bars, needle gauges, curved conversion funnels, circular radar grids, and secondary right-axis scatter plots."
     packageEntry="@coimui/svelte/charts"
     code={COMPONENT_CODE_EXAMPLES.charts}
@@ -227,5 +285,21 @@
         <CoimFunnelChart title="Smooth Curve Funnel" stages={smoothFunnelStages} curve="smooth" width={360} height={220} />
       </CoimGrid>
     </CoimGrid>
+  </ComponentDocCard>
+
+  <ComponentDocCard
+    id="coim-chart-legend"
+    title="CoimChartLegend &amp; Charts API Reference"
+    description="Standalone interactive legend component and complete TypeScript props guide for all chart components."
+    packageEntry="@coimui/svelte/charts"
+    code={legendCode}
+    apiGroups={chartsApiGroups}
+  >
+    <CoimStack spacing={3}>
+      <CoimChartLegend items={legendItems} onToggle={toggleLegendSeries} />
+      <CoimPaper variant="outlined" class="p-3 text-sm">
+        Active series: {legendItems.filter((i) => i.visible).map((i) => i.label).join(", ") || "None"}
+      </CoimPaper>
+    </CoimStack>
   </ComponentDocCard>
 </CoimStack>

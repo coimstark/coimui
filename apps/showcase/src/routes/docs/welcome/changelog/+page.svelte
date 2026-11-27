@@ -3,8 +3,21 @@
   import DocsSubNav from "#lib/components/DocsSubNav.svelte";
 
   const releases = [
-    { version: "v1.0.1", date: "Nov 2026", notes: "Added DataGrid full-row editing, collapsible column groups, interactive Pivot Field Configurator, provider-agnostic AI Assistant, and full Showcase application suites." },
-    { version: "v1.0.0", date: "Nov 2026", notes: "Initial stable release of @coimui/svelte with core components, 469 Ci icons, charts, pickers, layouts, and dual application templates." },
+    {
+      version: "v1.1.0",
+      date: "Nov 2026",
+      notes: "Added native translate i18n across CoimDataGrid, CoimDataGridToolbar, CoimDataGridPivotPanel, and CoimDataGridAiBar via DEFAULT_DATA_GRID_LABELS and resolveDataGridLabel(), plus CoimPivotTableOptions.",
+    },
+    {
+      version: "v1.0.1",
+      date: "Nov 2026",
+      notes: "Added DataGrid full-row editing, collapsible column groups, interactive Pivot Field Configurator, provider-agnostic AI Assistant, dark-mode WCAG AA foreground tokens, and full Showcase application suites.",
+    },
+    {
+      version: "v1.0.0",
+      date: "Nov 2026",
+      notes: "Initial stable release of @coimui/svelte with core components, 469 Ci icons, charts, pickers, layouts, and dual application templates.",
+    },
   ];
 </script>
 

@@ -23,9 +23,10 @@
     type CoimSortableItem,
   } from "@coimui/svelte/plugins";
   import ComponentDocCard from "#lib/components/ComponentDocCard.svelte";
+  import type { ComponentApiGroup } from "#lib/components/doc-types.ts";
   import { COMPONENT_CODE_EXAMPLES } from "#lib/examples/component-docs.ts";
 
-  let htmlNotes = $state("<p>CoimUI <strong>v1.0.0</strong> ships isolated rich-text, media, and calendar plugins.</p>");
+  let htmlNotes = $state("<p>CoimUI <strong>v1.1.0</strong> ships isolated rich-text, media, and calendar plugins.</p>");
   let editorTheme = $state<"snow" | "bubble">("snow");
   let chosenEmoji = $state("🚀");
   let printSectionEl = $state<HTMLElement | null>(null);
@@ -33,7 +34,7 @@
   let backlog = $state<CoimSortableItem[]>([
     { id: "t-1", label: "Verify external consumer minimal bundle", description: "Priority P0" },
     { id: "t-2", label: "Execute axe-core WCAG 2.1 AA audit", description: "Priority P0" },
-    { id: "t-3", label: "Publish release tag v1.0.0", description: "Priority P1" },
+    { id: "t-3", label: "Verify release tag v1.1.0", description: "Priority P1" },
   ]);
 
   const slides = [
@@ -49,7 +50,31 @@
 
   const calendarEvents: CoimCalendarEvent[] = [
     { id: "e1", title: "Design Token Review", start: "2026-11-22T10:00:00", end: "2026-11-22T11:30:00" },
-    { id: "e2", title: "CoimUI v1.0.0 Release Freeze", start: "2026-11-24T14:00:00", end: "2026-11-24T16:00:00" },
+    { id: "e2", title: "CoimUI v1.1.0 Release Freeze", start: "2026-11-24T14:00:00", end: "2026-11-24T16:00:00" },
+  ];
+
+  const editorMarkdownApi: ComponentApiGroup[] = [
+    {
+      title: "CoimRichTextEditor, CoimMarkdown & CoimCodeBlock",
+      props: [
+        { name: "CoimRichTextEditor", type: "value (bindable), theme?: \"snow\" | \"bubble\", toolbar?: \"minimal\" | \"standard\" | \"full\", variant?", kind: "bindable", description: "Client-guarded Quill v2 editor emitting HTML and plain text." },
+        { name: "CoimMarkdown", type: "content: string, sanitize?: boolean", description: "Marked parser sanitized with DOMPurify before DOM injection." },
+        { name: "CoimCodeBlock", type: "code, language?, filename?, showLineNumbers?, copyable?", description: "Syntax-highlighted viewer with copy-to-clipboard button." },
+        { name: "printElement(el, opts?)", type: "(HTMLElement, PrintOptions?) => void", description: "Prints an isolated DOM section cleanly." },
+      ],
+    },
+  ];
+
+  const mediaWidgetsApi: ComponentApiGroup[] = [
+    {
+      title: "Media & Interactive Plugin Components",
+      props: [
+        { name: "CoimCarousel", type: "items: CarouselSlide[], ariaLabel?", description: "Swiper-backed responsive slide carousel." },
+        { name: "CoimLightbox", type: "images: LightboxImage[], showDownload?, showCaptions?", description: "PhotoSwipe image grid with fullscreen zoom viewer." },
+        { name: "CoimEmojiPicker / VideoPlayer", type: "onSelect(ev) / src, poster?, ariaLabel?", description: "Web-component emoji selector and HTML5 video wrapper." },
+        { name: "CoimSortableList / EventCalendar", type: "items (bindable), onReorder? / events, date?, onEventClick?", kind: "bindable", description: "Drag/keyboard sortable items and full schedule calendar." },
+      ],
+    },
   ];
 </script>
 
@@ -69,10 +94,11 @@
   <CoimTypography variant="h2">Rich Editing, Media &amp; Scheduling</CoimTypography>
 
   <ComponentDocCard
-    title="RichTextEditor, Markdown, CodeBlock & Print"
+    title="RichTextEditor, Markdown, CodeBlock &amp; Print"
     description="Quill editor, DOMPurify-sanitized Marked renderer, highlight.js code viewer, and DOM print utility."
     packageEntry="@coimui/svelte/plugins"
     code={COMPONENT_CODE_EXAMPLES.plugins}
+    apiGroups={editorMarkdownApi}
   >
     <CoimGrid container spacing={4}>
       <CoimGrid size={{ xs: 12, lg: 6 }}>
@@ -120,7 +146,7 @@
               Print Snippet
             </CoimButton>
           </div>
-          <CoimMarkdown content={"### Release Checklist\n- **Core package**: Clean\n- **TS 7.0.2 check**: Passing\n\n`npm install @coimui/svelte`"} />
+          <CoimMarkdown content={"### Release Checklist\n- **Core package**: Clean\n- **TS 7 checks**: Passing\n\n`bun add @coimui/svelte`"} />
         </div>
       </CoimGrid>
       <CoimGrid size={12}>
@@ -134,10 +160,11 @@
   </ComponentDocCard>
 
   <ComponentDocCard
-    title="Carousel, Lightbox, EmojiPicker, VideoPlayer, SortableList & EventCalendar"
+    title="Carousel, Lightbox, EmojiPicker, VideoPlayer, SortableList &amp; EventCalendar"
     description="Lazy-hydrated rich widgets that keep SSR deterministic."
     packageEntry="@coimui/svelte/plugins"
     code={COMPONENT_CODE_EXAMPLES.plugins}
+    apiGroups={mediaWidgetsApi}
   >
     <CoimGrid container spacing={4}>
       <CoimGrid size={{ xs: 12, lg: 6 }}>

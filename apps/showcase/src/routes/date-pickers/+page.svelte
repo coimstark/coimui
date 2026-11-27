@@ -23,6 +23,7 @@
     type DateValue,
   } from "@coimui/svelte/date-pickers";
   import ComponentDocCard from "#lib/components/ComponentDocCard.svelte";
+  import type { ComponentApiGroup } from "#lib/components/doc-types.ts";
   import { COMPONENT_CODE_EXAMPLES } from "#lib/examples/component-docs.ts";
 
   let singleDate = $state<DateValue | undefined>(new CalendarDate(2026, 11, 22));
@@ -43,10 +44,30 @@
   let staticDate = $state<DateValue | undefined>(new CalendarDate(2026, 11, 25));
 
   const presets = getPresetDateRanges();
+
+  const pickersApiGroups: ComponentApiGroup[] = [
+    {
+      title: "CoimDatePicker, CoimDateRangePicker & Fields",
+      props: [
+        { name: "value", type: "DateValue | DateRange", kind: "bindable", description: "Timezone-safe @internationalized/date value or { start, end } range." },
+        { name: "clearable / open", type: "boolean", kind: "bindable", description: "Shows clear button and exposes controlled popover state." },
+        { name: "minValue / maxValue / locale", type: "DateValue / string", description: "Selectable date bounds and localized month/weekday formatting." },
+        { name: "showPresets / presets (Range)", type: "boolean / PresetDateRange[]", description: "Enables quick preset ranges via getPresetDateRanges()." },
+      ],
+    },
+    {
+      title: "Time, DateTime & Static Calendar Pickers",
+      props: [
+        { name: "CoimTimePicker", type: "value (Time), analogClock?, minuteStep?, hourCycle?", kind: "bindable", description: "Switches between column scrollers and interactive analog clock face." },
+        { name: "CoimDateTimePicker / Range", type: "CalendarDateTime / CoimDateTimeRange", kind: "bindable", description: "Combined date calendar and time selector." },
+        { name: "CoimCalendar / RangeCalendar / StaticDatePicker", type: "value, numberOfMonths?, title?", kind: "bindable", description: "Inline embedded calendars without popover triggers." },
+      ],
+    },
+  ];
 </script>
 
 <svelte:head>
-  <title>CoimUI Showcase — Date & Time Pickers</title>
+  <title>CoimUI Showcase — Date &amp; Time Pickers</title>
 </svelte:head>
 
 <CoimStack spacing={6}>
@@ -61,10 +82,11 @@
   <CoimTypography variant="h2">Pickers, Fields &amp; Inline Calendars</CoimTypography>
 
   <ComponentDocCard
-    title="DatePicker, DateRangePicker, TimePicker, TimeRangePicker, DateTimePicker & DateTimeRangePicker"
+    title="DatePicker, DateRangePicker, TimePicker, TimeRangePicker, DateTimePicker &amp; DateTimeRangePicker"
     description="Segmented keyboard fields paired with accessible popover calendars, range presets, clearable triggers, and digital/analog clocks."
     packageEntry="@coimui/svelte/date-pickers"
     code={COMPONENT_CODE_EXAMPLES.datePickers}
+    apiGroups={pickersApiGroups}
   >
     <CoimGrid container spacing={4}>
       <CoimGrid size={{ xs: 12, md: 6 }}>
@@ -117,7 +139,7 @@
   </ComponentDocCard>
 
   <ComponentDocCard
-    title="Inline Calendar, Range Calendar & Static DatePicker"
+    title="Inline Calendar, Range Calendar &amp; Static DatePicker"
     description="Embedded calendar surfaces suitable for scheduling sidebars and reservation cards."
     packageEntry="@coimui/svelte/date-pickers"
     code={COMPONENT_CODE_EXAMPLES.datePickers}

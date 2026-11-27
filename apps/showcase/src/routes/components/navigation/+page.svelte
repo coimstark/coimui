@@ -4,6 +4,7 @@
     CoimBottomNavigationAction,
     CoimBreadcrumbs,
     CoimButton,
+    CoimFormControlLabel,
     CoimGrid,
     CoimLink,
     CoimMenu,
@@ -12,6 +13,7 @@
     CoimMenubar,
     CoimMobileStepper,
     CoimPagination,
+    CoimSelect,
     CoimSpeedDial,
     CoimSpeedDialAction,
     CoimStack,
@@ -19,6 +21,7 @@
     CoimStepContent,
     CoimStepLabel,
     CoimStepper,
+    CoimSwitch,
     CoimTab,
     CoimTabPanel,
     CoimTabs,
@@ -27,13 +30,19 @@
     toast,
     type CoimMenubarSection,
   } from "@coimui/svelte";
-  import { CiBell, CiChartBar, CiPen, CiHome, CiPlus, CiUser } from "@coimui/svelte/icons";
+  import { CiBell, CiChartBar, CiHome, CiPen, CiPlus, CiUser } from "@coimui/svelte/icons";
   import ComponentDocCard from "#lib/components/ComponentDocCard.svelte";
-  import { COMPONENT_CODE_EXAMPLES } from "#lib/examples/component-docs.ts";
+  import type { ComponentApiGroup } from "#lib/components/doc-types.ts";
+
+  const END_SCRIPT = "</" + "script>";
 
   let activeTab = $state("overview");
+  let tabsVariant = $state<"standard" | "scrollable" | "fullWidth">("standard");
+  let tabsHairline = $state(true);
   let menuOpen = $state(false);
   let page = $state(2);
+  let pageShape = $state<"circular" | "rounded">("rounded");
+  let pageVariant = $state<"text" | "outlined" | "surface">("outlined");
   let activeStep = $state(0);
   let mobileStep = $state(1);
   let bottomNav = $state<string | number>("home");
@@ -43,6 +52,74 @@
   const menubarSections: CoimMenubarSection[] = [
     { value: "file", label: "File", items: fileItems },
     { value: "view", label: "View", items: viewItems },
+  ];
+
+  const tabsMenuCode = $derived(`<script lang="ts">
+  import { CoimTabs, CoimTab, CoimTabPanel, CoimMenu, CoimMenuItem, CoimToolbar } from "@coimui/svelte";
+  let value = $state("${activeTab}");
+${END_SCRIPT}
+
+<CoimTabs bind:value variant="${tabsVariant}"${tabsHairline ? " hairline" : ""}>
+  {#snippet tabs()}
+    <CoimTab value="overview" label="Overview" />
+    <CoimTab value="permissions" label="Permissions" />
+    <CoimTab value="webhooks" label="Webhooks" />
+  {/snippet}
+  <CoimTabPanel value="overview">Overview details</CoimTabPanel>
+  <CoimTabPanel value="permissions">Permissions matrix</CoimTabPanel>
+  <CoimTabPanel value="webhooks">Webhooks log</CoimTabPanel>
+</CoimTabs>`);
+
+  const steppersCode = $derived(`<script lang="ts">
+  import { CoimPagination, CoimStepper, CoimStep, CoimStepLabel } from "@coimui/svelte";
+  let page = $state(${page});
+  let activeStep = $state(${activeStep});
+${END_SCRIPT}
+
+<CoimPagination count={10} bind:page variant="${pageVariant}" shape="${pageShape}" showFirstButton showLastButton />
+<CoimStepper bind:activeStep nonLinear>
+  <CoimStep index={0}><CoimStepLabel>Profile</CoimStepLabel></CoimStep>
+  <CoimStep index={1}><CoimStepLabel optional="Optional">Integrations</CoimStepLabel></CoimStep>
+  <CoimStep index={2}><CoimStepLabel>Launch</CoimStepLabel></CoimStep>
+</CoimStepper>`);
+
+  const tabsMenuApiGroups: ComponentApiGroup[] = [
+    {
+      title: "CoimTabs, CoimTab & CoimTabPanel",
+      props: [
+        { name: "value", type: "string", kind: "bindable", description: "Active tab value synchronized across triggers and panels." },
+        { name: "variant / hairline / size", type: "\"standard\" | \"scrollable\" | \"fullWidth\" / boolean / \"tiny\" | \"small\" | \"medium\"", description: "Layout mode, bottom hairline border, and compact sizing." },
+        { name: "tabs", type: "Snippet", kind: "snippet", description: "Slot receiving CoimTab elements (or pass declarative items array)." },
+      ],
+    },
+    {
+      title: "CoimMenu, CoimMenubar, CoimToolbar & CoimLink",
+      props: [
+        { name: "CoimMenu.open / label", type: "boolean / string", kind: "bindable", description: "Dropdown trigger and open state holding CoimMenuItem & CoimMenuDivider." },
+        { name: "CoimMenubar.menus", type: "CoimMenubarSection[]", description: "Desktop menu bar sections with snippet-driven menus." },
+        { name: "CoimToolbar", type: "orientation?, ariaLabel?", description: "Horizontal/vertical control group with arrow-key roving focus." },
+        { name: "CoimLink.underline", type: "\"none\" | \"hover\" | \"always\"", defaultValue: "\"hover\"", description: "Anchor typography link with underline control." },
+      ],
+    },
+  ];
+
+  const steppersApiGroups: ComponentApiGroup[] = [
+    {
+      title: "CoimPagination & CoimBreadcrumbs & CoimStepper",
+      props: [
+        { name: "CoimPagination.count / page", type: "number / number", kind: "bindable", description: "Total pages and active page index with variant/shape/color props." },
+        { name: "CoimStepper.activeStep / nonLinear", type: "number / boolean", kind: "bindable", description: "Zero-based active step index supporting optional horizontal/vertical layout." },
+        { name: "CoimBreadcrumbs.items / maxItems", type: "BreadcrumbItem[] / number", description: "Collapses middle crumbs smoothly when exceeding maxItems." },
+      ],
+    },
+    {
+      title: "CoimMobileStepper, CoimBottomNavigation & CoimSpeedDial",
+      props: [
+        { name: "CoimMobileStepper", type: "steps, activeStep (bindable), variant?: \"text\" | \"dots\" | \"progress\"", kind: "bindable", description: "Compact mobile step progress indicator." },
+        { name: "CoimBottomNavigation", type: "value (bindable), showLabels?", kind: "bindable", description: "Bottom navigation bar wrapping CoimBottomNavigationAction." },
+        { name: "CoimSpeedDial", type: "open (bindable), direction?: \"up\" | \"down\" | \"left\" | \"right\"", kind: "bindable", description: "Expandable floating quick-action menu holding CoimSpeedDialAction items." },
+      ],
+    },
   ];
 </script>
 
@@ -73,12 +150,14 @@
   <CoimTypography variant="h2">Tabs, Menus, Pagination &amp; Steppers</CoimTypography>
 
   <ComponentDocCard
-    title="Tabs, Menus, Menubar & Toolbar"
+    id="coim-tabs"
+    title="Tabs, Menus, Menubar &amp; Toolbar"
     description="ARIA-compliant keyboard-navigable tabs, popover dropdown menus, menubar, and roving-tabindex toolbars."
-    code={COMPONENT_CODE_EXAMPLES.tabsAndMenus}
+    code={tabsMenuCode}
+    apiGroups={tabsMenuApiGroups}
   >
     <CoimStack spacing={4}>
-      <CoimTabs bind:value={activeTab} hairline>
+      <CoimTabs bind:value={activeTab} variant={tabsVariant} hairline={tabsHairline}>
         {#snippet tabs()}
           <CoimTab value="overview" label="Overview" />
           <CoimTab value="permissions" label="Permissions" />
@@ -143,12 +222,36 @@
         </CoimButton>
       </CoimToolbar>
     </CoimStack>
+
+    {#snippet controls()}
+      <div class="grid gap-3 sm:grid-cols-2 sm:items-center">
+        <CoimSelect
+          label="Tabs Variant"
+          size="small"
+          value={tabsVariant}
+          onValueChange={(v) => {
+            if (v === "standard" || v === "scrollable" || v === "fullWidth") tabsVariant = v;
+          }}
+          options={[
+            { value: "standard", label: "standard" },
+            { value: "scrollable", label: "scrollable" },
+            { value: "fullWidth", label: "fullWidth" },
+          ]}
+          fullWidth
+        />
+        <CoimFormControlLabel label="Tabs Hairline Divider">
+          <CoimSwitch bind:checked={tabsHairline} />
+        </CoimFormControlLabel>
+      </div>
+    {/snippet}
   </ComponentDocCard>
 
   <ComponentDocCard
-    title="Breadcrumbs, Pagination, Steppers, Bottom Navigation & SpeedDial"
+    id="coim-steppers"
+    title="Breadcrumbs, Pagination, Steppers, Bottom Navigation &amp; SpeedDial"
     description="Sequential workflow navigation, compact mobile pagination, and quick-action speed dial."
-    code={COMPONENT_CODE_EXAMPLES.steppersAndPagination}
+    code={steppersCode}
+    apiGroups={steppersApiGroups}
   >
     <CoimStack spacing={5}>
       <CoimBreadcrumbs
@@ -161,7 +264,14 @@
         maxItems={3}
       />
 
-      <CoimPagination count={10} bind:page showFirstButton showLastButton />
+      <CoimPagination
+        count={10}
+        bind:page
+        variant={pageVariant}
+        shape={pageShape}
+        showFirstButton
+        showLastButton
+      />
 
       <CoimGrid container spacing={4}>
         <CoimGrid size={{ xs: 12, md: 6 }}>
@@ -224,5 +334,37 @@
         </CoimGrid>
       </CoimGrid>
     </CoimStack>
+
+    {#snippet controls()}
+      <div class="grid gap-3 sm:grid-cols-2">
+        <CoimSelect
+          label="Pagination Variant"
+          size="small"
+          value={pageVariant}
+          onValueChange={(v) => {
+            if (v === "text" || v === "outlined" || v === "surface") pageVariant = v;
+          }}
+          options={[
+            { value: "text", label: "text" },
+            { value: "outlined", label: "outlined" },
+            { value: "surface", label: "surface" },
+          ]}
+          fullWidth
+        />
+        <CoimSelect
+          label="Pagination Shape"
+          size="small"
+          value={pageShape}
+          onValueChange={(v) => {
+            if (v === "circular" || v === "rounded") pageShape = v;
+          }}
+          options={[
+            { value: "rounded", label: "rounded" },
+            { value: "circular", label: "circular" },
+          ]}
+          fullWidth
+        />
+      </div>
+    {/snippet}
   </ComponentDocCard>
 </CoimStack>

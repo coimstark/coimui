@@ -126,6 +126,20 @@ export const showcaseNavItems: CoimNavItem[] = [
         icon: "CiSparkle",
         href: "/components/icons",
       },
+      {
+        id: "comp-layouts",
+        label: "menu-layouts",
+        description: "App Shell, Auth Layout, Header, Dual Sidebar & Search Dialog",
+        icon: "CiLayout",
+        href: "/components/layouts",
+      },
+      {
+        id: "comp-utilities",
+        label: "menu-utilities",
+        description: "Portal, ClickAwayListener, Collapse/Fade/Grow/Slide/Zoom & helpers",
+        icon: "CiMagicWand",
+        href: "/components/utilities",
+      },
     ],
   },
   {
