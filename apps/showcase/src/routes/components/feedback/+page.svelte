@@ -118,11 +118,11 @@ ${END_SCRIPT}
     { name: "CoimBackdrop.open / invisible", type: "boolean / boolean", defaultValue: "false / false", description: "Shows full-viewport scrim (or transparent click-catcher when invisible)." },
     { name: "CoimBackdrop.onclick", type: "(event: MouseEvent) => void", kind: "event" as const, description: "Handles scrim dismissal clicks." },
     { name: "CoimPopper.open / anchorEl", type: "boolean / HTMLElement | PopperVirtualElement | null", description: "Anchors floating content directly against a DOM or virtual coordinate box." },
-    { name: "CoimPopper.placement / offset", type: "PopperPlacement / number", defaultValue: "\"bottom\" / 8", description: "Popper alignment relative to anchorEl." },
+    { name: "CoimPopper.placement / offset", type: "PopperPlacement / number", defaultValue: "\"bottom\" / 6", description: "Popper alignment relative to anchorEl." },
   ];
 
   const progressProps = [
-    { name: "variant (Circular / Linear)", type: "\"determinate\" | \"indeterminate\" | \"buffer\"", defaultValue: "\"indeterminate\"", description: "Determinate percent display or continuous activity animation." },
+    { name: "variant (Circular / Linear)", type: "\"determinate\" | \"indeterminate\" | \"buffer\"", defaultValue: "\"determinate\" (with value) / \"indeterminate\"", description: "Determinate percent display or continuous activity animation." },
     { name: "value / valueBuffer", type: "number (0-100)", defaultValue: "0", description: "Current completion percentage (and buffer bar on LinearProgress)." },
     { name: "color", type: "\"primary\" | \"secondary\" | \"success\" | \"error\" | \"warning\" | \"info\"", defaultValue: "\"primary\"", description: "Progress indicator color token." },
     { name: "CoimSkeleton", type: "variant?: \"text\" | \"circular\" | \"rectangular\" | \"rounded\", width?, height?, animation?", description: "Animated loading placeholder silhouette." },

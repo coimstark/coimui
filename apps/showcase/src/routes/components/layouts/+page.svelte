@@ -1,6 +1,7 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import {
+    COIMUI_VERSION,
     CoimAuthLayout,
     CoimBreadcrumbs,
     CoimButton,
@@ -125,7 +126,7 @@ ${END_SCRIPT}
 
 <div class="flex items-center gap-2">
   <CoimLogo brandText="Acme" />
-  <CoimVersionSelect versions={[{ label: "v1.1.0", href: "/docs" }]} />
+  <CoimVersionSelect versions={[{ label: "v${COIMUI_VERSION}", href: "/docs" }]} />
   <CoimSearchDialog />
   <CoimShortcutsMenu />
   <CoimNotificationsMenu />
@@ -251,7 +252,7 @@ ${END_SCRIPT}
           <CoimLogo brandText="CoimUI" />
           <CoimVersionSelect
             versions={[
-              { label: "v1.1.0 (Latest)", href: "/docs/welcome/changelog" },
+              { label: `v${COIMUI_VERSION} (Latest)`, href: "/docs/welcome/changelog" },
               { label: "Component API", href: "/components" },
             ]}
             onNavigate={(href) => void goto(href)}

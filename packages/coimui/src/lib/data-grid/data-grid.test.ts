@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render } from "@testing-library/svelte";
 import { tick } from "svelte";
 import CoimDataGrid from "./CoimDataGrid.svelte";
+import CoimDataGridPivotPanel from "./CoimDataGridPivotPanel.svelte";
 import { buildCsvContent, exportDataGridToExcel } from "./export-utils.js";
 import { buildPivotTable } from "./pivot-utils.js";
 import type { CoimDataGridColumn, CoimDataGridColumnGroup } from "./types.js";
@@ -766,5 +767,90 @@ describe("CoimDataGrid", () => {
     });
     await tick();
     expect(view.getByText("Aucun résultat.")).toBeInTheDocument();
+  });
+
+  it("renders expanded CoimDataGridPivotPanel with valid semantic list children and keyboard interactions", async () => {
+    const onChange = vi.fn();
+    const onClose = vi.fn();
+
+    const cols: CoimDataGridColumn[] = [
+      { id: "region", field: "region", headerName: "Region" },
+      { id: "tier", field: "tier", headerName: "Tier" },
+      { id: "status", field: "status", headerName: "Status" },
+      { id: "mrr", field: "mrr", headerName: "MRR", type: "number" },
+    ];
+
+    const view = render(CoimDataGridPivotPanel, {
+      props: {
+        columns: cols,
+        config: {
+          rowFields: ["region", "status"],
+          columnField: "tier",
+          valueField: "mrr",
+          aggregationFn: "sum",
+          showRowTotals: true,
+        },
+        onChange,
+        onClose,
+      },
+    });
+    await tick();
+
+    // Row Fields list must contain only <li> children (never <select> or <button> outside <li>)
+    const rowGroup = view.getByRole("group", { name: "Row fields" });
+    const listEl = rowGroup.querySelector("ul");
+    expect(listEl).toBeTruthy();
+    expect(Array.from(listEl!.children).every((el) => el.tagName === "LI")).toBe(true);
+    expect(listEl!.children.length).toBe(2);
+
+    const addSelect = view.getByLabelText("Add row field") as HTMLSelectElement;
+    const confirmBtn = view.getByRole("button", { name: "Confirm add row field" });
+    expect(listEl!.contains(addSelect)).toBe(false);
+    expect(listEl!.contains(confirmBtn)).toBe(false);
+
+    // Reorder via Move up/down buttons & remove
+    await fireEvent.click(view.getByRole("button", { name: "Move Status up" }));
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ rowFields: ["status", "region"] }),
+    );
+
+    await fireEvent.click(view.getByRole("button", { name: "Move Region down" }));
+    await fireEvent.click(view.getByRole("button", { name: "Remove row field Status" }));
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ rowFields: ["region"] }),
+    );
+
+    // Select unused column and submit via Enter key
+    await fireEvent.change(addSelect, { target: { value: "mrr" } });
+    await fireEvent.keyDown(addSelect, { key: "Enter" });
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ rowFields: ["region", "status", "mrr"] }),
+    );
+
+    // Select value & press Confirm button path
+    await fireEvent.change(addSelect, { target: { value: "mrr" } });
+    await fireEvent.click(confirmBtn);
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ rowFields: ["region", "status", "mrr"] }),
+    );
+
+    // Column/Value/Aggregation/Row totals controls
+    await fireEvent.change(view.getByLabelText("Pivot column field"), { target: { value: "status" } });
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ columnField: "status" }),
+    );
+
+    await fireEvent.change(view.getByLabelText("Pivot aggregation"), { target: { value: "mean" } });
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ aggregationFn: "mean" }),
+    );
+
+    await fireEvent.click(view.getByLabelText("Show pivot row totals"));
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ showRowTotals: false }),
+    );
+
+    await fireEvent.click(view.getByRole("button", { name: "Close pivot field configurator" }));
+    expect(onClose).toHaveBeenCalledTimes(1);
   });
 });

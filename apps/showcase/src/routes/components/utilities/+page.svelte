@@ -68,6 +68,7 @@ ${END_SCRIPT}
     {
       title: "CoimCollapse & CoimSlide",
       props: [
+        { name: "timeout (CoimCollapse)", type: "number | { enter?: number; exit?: number }", defaultValue: "250", description: "Collapse transition duration in ms." },
         { name: "orientation (CoimCollapse)", type: "\"vertical\" | \"horizontal\"", defaultValue: "\"vertical\"", description: "Axis along which height or width collapses." },
         { name: "collapsedSize (CoimCollapse)", type: "number | string", defaultValue: "0", description: "Remaining size when collapsed (e.g. \"40px\")." },
         { name: "direction (CoimSlide)", type: "\"up\" | \"down\" | \"left\" | \"right\"", defaultValue: "\"down\"", description: "Edge direction from which content slides into view." },

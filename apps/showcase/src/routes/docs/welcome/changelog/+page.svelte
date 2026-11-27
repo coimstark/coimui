@@ -4,6 +4,11 @@
 
   const releases = [
     {
+      version: "v1.1.1",
+      date: "Nov 2026",
+      notes: "Fixed CoimDataGridPivotPanel semantic list ARIA structure (WCAG 1.3.1), CoimVersionSelect default label resolution via COIMUI_VERSION, and Showcase API documentation defaults.",
+    },
+    {
       version: "v1.1.0",
       date: "Nov 2026",
       notes: "Added native translate i18n across CoimDataGrid, CoimDataGridToolbar, CoimDataGridPivotPanel, and CoimDataGridAiBar via DEFAULT_DATA_GRID_LABELS and resolveDataGridLabel(), plus CoimPivotTableOptions.",

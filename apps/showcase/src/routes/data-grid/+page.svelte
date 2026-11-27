@@ -159,7 +159,7 @@
   // Modular sub-component states (below fold)
   let toolbarSearch = $state("");
   let toolbarDensity = $state<CoimDataGridDensity>("standard");
-  let toolbarPivotOpen = $state(false);
+  let toolbarPivotOpen = $state(true);
   let toolbarAiOpen = $state(false);
   let pivotConfig = $state<CoimDataGridPivotConfig>({
     rowFields: ["region"],

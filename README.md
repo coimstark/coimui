@@ -1,4 +1,4 @@
-# CoimUI v1.0.0
+# CoimUI
 
 **CoimUI** is an original Svelte 5 UI component library, accessible design system, application shell framework, and multi-application ecosystem built with TypeScript 7, Tailwind CSS 4, Bits UI, and SvelteKit 3.
 

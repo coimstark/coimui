@@ -1,5 +1,6 @@
 <script lang="ts">
   import {
+    COIMUI_VERSION,
     CoimBreadcrumbs,
     CoimButton,
     CoimGrid,
@@ -26,7 +27,7 @@
   import type { ComponentApiGroup } from "#lib/components/doc-types.ts";
   import { COMPONENT_CODE_EXAMPLES } from "#lib/examples/component-docs.ts";
 
-  let htmlNotes = $state("<p>CoimUI <strong>v1.1.0</strong> ships isolated rich-text, media, and calendar plugins.</p>");
+  let htmlNotes = $state(`<p>CoimUI <strong>v${COIMUI_VERSION}</strong> ships isolated rich-text, media, and calendar plugins.</p>`);
   let editorTheme = $state<"snow" | "bubble">("snow");
   let chosenEmoji = $state("🚀");
   let printSectionEl = $state<HTMLElement | null>(null);
@@ -34,7 +35,7 @@
   let backlog = $state<CoimSortableItem[]>([
     { id: "t-1", label: "Verify external consumer minimal bundle", description: "Priority P0" },
     { id: "t-2", label: "Execute axe-core WCAG 2.1 AA audit", description: "Priority P0" },
-    { id: "t-3", label: "Verify release tag v1.1.0", description: "Priority P1" },
+    { id: "t-3", label: `Verify release tag v${COIMUI_VERSION}`, description: "Priority P1" },
   ]);
 
   const slides = [
@@ -50,7 +51,7 @@
 
   const calendarEvents: CoimCalendarEvent[] = [
     { id: "e1", title: "Design Token Review", start: "2026-11-22T10:00:00", end: "2026-11-22T11:30:00" },
-    { id: "e2", title: "CoimUI v1.1.0 Release Freeze", start: "2026-11-24T14:00:00", end: "2026-11-24T16:00:00" },
+    { id: "e2", title: `CoimUI v${COIMUI_VERSION} Release Freeze`, start: "2026-11-24T14:00:00", end: "2026-11-24T16:00:00" },
   ];
 
   const editorMarkdownApi: ComponentApiGroup[] = [

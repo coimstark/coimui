@@ -60,13 +60,23 @@
     },
   ];
 
-  const viteConfigCode = `import { sveltekit } from "@sveltejs/kit/vite";
+  const viteConfigCode = `import adapter from "@sveltejs/adapter-auto";
+import { sveltekit } from "@sveltejs/kit/vite";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 
+// SvelteKit 3 configures adapters directly inside sveltekit({ ... }) in vite.config.ts (no svelte.config.js)
 export default defineConfig({
-  plugins: [tailwindcss(), sveltekit()],
+  plugins: [tailwindcss(), sveltekit({ adapter: adapter() })],
 });`;
+
+  const tsconfigCode = `{
+  "extends": "$app/tsconfig",
+  "include": ["src", "*"],
+  "compilerOptions": {
+    "strict": true
+  }
+}`;
 
   const appCssCode = `@import "tailwindcss";
 @import "@coimui/svelte/styles";
@@ -186,11 +196,12 @@ ${END_SCRIPT}
 
     <CoimCard>
       <CoimCardHeader
-        title="3. Configure Tailwind v4 &amp; Stylesheets"
-        subheader="Register @tailwindcss/vite in Vite and import the semantic stylesheet layers in src/app.css."
+        title="3. Configure SvelteKit 3, Vite &amp; Stylesheets"
+        subheader={"Register @tailwindcss/vite and sveltekit({ adapter }) in vite.config.ts, extend $app/tsconfig, and import semantic layers in src/app.css."}
       />
       <CoimCardContent class="space-y-4">
         <CoimCodeBlock language="typescript" filename="vite.config.ts" code={viteConfigCode} />
+        <CoimCodeBlock language="json" filename="tsconfig.json" code={tsconfigCode} />
         <CoimCodeBlock language="css" filename="src/app.css" code={appCssCode} />
       </CoimCardContent>
     </CoimCard>

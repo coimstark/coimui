@@ -2,6 +2,7 @@
   import { DropdownMenu } from "bits-ui";
   import CiChevronRightSmall from "../icons/ui/CiChevronRightSmall.svelte";
   import { cn } from "../utilities/utils.js";
+  import { COIMUI_VERSION } from "../version.js";
   import type { CoimVersionOption } from "./types.js";
 
   interface Props {
@@ -13,18 +14,20 @@
   }
 
   const defaultVersions: CoimVersionOption[] = [
-    { label: "CoimUI v1.0.0", href: "/" },
+    { label: `CoimUI v${COIMUI_VERSION}`, href: "/" },
     { label: "Components", href: "/components" },
     { label: "Documentation", href: "/docs" },
   ];
 
   let {
     versions = defaultVersions,
-    selectedVersion = $bindable("CoimUI v1.0.0"),
+    selectedVersion = $bindable<string | undefined>(undefined),
     onSelectVersion,
     onNavigate,
     class: className = "",
   }: Props = $props();
+
+  const activeVersion = $derived(selectedVersion ?? versions[0]?.label ?? "");
 
   let open = $state(false);
 
@@ -49,7 +52,7 @@
           className,
         )}
       >
-        <span class="truncate">{selectedVersion}</span>
+        <span class="truncate">{activeVersion}</span>
         <CiChevronRightSmall
           size="medium"
           class={cn(
@@ -72,7 +75,7 @@
           onSelect={() => selectVersion(item)}
           class={cn(
             "font-body text-text-primary hover:bg-grey-500/10 my-0.5 flex cursor-pointer items-center rounded-sm px-4 py-2 text-base leading-5 font-medium transition-colors outline-none",
-            item.label === selectedVersion && "bg-grey-500/15 text-primary",
+            item.label === activeVersion && "bg-grey-500/15 text-primary",
           )}
         >
           {item.label}

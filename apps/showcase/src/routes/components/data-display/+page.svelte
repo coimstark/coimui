@@ -1,5 +1,6 @@
 <script lang="ts">
   import {
+    COIMUI_VERSION,
     CoimAvatar,
     CoimAvatarGroup,
     CoimBadge,
@@ -348,7 +349,7 @@ ${END_SCRIPT}
             </CoimListItemButton>
             <CoimListItem>
               <CoimListItemIcon><CiCheckSquare /></CoimListItemIcon>
-              <CoimListItemText primary="Schema Frozen" secondary="Release v1.1.0 verified" />
+              <CoimListItemText primary="Schema Frozen" secondary={`Release v${COIMUI_VERSION} verified`} />
             </CoimListItem>
           </CoimList>
         </CoimGrid>
@@ -376,7 +377,7 @@ ${END_SCRIPT}
               <CoimTimelineSeparator>
                 <CoimTimelineDot variant="outlined" color="info" />
               </CoimTimelineSeparator>
-              <CoimTimelineContent>v1.1.0 artifact verified</CoimTimelineContent>
+              <CoimTimelineContent>{`v${COIMUI_VERSION} artifact verified`}</CoimTimelineContent>
             </CoimTimelineItem>
           </CoimTimeline>
         </CoimGrid>

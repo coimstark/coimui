@@ -2,6 +2,13 @@
 
 All notable changes to `@coimui/svelte` and the CoimUI workspace are documented in this file.
 
+## [1.1.1] - 2026-11-27
+
+### Accessibility & Layout Fixes
+- Fixed WCAG 1.3.1 `aria-required-children` in `CoimDataGridPivotPanel` by converting the Row Fields container to a semantic `<ul>`/`<li>` list and moving the "Add row field" `<select>` + button controls outside the list, with `Enter`-key submission support.
+- Updated `CoimVersionSelect` to derive its default selected label from `versions[0].label` (and default option `CoimUI v${COIMUI_VERSION}`) instead of hardcoding `CoimUI v1.0.0`.
+- Reconciled Showcase API documentation defaults (`CoimButton`, `CoimTextField`, `CoimPopper`, `CoimCircularProgress`, `CoimLinearProgress`, `CoimCollapse`) and SvelteKit 3 installation config against the library TypeScript implementation.
+
 ## [1.1.0] - 2026-11-27
 
 ### Application Shell & DataGrid Enhancements

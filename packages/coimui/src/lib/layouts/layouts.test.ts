@@ -14,6 +14,7 @@ import {
   CoimAppShell,
   CoimAuthLayout,
   CoimListingPageContent,
+  CoimVersionSelect,
   LayoutState,
   type CoimNavItem,
 } from "./index.js";
@@ -385,5 +386,33 @@ describe("LayoutState & CoimAppShell", () => {
     expect(onAccountSwitch).toHaveBeenCalledWith(expect.objectContaining({ id: "ws-1" }));
     // keepUserProfileOnAccountSwitch preserves the user's name in header trigger
     expect(view.getByLabelText("Open user menu for Sari Dewi")).toBeInTheDocument();
+  });
+
+  it("derives CoimVersionSelect default label from versions[0] when selectedVersion is omitted", async () => {
+    const onSelectVersion = vi.fn();
+    const onNavigate = vi.fn();
+
+    const view = render(CoimVersionSelect, {
+      props: {
+        versions: [
+          { label: "CoimUI v1.1.1", href: "/" },
+          { label: "Components", href: "/components" },
+        ],
+        onSelectVersion,
+        onNavigate,
+      },
+    });
+    await tick();
+
+    const trigger = view.getByRole("button", { name: "CoimUI v1.1.1" });
+    expect(trigger).toBeInTheDocument();
+
+    await fireEvent.click(trigger);
+    await tick();
+    await fireEvent.click(view.getByRole("menuitem", { name: "Components" }));
+    await tick();
+
+    expect(onSelectVersion).toHaveBeenCalledWith("Components");
+    expect(onNavigate).toHaveBeenCalledWith("/components");
   });
 });

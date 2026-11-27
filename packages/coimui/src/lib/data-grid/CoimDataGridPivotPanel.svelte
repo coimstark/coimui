@@ -150,11 +150,10 @@
       <div class="text-text-secondary mb-1.5 text-xs font-semibold uppercase tracking-wide">
         {resolveDataGridLabel(translate, "data-grid-pivot-row-fields")}
       </div>
-      <div role="list" class="flex flex-col gap-1.5">
+      <ul class="m-0 flex list-none flex-col gap-1.5 p-0">
         {#each config.rowFields as rf, idx (rf)}
           {@const fieldName = columnLabel(rf)}
-          <div
-            role="listitem"
+          <li
             draggable="true"
             ondragstart={(e) => {
               draggedField = rf;
@@ -200,35 +199,41 @@
                 <CiCross size="small" />
               </button>
             </span>
-          </div>
+          </li>
         {/each}
+      </ul>
 
-        {#if unusedRowFields.length > 0}
-          <div class="mt-1 flex items-center gap-1">
-            <select
-              aria-label={resolveDataGridLabel(translate, "data-grid-pivot-add-row-field-aria")}
-              bind:value={fieldToAdd}
-              class="border-grey-200 bg-background-paper min-w-0 flex-1 rounded border px-1.5 py-1 text-xs"
-            >
-              <option value="">
-                {resolveDataGridLabel(translate, "data-grid-pivot-add-row-field-placeholder")}
-              </option>
-              {#each unusedRowFields as col (col.id)}
-                <option value={col.id}>{col.headerName}</option>
-              {/each}
-            </select>
-            <button
-              type="button"
-              aria-label={resolveDataGridLabel(translate, "data-grid-pivot-confirm-add-row-field-aria")}
-              disabled={!fieldToAdd}
-              class="border-grey-200 hover:bg-grey-50 inline-flex h-6 w-6 items-center justify-center rounded border disabled:opacity-40"
-              onclick={() => addRowField(fieldToAdd)}
-            >
-              <CiPlus size="small" />
-            </button>
-          </div>
-        {/if}
-      </div>
+      {#if unusedRowFields.length > 0}
+        <div class="mt-1.5 flex items-center gap-1">
+          <select
+            aria-label={resolveDataGridLabel(translate, "data-grid-pivot-add-row-field-aria")}
+            bind:value={fieldToAdd}
+            onkeydown={(e) => {
+              if (e.key === "Enter" && fieldToAdd) {
+                e.preventDefault();
+                addRowField(fieldToAdd);
+              }
+            }}
+            class="border-grey-200 bg-background-paper min-w-0 flex-1 rounded border px-1.5 py-1 text-xs"
+          >
+            <option value="">
+              {resolveDataGridLabel(translate, "data-grid-pivot-add-row-field-placeholder")}
+            </option>
+            {#each unusedRowFields as col (col.id)}
+              <option value={col.id}>{col.headerName}</option>
+            {/each}
+          </select>
+          <button
+            type="button"
+            aria-label={resolveDataGridLabel(translate, "data-grid-pivot-confirm-add-row-field-aria")}
+            disabled={!fieldToAdd}
+            class="border-grey-200 hover:bg-grey-50 inline-flex h-6 w-6 items-center justify-center rounded border disabled:opacity-40"
+            onclick={() => addRowField(fieldToAdd)}
+          >
+            <CiPlus size="small" />
+          </button>
+        </div>
+      {/if}
     </div>
 
     <div

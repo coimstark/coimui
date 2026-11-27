@@ -181,7 +181,7 @@ ${END_SCRIPT}
     description="Standard, pastel, outlined, and contained buttons plus compact icon controls."
     code={COMPONENT_CODE_EXAMPLES.buttons}
     propsDocs={[
-      { name: "variant", type: "\"contained\" | \"outlined\" | \"text\" | \"pastel\" | \"surface\"", defaultValue: "\"text\"", description: "Visual emphasis level across button families." },
+      { name: "variant", type: "\"contained\" | \"outlined\" | \"text\" | \"pastel\" | \"surface\"", defaultValue: "\"contained\"", description: "Visual emphasis level across button families." },
       { name: "color / size", type: "CoimColor / \"tiny\" | \"small\" | \"medium\" | \"large\"", defaultValue: "\"primary\" / \"medium\"", description: "Theme color token and touch-target sizing." },
       { name: "loading", type: "boolean", defaultValue: "false", description: "Renders inline indicator while preserving layout geometry." },
       { name: "CoimToggleButtonGroup", type: "type: \"single\" | \"multiple\"", defaultValue: "\"single\"", description: "Roving focus radio/toggle semantics via Bits UI." },
@@ -249,7 +249,7 @@ ${END_SCRIPT}
     description="Labeled inputs wired to CoimFormControl with start/end adornments and combobox search."
     code={COMPONENT_CODE_EXAMPLES.textAndSelectInputs}
     propsDocs={[
-      { name: "floatingLabel", type: "boolean", defaultValue: "false", description: "Enables animated top label treatment on outlined and filled inputs." },
+      { name: "floatingLabel", type: "boolean", defaultValue: "true (outlined/filled)", description: "Enables animated top label treatment on outlined and filled inputs." },
       { name: "value", type: "string | number | string[] | null", kind: "bindable", description: "Two-way bound input/selection value." },
       { name: "freeSolo (Autocomplete)", type: "boolean", defaultValue: "false", description: "Allows custom text alongside filtered option suggestions." },
       { name: "multiple (Select)", type: "boolean", defaultValue: "false", description: "Switches value binding between string and string[]." },

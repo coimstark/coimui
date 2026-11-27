@@ -1,3 +1,4 @@
+import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
 const SHOWCASE_ORIGIN = "http://127.0.0.1:4174";
@@ -178,5 +179,54 @@ test.describe("CoimUI Feature Parity Interactive Verification", () => {
     // Starter i18n check
     await page.goto(`${STARTER_ORIGIN}/`, { waitUntil: "networkidle" });
     await expect(page.locator("h1").first()).toBeVisible();
+  });
+
+  test("verifies expanded CoimDataGridPivotPanel keyboard navigation and axe-core WCAG 2.1 AA compliance", async ({
+    page,
+  }) => {
+    await page.goto(`${SHOWCASE_ORIGIN}/data-grid`, { waitUntil: "networkidle" });
+
+    const opsGrid = page.locator(".coim-data-grid").nth(1);
+    await opsGrid.getByRole("button", { name: "Pivot", exact: true }).click();
+    await opsGrid.getByRole("button", { name: "Pivot Fields", exact: true }).click();
+
+    const pivotPanel = opsGrid.getByRole("region", { name: "Pivot field configurator" });
+    await expect(pivotPanel).toBeVisible();
+
+    // Verify Row Fields semantic list structure (all list children are listitem; controls live outside ul)
+    const rowGroup = pivotPanel.getByRole("group", { name: "Row fields" });
+    const rowList = rowGroup.getByRole("list");
+    await expect(rowList).toBeVisible();
+    const listHasOnlyListItems = await rowList.evaluate((el) =>
+      Array.from(el.children).every((child) => child.tagName === "LI"),
+    );
+    expect(listHasOnlyListItems).toBe(true);
+
+    // Keyboard interaction: select unused row field and add via Enter key
+    const addSelect = pivotPanel.getByLabel("Add row field", { exact: true });
+    await addSelect.focus();
+    await addSelect.selectOption("renewal");
+    await page.keyboard.press("Enter");
+    await expect(rowList.getByRole("listitem")).toHaveCount(2);
+
+    // Keyboard focus & activate move-up button
+    const moveUpBtn = pivotPanel.getByRole("button", { name: "Move Renewal Date up" });
+    await moveUpBtn.focus();
+    await page.keyboard.press("Enter");
+    await expect(rowList.getByRole("listitem").first()).toContainText("Renewal Date");
+
+    // Full WCAG 2.1 AA scan with Pivot Panel expanded
+    const results = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+      .analyze();
+
+    const criticalOrSerious = results.violations.filter(
+      (v) => v.impact === "critical" || v.impact === "serious",
+    );
+    expect(
+      criticalOrSerious.map(
+        (v) => `[${v.impact}] ${v.id}: ${v.help} -> ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`,
+      ),
+    ).toEqual([]);
   });
 });
