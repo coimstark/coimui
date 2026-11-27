@@ -42,8 +42,8 @@
     },
     {
       subpath: "@coimui/svelte/data-grid",
-      required: "@tanstack/svelte-table, @tanstack/svelte-virtual, papaparse",
-      optional: "exceljs (.xlsx export), @atlaskit/pragmatic-drag-and-drop (DnD)",
+      required: "@tanstack/svelte-table, @tanstack/svelte-virtual, papaparse, @atlaskit/pragmatic-drag-and-drop",
+      optional: "exceljs (lazy .xlsx export)",
       css: "@coimui/svelte/styles/data-grid.css",
     },
     {

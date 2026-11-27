@@ -64,7 +64,7 @@ ${END_SCRIPT}
   const subpaths = [
     { entry: "@coimui/svelte", styles: "@coimui/svelte/styles", peers: "None (svelte + tailwindcss)", purpose: "Core components, design tokens, theme context, layouts, forms & utilities" },
     { entry: "@coimui/svelte/icons", styles: "Included in core", peers: "None", purpose: "469 outlined/contained UI icons & SVG illustrations (tree-shakeable)" },
-    { entry: "@coimui/svelte/data-grid", styles: "@coimui/svelte/styles/data-grid.css", peers: "@tanstack/svelte-table, @tanstack/svelte-virtual, papaparse", purpose: "Filtering, inline/row editing, column groups, pivot, translate i18n & CSV/XLSX" },
+    { entry: "@coimui/svelte/data-grid", styles: "@coimui/svelte/styles/data-grid.css", peers: "@tanstack/svelte-table, @tanstack/svelte-virtual, papaparse, @atlaskit/pragmatic-drag-and-drop", purpose: "Filtering, inline/row editing, column groups, pivot, translate i18n & CSV/XLSX" },
     { entry: "@coimui/svelte/charts", styles: "@coimui/svelte/styles/charts.css", peers: "layerchart, d3-array, d3-scale, d3-shape", purpose: "Ten LayerChart & D3 chart families + interactive CoimChartLegend" },
     { entry: "@coimui/svelte/date-pickers", styles: "@coimui/svelte/styles/date-pickers.css", peers: "None (@internationalized/date bundled)", purpose: "Calendar, range picker, segmented ISO date/time fields & clocks" },
     { entry: "@coimui/svelte/plugins", styles: "@coimui/svelte/styles/plugins.css", peers: "Optional per plugin (quill, marked, etc.)", purpose: "Quill editor, Swiper carousel, PhotoSwipe, Emoji Picker, CodeBlock & Event Calendar" },
