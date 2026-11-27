@@ -4,6 +4,11 @@
 
   const releases = [
     {
+      version: "v1.1.2",
+      date: "Nov 2026",
+      notes: "Fixed sidebar accordion expansion when switching between groups while another submenu route is active, eliminated duplicate SingleLayer navigation triggers, and added smooth grid-row collapse animations.",
+    },
+    {
       version: "v1.1.1",
       date: "Nov 2026",
       notes: "Fixed CoimDataGridPivotPanel semantic list ARIA structure (WCAG 1.3.1), CoimVersionSelect default label resolution via COIMUI_VERSION, and Showcase API documentation defaults.",

@@ -18,7 +18,7 @@ import {
   LayoutState,
   type CoimNavItem,
 } from "./index.js";
-import { findPrimaryNavItem, resolveLabel } from "./nav-utils.js";
+import { findActiveAccordionChain, findPrimaryNavItem, resolveLabel } from "./nav-utils.js";
 
 const sampleItems: CoimNavItem[] = [
   {
@@ -414,5 +414,223 @@ describe("LayoutState & CoimAppShell", () => {
 
     expect(onSelectVersion).toHaveBeenCalledWith("Components");
     expect(onNavigate).toHaveBeenCalledWith("/components");
+  });
+
+  it("expands sibling and active groups freely in SingleLayer mode, syncs on route change, and fires onNavigate once", async () => {
+    createMatchMediaController(true);
+    localStorage.setItem("coim-test-nav-bug", MenuType.SingleLayer);
+
+    const coimItems: CoimNavItem[] = [
+      { id: "inbox", label: "Inbox", href: "/app/inbox", icon: "CiMessages" },
+      {
+        id: "crm",
+        label: "Pelanggan & CRM",
+        href: "/app/kontak",
+        icon: "CiUsers",
+        children: [
+          { id: "kontak", label: "Kontak & Pelanggan", href: "/app/kontak" },
+          { id: "prospek", label: "Papan Prospek", href: "/app/prospek" },
+        ],
+      },
+      {
+        id: "growth",
+        label: "Siaran & Otomasi",
+        href: "/app/siaran",
+        icon: "CiAnnouncement",
+        children: [
+          { id: "siaran", label: "Siaran WhatsApp", href: "/app/siaran" },
+          { id: "otomasi", label: "Otomasi & Asisten AI", href: "/app/otomasi" },
+        ],
+      },
+      {
+        id: "pengaturan",
+        label: "Pengaturan",
+        href: "/app/pengaturan/saluran",
+        icon: "CiSettings",
+        children: [
+          { id: "saluran", label: "Saluran", href: "/app/pengaturan/saluran" },
+          { id: "tagihan", label: "Tagihan & Paket", href: "/app/pengaturan/tagihan" },
+        ],
+      },
+    ];
+
+    const onNavigate = vi.fn();
+    const view = render(CoimAppShell, {
+      props: {
+        items: coimItems,
+        currentPath: "/app/kontak",
+        menuStorageKey: "coim-test-nav-bug",
+        persistMenu: true,
+        onNavigate,
+      },
+    });
+    await tick();
+
+    const crmBtn = view.getByRole("button", { name: "Pelanggan & CRM" });
+    const growthBtn = view.getByRole("button", { name: "Siaran & Otomasi" });
+    const settingsBtn = view.getByRole("button", { name: "Pengaturan" });
+
+    // Initial route /app/kontak opens Pelanggan & CRM cleanly
+    expect(crmBtn).toHaveAttribute("aria-expanded", "true");
+    expect(growthBtn).toHaveAttribute("aria-expanded", "false");
+    expect(settingsBtn).toHaveAttribute("aria-expanded", "false");
+    expect(view.getByRole("link", { name: "Kontak & Pelanggan" })).toHaveAttribute("aria-current", "page");
+
+    // Click sibling Siaran & Otomasi while /app/kontak is active: must expand Siaran & Otomasi
+    await fireEvent.click(growthBtn);
+    await tick();
+    expect(growthBtn).toHaveAttribute("aria-expanded", "true");
+    expect(crmBtn).toHaveAttribute("aria-expanded", "false");
+    expect(crmBtn.className).toContain("text-primary-fg!");
+    expect(growthBtn.className).not.toContain("text-primary-fg!");
+    expect(document.getElementById(growthBtn.getAttribute("aria-controls")!)).toHaveAttribute("data-state", "open");
+    const crmPanel = document.getElementById(crmBtn.getAttribute("aria-controls")!);
+    expect(crmPanel).toHaveAttribute("data-state", "closed");
+    expect(crmPanel).toHaveAttribute("aria-hidden", "true");
+
+    // Background items array identity refresh on same route must NOT wipe manually opened group
+    await view.rerender({
+      items: coimItems.map((i) => ({ ...i })),
+      currentPath: "/app/kontak",
+      menuStorageKey: "coim-test-nav-bug",
+      persistMenu: true,
+      onNavigate,
+    });
+    await tick();
+    expect(growthBtn).toHaveAttribute("aria-expanded", "true");
+
+    // Click sibling Pengaturan -> Pengaturan opens, Siaran & Otomasi closes
+    await fireEvent.click(settingsBtn);
+    await tick();
+    expect(settingsBtn).toHaveAttribute("aria-expanded", "true");
+    expect(growthBtn).toHaveAttribute("aria-expanded", "false");
+
+    // Toggle active group open -> closed -> open
+    await fireEvent.click(crmBtn);
+    await tick();
+    expect(crmBtn).toHaveAttribute("aria-expanded", "true");
+    await fireEvent.click(crmBtn);
+    await tick();
+    expect(crmBtn).toHaveAttribute("aria-expanded", "false");
+    await fireEvent.click(crmBtn);
+    await tick();
+    expect(crmBtn).toHaveAttribute("aria-expanded", "true");
+
+    // Open Pengaturan and navigate to Tagihan & Paket -> onNavigate called ONCE, then sync route
+    await fireEvent.click(settingsBtn);
+    await tick();
+    await fireEvent.click(view.getByRole("link", { name: "Tagihan & Paket" }));
+    await tick();
+    expect(onNavigate).toHaveBeenCalledTimes(1);
+    expect(onNavigate).toHaveBeenCalledWith("/app/pengaturan/tagihan");
+
+    await view.rerender({
+      items: coimItems,
+      currentPath: "/app/pengaturan/tagihan",
+      menuStorageKey: "coim-test-nav-bug",
+      persistMenu: true,
+      onNavigate,
+    });
+    await tick();
+    expect(settingsBtn).toHaveAttribute("aria-expanded", "true");
+    expect(crmBtn).toHaveAttribute("aria-expanded", "false");
+    expect(view.getByRole("link", { name: "Tagihan & Paket" })).toHaveAttribute("aria-current", "page");
+
+    // Navigate back to leaf route /app/inbox -> all accordions collapse cleanly
+    await view.rerender({
+      items: coimItems,
+      currentPath: "/app/inbox",
+      menuStorageKey: "coim-test-nav-bug",
+      persistMenu: true,
+      onNavigate,
+    });
+    await tick();
+    expect(settingsBtn).toHaveAttribute("aria-expanded", "false");
+    expect(crmBtn).toHaveAttribute("aria-expanded", "false");
+    expect(view.getByRole("link", { name: "Inbox" })).toHaveAttribute("aria-current", "page");
+
+    // Browser Back simulation back to /app/pengaturan/tagihan restores Pengaturan expanded
+    await view.rerender({
+      items: coimItems,
+      currentPath: "/app/pengaturan/tagihan",
+      menuStorageKey: "coim-test-nav-bug",
+      persistMenu: true,
+      onNavigate,
+    });
+    await tick();
+    expect(settingsBtn).toHaveAttribute("aria-expanded", "true");
+  });
+
+  it("handles nested multi-level accordions and mobile SingleLayer drawer without premature collapse", async () => {
+    const mm = createMatchMediaController(false);
+    localStorage.setItem("coim-test-mobile-nav", MenuType.SingleLayer);
+
+    const nestedItems: CoimNavItem[] = [
+      {
+        id: "pages",
+        label: "Pages",
+        children: [
+          {
+            id: "menu-levels",
+            label: "Menu Levels",
+            children: [
+              { id: "level-2", label: "Level 2", href: "/menu-levels/level-two" },
+              {
+                id: "level-2-subs",
+                label: "Level 2 Subs",
+                children: [{ id: "level-3", label: "Level 3", href: "/menu-levels/level-two-subs/level-three" }],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: "settings",
+        label: "Settings",
+        children: [{ id: "billing", label: "Billing", href: "/settings/billing" }],
+      },
+    ];
+
+    expect(findActiveAccordionChain(nestedItems, "/menu-levels/level-two-subs/level-three")).toEqual([
+      { indent: 0, id: "pages" },
+      { indent: 1, id: "menu-levels" },
+      { indent: 2, id: "level-2-subs" },
+    ]);
+
+    const onNavigate = vi.fn();
+    const view = render(CoimAppShell, {
+      props: {
+        items: nestedItems,
+        currentPath: "/menu-levels/level-two-subs/level-three",
+        menuStorageKey: "coim-test-mobile-nav",
+        persistMenu: true,
+        onNavigate,
+      },
+    });
+    await tick();
+    mm.emitAll(false);
+    await tick();
+
+    const mobileToggle = view.getByLabelText("Toggle navigation menu");
+    await fireEvent.click(mobileToggle);
+    await tick();
+    expect(mobileToggle).toHaveAttribute("aria-expanded", "true");
+
+    // Deep-linked nested chain is immediately expanded
+    expect(view.getByRole("button", { name: "Pages" })).toHaveAttribute("aria-expanded", "true");
+    expect(view.getByRole("button", { name: "Menu Levels" })).toHaveAttribute("aria-expanded", "true");
+    expect(view.getByRole("button", { name: "Level 2 Subs" })).toHaveAttribute("aria-expanded", "true");
+
+    // Expanding sibling group on mobile keeps mobile drawer open and allows navigation
+    const settingsBtn = view.getByRole("button", { name: "Settings" });
+    await fireEvent.click(settingsBtn);
+    await tick();
+    expect(settingsBtn).toHaveAttribute("aria-expanded", "true");
+    expect(mobileToggle).toHaveAttribute("aria-expanded", "true");
+
+    await fireEvent.click(view.getByRole("link", { name: "Billing" }));
+    await tick();
+    expect(onNavigate).toHaveBeenCalledTimes(1);
+    expect(onNavigate).toHaveBeenCalledWith("/settings/billing");
   });
 });

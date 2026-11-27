@@ -2,6 +2,14 @@
 
 All notable changes to `@coimui/svelte` and the CoimUI workspace are documented in this file.
 
+## [1.1.2] - 2026-11-28
+
+### Sidebar Navigation & Accordion Fixes
+- Fixed `CoimSecondaryItem` and `CoimLeftMenu` accordion state management so expanding sibling or different navigation groups works reliably even while another group owns the active route (removed the competing auto-reopen `$effect` inside `CoimSecondaryItem`).
+- Synchronized initial SSR and route-driven `openedAccordions` expansion centrally in `CoimLeftMenu` using `findActiveAccordionChain` (exported from `@coimui/svelte/layouts`), supporting click navigation, hard refresh, deep links, browser back/forward, desktop, and mobile drawers while preserving manual group toggles across `items` array identity updates.
+- Eliminated duplicate `onNavigate` invocations and spurious desktop backdrop triggers in `MenuType.SingleLayer`, and added modifier-key guards before triggering internal link selection.
+- Replaced abrupt `{#if isExpanded}` submenu mounts with accessible smooth CSS `grid-template-rows` + `inert` collapse transitions (`motion-reduce:transition-none`).
+
 ## [1.1.1] - 2026-11-27
 
 ### Accessibility & Layout Fixes

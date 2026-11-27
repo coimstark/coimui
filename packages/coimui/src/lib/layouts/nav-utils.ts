@@ -1,5 +1,5 @@
 import { isPathMatch } from "../utilities/utils.js";
-import type { CoimNavItem, TranslateFn } from "./types.js";
+import type { CoimNavItem, OpenedAccordion, TranslateFn } from "./types.js";
 
 /**
  * Human-readable English fallbacks for built-in CoimUI shell keys so consumer apps
@@ -118,4 +118,49 @@ export function findPrimaryNavItem(
   if (nonRootMatch) return nonRootMatch;
 
   return all.find((item) => navItemMatchesPath(item, currentPath));
+}
+
+/**
+ * Resolves the active accordion expansion chain (`indent` + `id`) owning `currentPath`.
+ * Prefers an exact leaf match at the current depth so a shorter prefix leaf in a
+ * sibling group does not falsely expand over a deeper route, and prefers non-root
+ * matches before falling back to `"/"`.
+ */
+export function findActiveAccordionChain(
+  menuItems: CoimNavItem[],
+  currentPath: string,
+  indent = 0,
+): OpenedAccordion[] {
+  const visible = menuItems.filter((item) => !item.hideInMenu);
+  const cleanPath = currentPath.replace(/\/$/, "") || "/";
+
+  const hasExactLeafAtLevel = visible.some((item) => {
+    const visibleChildren = (item.children ?? []).filter((child) => !child.hideInMenu);
+    if (visibleChildren.length > 0 || !item.href) return false;
+    const cleanHref = item.href.replace(/\/$/, "") || "/";
+    return cleanHref === cleanPath;
+  });
+  if (hasExactLeafAtLevel) {
+    return [];
+  }
+
+  const groups = visible.filter((item) => (item.children ?? []).some((child) => !child.hideInMenu));
+
+  for (const preferNonRoot of [true, false]) {
+    for (const item of groups) {
+      const visibleChildren = (item.children ?? []).filter((child) => !child.hideInMenu);
+      const matchesNonRoot =
+        item.href !== "/" && navItemMatchesPath({ ...item, children: visibleChildren }, currentPath);
+      const matchesAny =
+        navItemMatchesPath({ ...item, children: visibleChildren }, currentPath);
+      if (preferNonRoot ? !matchesNonRoot : !matchesAny) {
+        continue;
+      }
+
+      const childChain = findActiveAccordionChain(visibleChildren, currentPath, indent + 1);
+      return [{ indent, id: item.id }, ...childChain];
+    }
+  }
+
+  return [];
 }

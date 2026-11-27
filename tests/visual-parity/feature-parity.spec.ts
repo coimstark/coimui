@@ -229,4 +229,81 @@ test.describe("CoimUI Feature Parity Interactive Verification", () => {
       ),
     ).toEqual([]);
   });
+
+  test("verifies SingleLayer sidebar sibling group expansion, deep links, back/forward, and mobile drawer", async ({
+    page,
+  }) => {
+    await page.addInitScript(() => {
+      window.localStorage.setItem("coimui-showcase-left-menu-type", JSON.stringify("single-layer"));
+    });
+
+    await page.goto(`${SHOWCASE_ORIGIN}/dashboards/analytics`, { waitUntil: "networkidle" });
+
+    const nav = page.getByRole("navigation", { name: "Primary navigation" });
+    const dashBtn = nav.getByRole("button", { name: "Dashboards", exact: true });
+    const compBtn = nav.getByRole("button", { name: "UI Components", exact: true });
+    const pagesBtn = nav.getByRole("button", { name: "Pages", exact: true });
+
+    await expect(dashBtn).toHaveAttribute("aria-expanded", "true");
+    await expect(compBtn).toHaveAttribute("aria-expanded", "false");
+
+    // Clicking sibling groups while another group owns active route must open them cleanly
+    await compBtn.click();
+    await expect(compBtn).toHaveAttribute("aria-expanded", "true");
+    await expect(dashBtn).toHaveAttribute("aria-expanded", "false");
+    await expect(nav.getByRole("link", { name: "Foundation & Layout", exact: true })).toBeVisible();
+
+    await pagesBtn.click();
+    await expect(pagesBtn).toHaveAttribute("aria-expanded", "true");
+    await expect(compBtn).toHaveAttribute("aria-expanded", "false");
+    await expect(nav.getByRole("link", { name: "Settings", exact: true })).toBeVisible();
+
+    // Navigate via submenu click, reload, deep link, Back & Forward
+    await nav.getByRole("link", { name: "Settings", exact: true }).click();
+    await expect(page).toHaveURL(/\/settings$/);
+    await expect(pagesBtn).toHaveAttribute("aria-expanded", "true");
+
+    await page.reload({ waitUntil: "networkidle" });
+    await expect(nav.getByRole("button", { name: "Pages", exact: true })).toHaveAttribute(
+      "aria-expanded",
+      "true",
+    );
+
+    await page.goto(`${SHOWCASE_ORIGIN}/menu-levels/level-two-subs/level-three-subs/level-four-subs/level-five`, {
+      waitUntil: "networkidle",
+    });
+    await expect(nav.getByRole("link", { name: "Level 5", exact: true })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+
+    await page.goBack({ waitUntil: "networkidle" });
+    await expect(page).toHaveURL(/\/settings$/);
+    await expect(nav.getByRole("button", { name: "Pages", exact: true })).toHaveAttribute(
+      "aria-expanded",
+      "true",
+    );
+
+    await page.goForward({ waitUntil: "networkidle" });
+    await expect(page).toHaveURL(/\/level-five$/);
+
+    // Mobile drawer check
+    await page.setViewportSize({ width: 390, height: 844 });
+    const mobileToggle = page.getByLabel("Toggle navigation menu");
+    await mobileToggle.click();
+    await expect(mobileToggle).toHaveAttribute("aria-expanded", "true");
+    await nav.getByRole("button", { name: "UI Components", exact: true }).click();
+    await expect(nav.getByRole("link", { name: "Foundation & Layout", exact: true })).toBeVisible();
+    await nav.getByRole("link", { name: "Foundation & Layout", exact: true }).click();
+    await expect(page).toHaveURL(/\/components\/foundation$/);
+
+    const results = await new AxeBuilder({ page })
+      .include('nav[aria-label="Primary navigation"]')
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+      .analyze();
+    const criticalOrSerious = results.violations.filter(
+      (v) => v.impact === "critical" || v.impact === "serious",
+    );
+    expect(criticalOrSerious).toEqual([]);
+  });
 });

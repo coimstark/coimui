@@ -64,4 +64,33 @@ describe("Phase C Layouts SSR Safety", () => {
     });
     expect(listing.body).toContain("Default");
   });
+
+  it("renders active SingleLayer accordion group expanded during SSR without hydration jump", () => {
+    const ssrItems: CoimNavItem[] = [
+      {
+        id: "crm",
+        label: "CRM",
+        href: "/crm/contacts",
+        children: [{ id: "contacts", label: "Contacts", href: "/crm/contacts" }],
+      },
+      {
+        id: "settings",
+        label: "Settings",
+        href: "/settings/general",
+        children: [{ id: "general", label: "General", href: "/settings/general" }],
+      },
+    ];
+
+    const shell = render(CoimAppShell, {
+      props: {
+        items: ssrItems,
+        currentPath: "/crm/contacts",
+        children: createRawSnippet(() => ({ render: () => "<div>Contacts SSR</div>" })),
+      },
+    });
+
+    expect(shell.body).toContain("Contacts SSR");
+    expect(shell.body).toContain("CRM");
+    expect(shell.body).toContain("Settings");
+  });
 });

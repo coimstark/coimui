@@ -5,7 +5,7 @@
   import { MenuShowState, MenuType } from "../theme/types.js";
   import { cn, isPathMatch } from "../utilities/utils.js";
   import { getLayoutContext } from "./layout-state.svelte.js";
-  import { findPrimaryNavItem, resolveLabel } from "./nav-utils.js";
+  import { findActiveAccordionChain, findPrimaryNavItem, resolveLabel } from "./nav-utils.js";
   import CoimLogo from "./CoimLogo.svelte";
   import CoimPrimaryItem from "./CoimPrimaryItem.svelte";
   import CoimSecondaryItem from "./CoimSecondaryItem.svelte";
@@ -40,9 +40,36 @@
   const theme = getThemeContext();
   const layout = getLayoutContext();
 
-  let selectedPrimary = $state<CoimNavItem | undefined>(undefined);
-  let activeItem = $state<CoimNavItem | undefined>(undefined);
-  let openedAccordions = $state<OpenedAccordion[]>([]);
+  function resolveActiveAccordionChain(
+    menuItems: CoimNavItem[],
+    bottom: CoimNavItem[],
+    path: string,
+    menuType: MenuType,
+  ): OpenedAccordion[] {
+    if (menuType === MenuType.SingleLayer) {
+      return findActiveAccordionChain([...menuItems, ...bottom], path, 0);
+    }
+    const primary = findPrimaryNavItem(menuItems, bottom, path);
+    return primary?.children ? findActiveAccordionChain(primary.children, path, 0) : [];
+  }
+
+  function serializeChain(chain: OpenedAccordion[]): string {
+    return chain.map((a) => `${a.indent}:${a.id}`).join(",");
+  }
+
+  const initialMatched = untrack(() => findPrimaryNavItem(items, bottomItems, currentPath));
+  const initialChain = untrack(() =>
+    resolveActiveAccordionChain(items, bottomItems, currentPath, layout.leftMenuType),
+  );
+
+  let selectedPrimary = $state<CoimNavItem | undefined>(initialMatched);
+  let activeItem = $state<CoimNavItem | undefined>(initialMatched);
+  let openedAccordions = $state<OpenedAccordion[]>(initialChain);
+
+  let lastSyncedPath = untrack(() => currentPath);
+  let lastSyncedRouteKey = untrack(
+    () => `${layout.leftMenuType}|${currentPath}|${serializeChain(initialChain)}`,
+  );
 
   function findPrimaryForPath(path: string): CoimNavItem | undefined {
     return findPrimaryNavItem(items, bottomItems, path);
@@ -67,20 +94,47 @@
     layout.setMenuSelectedSecondaryItem(findSelectedSecondary(activeItem.children, currentPath));
   }
 
+  const matchedPrimary = $derived(findPrimaryForPath(currentPath));
+  const activeAccordionChain = $derived(
+    resolveActiveAccordionChain(items, bottomItems, currentPath, layout.leftMenuType),
+  );
+  const routeSyncKey = $derived(
+    `${layout.leftMenuType}|${currentPath}|${serializeChain(activeAccordionChain)}`,
+  );
+
   $effect(() => {
-    const matched = findPrimaryForPath(currentPath);
+    const matched = matchedPrimary;
+    const nextChain = activeAccordionChain;
+    const nextPath = currentPath;
+    const nextRouteKey = routeSyncKey;
+
     untrack(() => {
+      const pathChanged = nextPath !== lastSyncedPath;
+      const routeKeyChanged = nextRouteKey !== lastSyncedRouteKey;
+
       selectedPrimary = matched;
-      activeItem = matched;
-      if (layout.temporaryShowPrimaryMenu) {
-        layout.setTemporaryShowPrimaryMenu(false);
+      if (pathChanged || layout.leftMenuType === MenuType.SingleLayer || !activeItem) {
+        activeItem = matched;
       }
-      layout.resetLeftMenu();
+
+      if (routeKeyChanged) {
+        openedAccordions = nextChain;
+        lastSyncedRouteKey = nextRouteKey;
+      }
+
+      if (pathChanged) {
+        lastSyncedPath = nextPath;
+        if (layout.temporaryShowPrimaryMenu) {
+          layout.setTemporaryShowPrimaryMenu(false);
+        }
+        layout.resetLeftMenu();
+      }
     });
   });
 
   $effect(() => {
     return layout.onResetLeft(() => {
+      openedAccordions = activeAccordionChain;
       if (selectedPrimary) {
         activeItem = selectedPrimary;
         const visibleChildren = (selectedPrimary.children ?? []).filter((x) => !x.hideInMenu);
@@ -99,7 +153,11 @@
   });
 
   $effect(() => {
-    if (selectedPrimary?.id !== activeItem?.id && !layout.leftShowBackdrop) {
+    if (
+      layout.leftMenuType !== MenuType.SingleLayer &&
+      selectedPrimary?.id !== activeItem?.id &&
+      !layout.leftShowBackdrop
+    ) {
       layout.setLeftShowBackdrop(true);
     }
   });
@@ -119,6 +177,23 @@
       layout.hideLeftSecondary();
     }
   });
+
+  function handleSingleLayerSelect(selected: CoimNavItem) {
+    if (layout.temporaryShowPrimaryMenu) {
+      layout.setTemporaryShowPrimaryMenu(false);
+    }
+    if (selected.content) {
+      activeItem = selected;
+      return;
+    }
+    if (
+      selected.href &&
+      isPathMatch(currentPath, selected.href) &&
+      (layout.leftShowBackdrop || layout.leftPrimaryCurrent === MenuShowState.TemporaryShow)
+    ) {
+      layout.resetLeftMenu();
+    }
+  }
 
   function handleSelectPrimaryItem(item: CoimNavItem) {
     if (!layout.temporaryShowPrimaryMenu && layout.leftMenuType !== MenuType.SingleLayer) {
@@ -266,13 +341,7 @@
                 onToggleAccordion={(next) => (openedAccordions = next)}
                 {onNavigate}
                 {translate}
-                onSelect={(selected) => {
-                  if (layout.temporaryShowPrimaryMenu) {
-                    layout.setTemporaryShowPrimaryMenu(false);
-                  }
-                  handleSelectPrimaryItem(selected);
-                  activeItem = selected;
-                }}
+                onSelect={handleSingleLayerSelect}
               />
             {/each}
           </div>
@@ -294,7 +363,7 @@
                 onToggleAccordion={(next) => (openedAccordions = next)}
                 {onNavigate}
                 {translate}
-                onSelect={handleSelectPrimaryItem}
+                onSelect={handleSingleLayerSelect}
               />
             {/each}
           </div>

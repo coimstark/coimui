@@ -6,6 +6,7 @@ export {
   tryGetLayoutContext,
   type LayoutStateOptions,
 } from "./layout-state.svelte.js";
+export { findActiveAccordionChain, findPrimaryNavItem } from "./nav-utils.js";
 
 export { default as CoimAppShell } from "./CoimAppShell.svelte";
 export { default as CoimAuthLayout } from "./CoimAuthLayout.svelte";
